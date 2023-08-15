@@ -1,54 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../authenticate/sign_in.dart';
+import '../settings/settings.dart'; // Import your settings page
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  bool _isDrawerOpen = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  void _toggleDrawer() {
-    setState(() {
-      _isDrawerOpen = !_isDrawerOpen;
-    });
-  }
-
-  Future<void> _signOutAndNavigateToLogin() async {
-    await _auth.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignIn()),
-    );
-  }
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EduPulse'),
+        title: Text('EduPulse', style: TextStyle(fontSize: 24)),
         actions: [
           IconButton(
             icon: Icon(Icons.settings),
-            onPressed: _toggleDrawer,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Settings()),
+              );
+            },
           ),
         ],
       ),
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              child: Text(
-                'Settings',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+            Container(
+              height: 90,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                ),
+                child: Text(
+                  'Paramètres',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
                 ),
               ),
             ),
@@ -82,14 +68,16 @@ class _HomeState extends State<Home> {
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
-              title: Text('Logout'),
-              onTap: _signOutAndNavigateToLogin,
+              title: Text('Déconnexion'),
+              onTap: () {
+                // Add your logic for logout
+              },
             ),
           ],
         ),
       ),
       body: Center(
-        child: Text('Welcome to EduPulse Home'),
+        child: Text('Bienvenue sur la page d\'accueil d\'EduPulse', style: TextStyle(fontSize: 18)),
       ),
     );
   }
