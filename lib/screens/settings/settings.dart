@@ -5,10 +5,10 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: Text('Paramètres'),
       ),
       body: Center(
-        child: Text('This is the settings page (empty for now)'),
+        child: Text('Ceci est la page des paramètres (vide pour le moment)'),
       ),
     );
   }
