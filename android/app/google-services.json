@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "109161871624",
+    "firebase_url": "https://edupulse-4bf45-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "edupulse-4bf45",
+    "storage_bucket": "edupulse-4bf45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109161871624:android:96598916ff192ef470d4bd",
+        "android_client_info": {
+          "package_name": "com.example.edupulse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109161871624-frf0jef9crjpaok80cskmj2b0nhpmcq5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuO6GW0ewkhHw2AmRUSGx6c2BovQK3mSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109161871624-frf0jef9crjpaok80cskmj2b0nhpmcq5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
