@@ -1,7 +1,8 @@
+import 'package:edupulse/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'home.dart';
+import 'screens/home/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: Home(),
+      home: Wrapper(),
     );
   }
 }
