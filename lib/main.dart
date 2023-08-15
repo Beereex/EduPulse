@@ -1,3 +1,4 @@
+import 'package:edupulse/screens/authenticate/sign_in.dart';
 import 'package:edupulse/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EduPulse',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       home: Wrapper(),
     );
   }
