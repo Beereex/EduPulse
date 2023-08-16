@@ -1,3 +1,6 @@
+import 'package:edupulse/account/account.dart';
+import 'package:edupulse/propositions/propositions.dart';
+import 'package:edupulse/screens/vote/vote.dart';
 import 'package:flutter/material.dart';
 import '../settings/settings.dart';
 import '../authenticate/sign_in.dart'; // Import your login page
@@ -76,23 +79,36 @@ class Home extends StatelessWidget {
               leading: Icon(Icons.account_circle), // Use the appropriate icon for Account
               title: Text('Compte'),
               onTap: () {
-                // Add your logic for Account
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Account()),
+                );
               },
             ),
             ListTile(
               leading: Icon(Icons.description), // Use the appropriate icon for Propositions
               title: Text('Propositions'),
               onTap: () {
-                // Add your logic for Propositions
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Propositions()),
+                );
               },
             ),
             ListTile(
               leading: Icon(Icons.how_to_vote), // Use the appropriate icon for Voting
               title: Text('Vote'),
               onTap: () {
-                // Add your logic for Voting
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Vote()),
+                );
               },
             ),
+
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Déconnexion'),
