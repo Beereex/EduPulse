@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../services/app_data.dart';
 import '../home/home.dart';
 
 class SignIn extends StatefulWidget {
@@ -35,6 +36,7 @@ class _SignInState extends State<SignIn> {
       );
 
       if (userCredential.user != null) {
+        AppData.instance.setCurrentUser(userCredential.user!); // 'user' is the authenticated user object
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),

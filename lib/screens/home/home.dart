@@ -1,5 +1,5 @@
-import 'package:edupulse/account/account.dart';
-import 'package:edupulse/propositions/propositions.dart';
+import 'package:edupulse/screens/account/account.dart';
+import 'package:edupulse/screens/propositions/propositions.dart';
 import 'package:edupulse/screens/vote/vote.dart';
 import 'package:flutter/material.dart';
 import '../settings/settings.dart';
