@@ -86,7 +86,10 @@ class _AccountState extends State<Account> {
                           SizedBox(height: 30),
                           ElevatedButton(
                             onPressed: () {
-                              // TODO: Implement edit functionality
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => EditAccount()),
+                              );
                             },
                             child: Text(
                               'Modifier',
