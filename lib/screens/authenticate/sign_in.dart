@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../models/extended_user.dart';
 import '../../services/app_data.dart';
 import '../home/home.dart';
 
@@ -36,11 +38,38 @@ class _SignInState extends State<SignIn> {
       );
 
       if (userCredential.user != null) {
-        AppData.instance.setCurrentUser(userCredential.user!); // 'user' is the authenticated user object
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-        );
+        AppData.instance.setCurrentUser(userCredential.user!); // Set the authenticated user object in AppData
+
+        // Fetch user data from Firestore using the uid
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .get();
+
+        if (userSnapshot.exists) {
+          Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+
+          // Create an ExtendedUser object with the retrieved data
+          ExtendedUser extendedUser = ExtendedUser(
+            uid: userCredential.user!.uid,
+            firstName: userData['first_name'],
+            lastName: userData['last_name'],
+            picUrl: userData['pic_url'],
+            userType: userData['userType'],
+          );
+
+          // Set the ExtendedUser object in AppData
+          AppData.instance.currentUser = extendedUser;
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        } else {
+          setState(() {
+            _errorMessage = 'Échec de la connexion. Veuillez vérifier votre courriel et votre mot de passe.';
+          });
+        }
       } else {
         setState(() {
           _errorMessage = 'Échec de la connexion. Veuillez vérifier votre courriel et votre mot de passe.';

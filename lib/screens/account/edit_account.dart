@@ -57,7 +57,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
               radius: 50,
               backgroundImage: _pickedImage != null
                   ? FileImage(_pickedImage!)
-                  : AppData.instance.currentUser!.picUrl == 'none'
+                  : AppData.instance.currentUser!.p == 'none'
                   ? AssetImage('assets/default_profile_pic.jpg')
                   : NetworkImage(AppData.instance.currentUser!.picUrl) as ImageProvider,
             ),
