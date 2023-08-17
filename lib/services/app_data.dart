@@ -22,7 +22,7 @@ class AppData {
       await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
       if (userDoc.exists) {
-        currentUser = currentUser.fromFirestore(userDoc.data()!);
+        extendedUser = currentUser?.fromFirestore(userDoc.data()!);
       }
     } catch (e) {
       print("Error fetching extended user data: $e");
