@@ -80,7 +80,7 @@ class _AccountState extends State<Account> {
                     child: Text(
                       'Modifier',
                       style: TextStyle(
-                          fontSize: 20
+                        fontSize: 20,
                       ),
                     ),
                   ),
