@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../models/extended_user.dart';
 import '../../services/app_data.dart';
 import '../home/home.dart';
 
@@ -48,18 +47,6 @@ class _SignInState extends State<SignIn> {
 
         if (userSnapshot.exists) {
           Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-
-          // Create an ExtendedUser object with the retrieved data
-          ExtendedUser extendedUser = ExtendedUser(
-            uid: userCredential.user!.uid,
-            firstName: userData['first_name'],
-            lastName: userData['last_name'],
-            picUrl: userData['pic_url'],
-            userType: userData['userType'],
-          );
-
-          // Set the ExtendedUser object in AppData
-          AppData.instance.currentUser = extendedUser;
 
           Navigator.pushReplacement(
             context,
