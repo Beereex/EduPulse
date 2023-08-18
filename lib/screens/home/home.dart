@@ -4,12 +4,13 @@ import 'package:edupulse/screens/account/account.dart';
 import 'package:edupulse/screens/propositions/propositions.dart';
 import 'package:edupulse/screens/vote/vote.dart';
 import '../settings/settings.dart';
-import '../authenticate/sign_in.dart'; // Import your login page
+import '../authenticate/sign_in.dart';
+import 'home_button.dart'; // Import your login page
 
 class Home extends StatelessWidget {
   // Example data (replace with your actual data)
   String currentPhase = "Propositions";
-  Duration timeRemaining = Duration(days: 5, hours: 10, minutes: 15);
+  Duration timeRemaining = const Duration(days: 5, hours: 10, minutes: 15);
   String userRegion = "Région de Casablanca-Settat"; // Example region
 
   void showNotificationsMenu(BuildContext context) {
@@ -17,8 +18,7 @@ class Home extends StatelessWidget {
   }
 
   void logout(BuildContext context) async {
-    await
-    FirebaseAuth.instance.signOut(); // Sign out from Firebase
+    await FirebaseAuth.instance.signOut(); // Sign out from Firebase
 
     Navigator.pushReplacement(
       context,
@@ -39,33 +39,33 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-            child: Text('EduPulse', style: TextStyle(fontSize: 24)),
-          onTap: (){
+          child: const Text('EduPulse', style: TextStyle(fontSize: 24)),
+          onTap: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
         ),
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onSelected: (value) {
               // Add your logic for handling menu item selection
             },
             itemBuilder: (context) {
               return [
-                PopupMenuItem(
-                  child: Text('Notification 1'),
+                const PopupMenuItem(
                   value: 1,
+                  child: Text('Notification 1'),
                 ),
-                PopupMenuItem(
-                  child: Text('Notification 2'),
+                const PopupMenuItem(
                   value: 2,
+                  child: Text('Notification 2'),
                 ),
                 // Add more items here
               ];
             },
           ),
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.push(
                 context,
@@ -79,13 +79,13 @@ class Home extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            Container(
+            SizedBox(
               height: 90,
               child: DrawerHeader(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                 ),
-                child: Text(
+                child: const Text(
                   'Paramètres',
                   style: TextStyle(
                     color: Colors.white,
@@ -95,8 +95,11 @@ class Home extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.account_circle,size: 40,),
-              title: Text('Compte',style: TextStyle(fontSize: 25),),
+              leading: const Icon(Icons.account_circle, size: 40),
+              title: const Text(
+                'Compte',
+                style: TextStyle(fontSize: 25),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -106,8 +109,11 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.description,size: 40,),
-              title: Text('Propositions',style: TextStyle(fontSize: 25),),
+              leading: const Icon(Icons.description, size: 40),
+              title: const Text(
+                'Propositions',
+                style: TextStyle(fontSize: 25),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -117,8 +123,11 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.how_to_vote,size: 40,),
-              title: Text('Vote',style: TextStyle(fontSize: 25),),
+              leading: const Icon(Icons.how_to_vote, size: 40),
+              title: const Text(
+                'Vote',
+                style: TextStyle(fontSize: 25),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -128,8 +137,11 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app,size: 40,),
-              title: Text('Déconnexion',style: TextStyle(fontSize: 25),),
+              leading: const Icon(Icons.exit_to_app, size: 40),
+              title: const Text(
+                'Déconnexion',
+                style: TextStyle(fontSize: 25),
+              ),
               onTap: () {
                 logout(context); // Call the logout function
               },
@@ -143,11 +155,11 @@ class Home extends StatelessWidget {
             Container(
               width: double.infinity,
               color: Colors.blueGrey[900], // Dark theme color
-              padding: EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
               child: Text(
-                "$userRegion",
-                style: TextStyle(
+                userRegion,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 27,
                   fontWeight: FontWeight.bold,
@@ -156,20 +168,20 @@ class Home extends StatelessWidget {
             ),
             Container(
               width: double.infinity,
-              color: Colors.cyan.shade200, // Dark theme color for current phase
-              padding: EdgeInsets.symmetric(vertical: 16),
+              color: Colors.cyanAccent.shade100, // Accent color for current phase
+              padding: const EdgeInsets.symmetric(vertical: 16),
               alignment: Alignment.center,
               child: Column(
                 children: [
                   Text(
-                    "$currentPhase",
+                    currentPhase,
                     style: TextStyle(
                       fontSize: 45,
-                      color: Colors.deepOrange.shade500,
                       fontWeight: FontWeight.w900,
+                      color: Colors.teal.shade900
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "Temps restant: ${formatDuration(timeRemaining)}",
                     style: TextStyle(
@@ -178,12 +190,113 @@ class Home extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+
                 ],
               ),
             ),
-            // Rest of the content...
+            const SizedBox(height: 20), // Add spacing between phase info and buttons
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.add_circle, size: 50),
+                        onPressed: () {
+                          // Add logic for creating a proposition
+                        },
+                      ),
+                      SizedBox(height: 20,),
+                      Text(
+                        "Créer Proposition",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.search, size: 50),
+                        onPressed: () {
+                          // Add logic for searching propositions
+                        },
+                      ),
+                      SizedBox(height: 20,),
+                      Text(
+                        "Rechercher Propositions",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 50),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.tealAccent.withOpacity(0.07),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    child: Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.visibility, size: 50),
+                          onPressed: () {
+                            // Add logic for viewing user's propositions
+                          },
+                        ),
+                        SizedBox(height: 20,),
+                        Text(
+                          "Mes Propositions",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.chat_bubble, size: 50),
+                        onPressed: () {
+                          // Add logic for chatting or commenting
+                        },
+                      ),
+                      SizedBox(height: 20,),
+                      Text(
+                        "Commenter / Discuter",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Column(
+                  children: [
+                    HomeButton(
+                      iconData: Icons.add_alarm,
+                      text: 'Test',
+                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                      onTap: () { print("huh"); },)
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
+
       ),
     );
   }
