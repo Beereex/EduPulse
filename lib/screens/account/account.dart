@@ -28,86 +28,64 @@ class _AccountState extends State<Account> {
             final firstName = data['first_name'] ?? 'N/A';
             final lastName = data['last_name'] ?? 'N/A';
             final picUrl = data['pic_url'] ?? 'none';
-            final userTypeRef = data['userType'] as DocumentReference?;
+            final userType = data['userType'] ?? 'N/A';
 
-            return FutureBuilder<DocumentSnapshot>(
-              future: userTypeRef?.get(),
-              builder: (context, userTypeSnapshot) {
-                if (userTypeSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (userTypeSnapshot.hasData) {
-                  final userTypeData = userTypeSnapshot.data!.data() as Map<String, dynamic>?;
-
-                  if (userTypeData != null) {
-                    final userType = userTypeData['userType'] ?? 'N/A';
-
-                    return Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 30,),
-                          CircleAvatar(
-                            radius: 120,
-                            backgroundImage: picUrl == 'none'
-                                ? AssetImage('assets/default_profile_pic.jpg')
-                                : NetworkImage(picUrl) as ImageProvider,
-                          ),
-                          SizedBox(height: 70),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Prénom: $firstName',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: _dispFontSize,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Nom: $lastName',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: _dispFontSize,
-                            ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Type de Compte: $userType',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: _dispFontSize,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 30),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => EditAccount()),
-                              );
-                            },
-                            child: Text(
-                              'Modifier',
-                              style: TextStyle(
-                                fontSize: 20
-                              ),
-                            ),
-                          ),
-                        ],
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30,),
+                  CircleAvatar(
+                    radius: 120,
+                    backgroundImage: picUrl == 'none'
+                        ? AssetImage('assets/default_profile_pic.jpg')
+                        : NetworkImage(picUrl) as ImageProvider,
+                  ),
+                  SizedBox(height: 70),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Prénom: $firstName',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _dispFontSize,
                       ),
-                    );
-                  }
-                }
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Nom: $lastName',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _dispFontSize,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Type de Compte: $userType',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _dispFontSize,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () {
 
-                return Center(
-                  child: Text('Erreur lors de la récupération des informations du compte.'),
-                );
-              },
+                    },
+                    child: Text(
+                      'Modifier',
+                      style: TextStyle(
+                          fontSize: 20
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           } else {
             return Center(
