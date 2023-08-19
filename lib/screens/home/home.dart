@@ -11,7 +11,10 @@ class Home extends StatelessWidget {
   // Example data (replace with your actual data)
   String currentPhase = "Propositions";
   Duration timeRemaining = const Duration(days: 5, hours: 10, minutes: 15);
-  String userRegion = "Région de Casablanca-Settat"; // Example region
+  String userRegion = "Région de Casablanca-Settat";
+  double buttonFontSize = 25;
+  double buttonBoxSize = 180;
+  double buttonIconSize = 80;
 
   void showNotificationsMenu(BuildContext context) {
     // Add your code to show the notifications menu here
@@ -159,6 +162,7 @@ class Home extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 userRegion,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 27,
@@ -194,105 +198,59 @@ class Home extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20), // Add spacing between phase info and buttons
+            const SizedBox(height: 100), // Add spacing between phase info and buttons
             Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.add_circle, size: 50),
-                        onPressed: () {
-                          // Add logic for creating a proposition
-                        },
-                      ),
-                      SizedBox(height: 20,),
-                      Text(
-                        "Créer Proposition",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.search, size: 50),
-                        onPressed: () {
-                          // Add logic for searching propositions
-                        },
-                      ),
-                      SizedBox(height: 20,),
-                      Text(
-                        "Rechercher Propositions",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 50),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.tealAccent.withOpacity(0.07),
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    child: Column(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.visibility, size: 50),
-                          onPressed: () {
-                            // Add logic for viewing user's propositions
-                          },
-                        ),
-                        SizedBox(height: 20,),
-                        Text(
-                          "Mes Propositions",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.chat_bubble, size: 50),
-                        onPressed: () {
-                          // Add logic for chatting or commenting
-                        },
-                      ),
-                      SizedBox(height: 20,),
-                      Text(
-                        "Commenter / Discuter",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Column(
-                  children: [
-                    HomeButton(
-                      iconData: Icons.add_alarm,
-                      text: 'Test',
+                  HomeButton(
+                      iconData: Icons.add_circle,
+                      text: "Créer Proposition",
                       backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                      onTap: () { print("huh"); },)
-                  ],
-                ),
-              ],
+                      fontSize: buttonFontSize,
+                      iconSize: buttonIconSize,
+                      boxSize: buttonBoxSize,
+                      onTap: (){}
+                  ),
+                  HomeButton(
+                      iconData: Icons.search,
+                      text: "Rechercher Propositions",
+                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                      fontSize: buttonFontSize,
+                      iconSize: buttonIconSize,
+                      boxSize: buttonBoxSize,
+                      onTap: (){}
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  HomeButton(
+                      iconData: Icons.visibility,
+                      text: "Mes Propositions",
+                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                      fontSize: buttonFontSize,
+                      iconSize: buttonIconSize,
+                      boxSize: buttonBoxSize,
+                      onTap: (){}
+                  ),
+                  HomeButton(
+                      iconData: Icons.chat_bubble,
+                      text: "Commenter / Discuter",
+                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                      fontSize: buttonFontSize,
+                      iconSize: buttonIconSize,
+                      boxSize: buttonBoxSize,
+                      onTap: (){}
+                  ),
+                ],
+              ),
             ),
           ],
         ),

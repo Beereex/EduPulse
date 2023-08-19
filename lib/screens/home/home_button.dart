@@ -4,7 +4,10 @@ class HomeButton extends StatelessWidget {
   final IconData iconData;
   final String text;
   final Color backgroundColor;
-  final VoidCallback onTap; // Callback function for tap
+  final VoidCallback onTap;
+  final double fontSize;
+  final double boxSize;
+  final double iconSize;// Callback function for tap
 
   const HomeButton({
     Key? key,
@@ -12,6 +15,9 @@ class HomeButton extends StatelessWidget {
     required this.text,
     required this.backgroundColor,
     required this.onTap,
+    required this.fontSize,
+    required this.boxSize,
+    required this.iconSize,
   }) : super(key: key);
 
   @override
@@ -19,7 +25,8 @@ class HomeButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap, // Attach the onTap callback here
       child: Container(
-        width: 120, // Adjust the width as needed
+        width: boxSize,
+        height: boxSize,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -30,7 +37,7 @@ class HomeButton extends StatelessWidget {
           children: [
             Icon(
               iconData,
-              size: 40,
+              size: iconSize,
               color: Colors.white,
             ),
             SizedBox(height: 5),
@@ -38,7 +45,7 @@ class HomeButton extends StatelessWidget {
               text,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: fontSize,
               ),
               textAlign: TextAlign.center,
             ),
