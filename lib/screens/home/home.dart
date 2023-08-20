@@ -96,7 +96,7 @@ class Home extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 child: Text(
-                  'Paramètres',
+                  'Menu',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: titleBarFontSize,

@@ -28,13 +28,15 @@ class _ShowAccountState extends State<ShowAccount> {
             final firstName = data['first_name'] ?? 'N/A';
             final lastName = data['last_name'] ?? 'N/A';
             final picUrl = data['pic_url'] ?? 'none';
-            final userType = data['userType'] ?? 'N/A';
+            final accountType = data['userType'] ?? 'N/A';
+            final role = data['user_role'] ?? 'N/A';
+            final region = data['region'] ?? 'N/A';
 
             return Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 30,),
+                  SizedBox(height: 30),
                   CircleAvatar(
                     radius: 120,
                     backgroundImage: picUrl == 'none'
@@ -65,7 +67,27 @@ class _ShowAccountState extends State<ShowAccount> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Type de Compte: $userType',
+                      'Type de Compte: $accountType',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _dispFontSize,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Rôle: $role',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: _dispFontSize,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Région: $region',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: _dispFontSize,
@@ -74,9 +96,7 @@ class _ShowAccountState extends State<ShowAccount> {
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
-
-                    },
+                    onPressed: () {},
                     child: Text(
                       'Modifier',
                       style: TextStyle(
