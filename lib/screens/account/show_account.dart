@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Account extends StatefulWidget {
+class ShowAccount extends StatefulWidget {
   @override
-  _AccountState createState() => _AccountState();
+  _ShowAccountState createState() => _ShowAccountState();
 }
 
-class _AccountState extends State<Account> {
+class _ShowAccountState extends State<ShowAccount> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _dispFontSize = 25.0;

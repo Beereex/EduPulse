@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Propositions extends StatelessWidget {
+class VoteList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Propositions'),
+        title: Text('Vote'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -14,7 +14,7 @@ class Propositions extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Text('Page de propositions'),
+        child: Text('Page de vote'),
       ),
     );
   }
