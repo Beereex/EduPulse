@@ -1,3 +1,7 @@
+import 'package:edupulse/screens/propositions/create_proposition.dart';
+import 'package:edupulse/screens/propositions/my_propositions.dart';
+import 'package:edupulse/screens/propositions/search_propositions.dart';
+import 'package:edupulse/screens/vote/my_votes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:edupulse/screens/account/account.dart';
@@ -211,7 +215,12 @@ class Home extends StatelessWidget {
                       fontSize: buttonFontSize,
                       iconSize: buttonIconSize,
                       boxSize: buttonBoxSize,
-                      onTap: (){}
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CreateProposition()),
+                        );
+                      }
                   ),
                   HomeButton(
                       iconData: Icons.search,
@@ -220,7 +229,12 @@ class Home extends StatelessWidget {
                       fontSize: buttonFontSize,
                       iconSize: buttonIconSize,
                       boxSize: buttonBoxSize,
-                      onTap: (){}
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SearchPropositions()),
+                        );
+                      }
                   ),
                 ],
               ),
@@ -238,16 +252,26 @@ class Home extends StatelessWidget {
                       fontSize: buttonFontSize,
                       iconSize: buttonIconSize,
                       boxSize: buttonBoxSize,
-                      onTap: (){}
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyPropositions()),
+                        );
+                      }
                   ),
                   HomeButton(
-                      iconData: Icons.chat_bubble,
-                      text: "Commenter / Discuter",
+                      iconData: Icons.thumbs_up_down,
+                      text: "Mes votes",
                       backgroundColor: Colors.tealAccent.withOpacity(0.1),
                       fontSize: buttonFontSize,
                       iconSize: buttonIconSize,
                       boxSize: buttonBoxSize,
-                      onTap: (){}
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyVotes()),
+                        );
+                      }
                   ),
                 ],
               ),
