@@ -33,10 +33,25 @@ class _ShowAccountState extends State<ShowAccount> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 30),
+            Container(
+              width: double.infinity,
+              color: Colors.blueGrey[900], // Dark theme color
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              alignment: Alignment.center,
+              child: Text(
+                region,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 27,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(height: 100),
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -66,17 +81,6 @@ class _ShowAccountState extends State<ShowAccount> {
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'Région: $region',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: _dispFontSize,
-                ),
               ),
             ),
             SizedBox(height: 40),

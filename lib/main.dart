@@ -1,5 +1,5 @@
 import 'package:edupulse/screens/authenticate/sign_in.dart';
-import 'package:edupulse/screens/wrapper.dart';
+import 'package:edupulse/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,9 @@
 import 'package:edupulse/screens/account/edit_account.dart';
 import 'package:edupulse/screens/propositions/create_proposition.dart';
 import 'package:edupulse/screens/propositions/my_propositions.dart';
-import 'package:edupulse/screens/propositions/search_propositions.dart';
+import 'package:edupulse/screens/propositions/propositions_list.dart';
 import 'package:edupulse/screens/vote/my_votes.dart';
+import 'package:edupulse/services/app_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:edupulse/screens/account/show_account.dart';
@@ -12,10 +13,6 @@ import '../authenticate/sign_in.dart';
 import 'home_button.dart'; // Import your login page
 
 class Home extends StatelessWidget {
-  // Example data (replace with your actual data)
-  String currentPhase = "Propositions";
-  Duration timeRemaining = const Duration(days: 5, hours: 10, minutes: 15);
-  String userRegion = "Région de Casablanca-Settat";
   double titleBarFontSize = 24;
   double buttonFontSize = 25;
   double buttonBoxSize = 180;
@@ -34,14 +31,6 @@ class Home extends StatelessWidget {
     );
   }
 
-  String formatDuration(Duration duration) {
-    int days = duration.inDays;
-    int hours = duration.inHours % 24;
-    int minutes = duration.inMinutes % 60;
-
-    return "$days j - $hours h - $minutes min";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +46,7 @@ class Home extends StatelessWidget {
           PopupMenuButton(
             icon: Icon(Icons.notifications,size: titleBarFontSize+10,),
             onSelected: (value) {
-              // Add your logic for handling menu item selection
+
             },
             itemBuilder: (context) {
               return [
@@ -69,7 +58,6 @@ class Home extends StatelessWidget {
                   value: 2,
                   child: Text('Notification 2'),
                 ),
-                // Add more items here
               ];
             },
           ),
@@ -91,7 +79,6 @@ class Home extends StatelessWidget {
             SizedBox(
               height: 90,
               child: DrawerHeader(
-
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                 ),
@@ -111,9 +98,6 @@ class Home extends StatelessWidget {
                 'Mon compte',
                 style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
               ),
-              onTap: () {
-
-              },
             ),
             ListTile(
               contentPadding: EdgeInsets.only(left: 55),
@@ -152,8 +136,20 @@ class Home extends StatelessWidget {
                 'Propositions',
                 style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
               ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.only(left: 55),
+              leading: const Icon(Icons.list_alt, size: 35),
+              title: const Text(
+                'Liste des propositions',
+                style: TextStyle(fontSize: 20),
+              ),
               onTap: () {
-
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPropositions()),
+                );
               },
             ),
             ListTile(
@@ -168,21 +164,6 @@ class Home extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MyPropositions()),
-                );
-              },
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.search, size: 35),
-              title: const Text(
-                'Rechercher propositions',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPropositions()),
                 );
               },
             ),
@@ -208,9 +189,6 @@ class Home extends StatelessWidget {
                 'Vote',
                 style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
               ),
-              onTap: () {
-
-              },
             ),
             ListTile(
               contentPadding: EdgeInsets.only(left: 55),
@@ -248,9 +226,7 @@ class Home extends StatelessWidget {
                 'Déconnexion',
                 style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
               ),
-              onTap: () {
-                logout(context); // Call the logout function
-              },
+              onTap: () {logout(context);},
             ),
           ],
         ),
@@ -264,7 +240,7 @@ class Home extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
               child: Text(
-                userRegion,
+                AppData.instance.userInfos!.region,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
@@ -281,7 +257,15 @@ class Home extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    currentPhase,
+                    "Phase des",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.teal.shade900,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    "Votes",
                     style: TextStyle(
                       fontSize: 45,
                       fontWeight: FontWeight.w900,
@@ -290,7 +274,7 @@ class Home extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Temps restant: ${formatDuration(timeRemaining)}",
+                    "De 01/08/2023 à 15/09/2023",
                     style: TextStyle(
                       fontSize: 23,
                       color: Colors.blueGrey[900],
@@ -322,8 +306,8 @@ class Home extends StatelessWidget {
                       }
                   ),
                   HomeButton(
-                      iconData: Icons.search,
-                      text: "Rechercher Propositions",
+                      iconData: Icons.list_alt,
+                      text: "Liste des Propositions",
                       backgroundColor: Colors.tealAccent.withOpacity(0.1),
                       fontSize: buttonFontSize,
                       iconSize: buttonIconSize,
@@ -360,7 +344,7 @@ class Home extends StatelessWidget {
                   ),
                   HomeButton(
                       iconData: Icons.thumbs_up_down,
-                      text: "Mes votes",
+                      text: "Mes Votes",
                       backgroundColor: Colors.tealAccent.withOpacity(0.1),
                       fontSize: buttonFontSize,
                       iconSize: buttonIconSize,
