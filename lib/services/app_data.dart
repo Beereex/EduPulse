@@ -39,4 +39,35 @@ class AppData {
     currentUser = user;
     _getUserData(currentUser!.uid);
   }
+
+  void updateUserProfile(String uid, String newPicUrl, String newFirstName, String newLastName) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'pic_url': newPicUrl,
+        'first_name': newFirstName,
+        'last_name': newLastName,
+      });
+      print('User profile updated successfully');
+      _updateUserInfos(
+        firstName: newFirstName,
+        lastName: newLastName,
+        picUrl: newPicUrl,
+      );
+    } catch (e) {
+      print('Error updating user profile: $e');
+    }
+  }
+
+  void _updateUserInfos({
+    String? firstName,
+    String? lastName,
+    String? picUrl,
+    // ... other fields you want to update ...
+  }) {
+    if (firstName != null) userInfos!.firstName = firstName;
+    if (lastName != null) userInfos!.lastName = lastName;
+    if (picUrl != null) userInfos!.picUrl = picUrl;
+    // ... update other fields ...
+  }
+
 }

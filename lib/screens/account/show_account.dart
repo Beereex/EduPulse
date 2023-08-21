@@ -1,4 +1,3 @@
-
 import 'package:edupulse/screens/account/edit_account.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,65 +26,40 @@ class _ShowAccountState extends State<ShowAccount> {
     String userType = userInfos!.userType;
     String userRole = userInfos!.user_role;
     String region = userInfos!.region;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Mon Compte'),
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 30),
-            picUrl == 'none'
-                ? CircleAvatar(
-              backgroundImage: AssetImage('assets/default_profile_pic.jpg'),
-              radius: 120,
-            )
-                : CircleAvatar(
-              backgroundImage: NetworkImage(picUrl),
+            CircleAvatar(
+              backgroundImage: picUrl == 'none'
+                  ? AssetImage('assets/default_profile_pic.jpg')
+                  : NetworkImage(picUrl) as ImageProvider,
               radius: 120,
             ),
-            SizedBox(height: 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'Prénom: $firstName',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: _dispFontSize,
-                ),
+            SizedBox(height: 30),
+            Text(
+              '$firstName $lastName',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: _dispFontSize+10,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'Nom: $lastName',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: _dispFontSize,
-                ),
+            SizedBox(height: 10),
+            Text(
+              '$userType - $userRole',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.grey,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'Type de Compte: $userType',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: _dispFontSize,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                'Rôle: $userRole',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: _dispFontSize,
-                ),
-              ),
-            ),
+            SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Text(
@@ -96,8 +70,12 @@ class _ShowAccountState extends State<ShowAccount> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 40),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                minimumSize: Size(120, 60),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -107,7 +85,7 @@ class _ShowAccountState extends State<ShowAccount> {
               child: Text(
                 'Modifier',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 25,
                 ),
               ),
             ),

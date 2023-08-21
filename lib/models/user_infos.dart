@@ -1,8 +1,8 @@
 class UserInfos {
   final String uid;
-  final String firstName;
-  final String lastName;
-  final String picUrl;
+  String firstName;
+  String lastName;
+  String picUrl;
   final String user_role;
   final String userType;
   final String region;

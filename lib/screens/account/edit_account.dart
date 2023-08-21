@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:edupulse/screens/home/home.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import '../../models/user_infos.dart';
 import '../../services/app_data.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,6 @@ class _EditAccountState extends State<EditAccount> {
   final _imagePicker = ImagePicker();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  String _selectedImage = "";
   File? _selectedImageFile;
   UserInfos userInfos = AppData.instance.userInfos!;
 
@@ -23,7 +25,6 @@ class _EditAccountState extends State<EditAccount> {
     // Initialize text fields with existing user data
     _firstNameController.text = userInfos.firstName;
     _lastNameController.text = userInfos.lastName;
-    _selectedImage = userInfos.picUrl;
   }
 
   @override
@@ -40,10 +41,10 @@ class _EditAccountState extends State<EditAccount> {
             CircleAvatar(
               radius: 120,
               backgroundImage: _selectedImageFile == null
-                  ? _selectedImage == "none"
-                    ? AssetImage('assets/default_profile_pic.jpg') as ImageProvider
-                    : NetworkImage(_selectedImage)
-                  : FileImage(_selectedImageFile!) as ImageProvider,
+                ? userInfos.picUrl == "none"
+                  ? AssetImage('assets/default_profile_pic.jpg') as ImageProvider
+                  : NetworkImage(userInfos.picUrl)
+                : FileImage(_selectedImageFile!)
             ),
             SizedBox(height: 20),
             Column(
@@ -77,9 +78,7 @@ class _EditAccountState extends State<EditAccount> {
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                // TODO: Save changes
-              },
+              onPressed: _saveChanges,
               child: Text('Enregistrer'),
             ),
           ],
@@ -88,12 +87,41 @@ class _EditAccountState extends State<EditAccount> {
     );
   }
 
+
+  void _saveChanges() async {
+    String? uid = AppData.instance.userInfos?.uid;
+    String newFirstName = _firstNameController.text;
+    String newLastName = _lastNameController.text;
+
+    String newImageUrl;
+
+    // Check if a new image was selected
+    if (_selectedImageFile != null) {
+      // Upload the image to Firebase Cloud Storage
+      final storageRef = FirebaseStorage.instance.ref().child('profile_images/$uid');
+      await storageRef.putFile(_selectedImageFile!);
+
+      // Get the download URL of the uploaded image
+      newImageUrl = await storageRef.getDownloadURL();
+      _selectedImageFile = null;
+    } else {
+      newImageUrl = "none";
+    }
+
+    // Update user profile data in Firestore
+    AppData.instance.updateUserProfile(uid!, newImageUrl, newFirstName, newLastName);
+
+    Navigator.of(context).pop(); // Close the EditAccount page
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Home()));
+  }
+
+
+
   void _pickImage() async {
     final pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
-        _selectedImage = pickedImage.path;
-        _selectedImageFile = File(pickedImage.path); // Convert PickedFile to File
+        _selectedImageFile = File(pickedImage.path);
       });
     }
   }
