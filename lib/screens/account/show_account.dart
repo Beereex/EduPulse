@@ -37,11 +37,20 @@ class _ShowAccountState extends State<ShowAccount> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 30),
-            CircleAvatar(
-              backgroundImage: picUrl == 'none'
-                  ? AssetImage('assets/default_profile_pic.jpg')
-                  : NetworkImage(picUrl) as ImageProvider,
-              radius: 120,
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.teal.shade700.withOpacity(0.7),
+                  width: 5.0,
+                ),
+              ),
+              child: CircleAvatar(
+                backgroundImage: picUrl == 'none'
+                    ? AssetImage('assets/default_profile_pic.jpg')
+                    : NetworkImage(picUrl) as ImageProvider,
+                radius: 120,
+              ),
             ),
             SizedBox(height: 30),
             Text(
