@@ -37,6 +37,7 @@ class _SignInState extends State<SignIn> {
       );
 
       if (userCredential.user != null) {
+        print(userCredential.user?.uid);
         AppData.instance.setCurrentUser(userCredential.user!); // Set the authenticated user object in AppData
 
         // Fetch user data from Firestore using the uid
@@ -58,6 +59,7 @@ class _SignInState extends State<SignIn> {
           });
         }
       } else {
+        print("oh SSSShit");
         setState(() {
           _errorMessage = 'Échec de la connexion. Veuillez vérifier votre courriel et votre mot de passe.';
         });

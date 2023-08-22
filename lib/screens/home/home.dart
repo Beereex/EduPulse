@@ -241,6 +241,7 @@ class Home extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 AppData.instance.userInfos!.region,
+                //"oh shit",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
