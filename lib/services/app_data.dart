@@ -11,10 +11,10 @@ class AppData {
   User? currentUser;
   UserInfos? userInfos;
 
-  Future<void> _getUserData(String uid) async {
+  Future<void> getUserData() async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      await FirebaseFirestore.instance.collection('users').doc(currentUser?.uid).get();
 
       if (snapshot.exists) {
         final userData = snapshot.data()!;
@@ -28,7 +28,7 @@ class AppData {
             region: userData['region'],
         );
       } else {
-        print("User with UID $uid not found.");
+        print("User with UID ${currentUser?.uid} not found.");
       }
     } catch (e) {
       print("Error fetching user data: $e");
@@ -37,7 +37,6 @@ class AppData {
 
   Future<void> setCurrentUser(User user) async {
     currentUser = user;
-    _getUserData(currentUser!.uid);
   }
 
   void updateUserProfile(String uid, String newPicUrl, String newFirstName, String newLastName) async {
