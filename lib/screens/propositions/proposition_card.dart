@@ -24,27 +24,6 @@ class PropositionCard extends StatelessWidget {
     this.downVotes = proposition.downvoteCount;
   }
 
-  /*PropositionCard({
-    required this.title,
-    required this.author,
-    required this.path,
-    required this.creationDate,
-    required this.lastEditDate,
-    required this.upVotes,
-    required this.downVotes,
-  });
-
-  PropositionCard.fromProposition(Proposition proposition)
-      : title = proposition.title!,
-        author = proposition.authorId!,
-        path = proposition.getPath(),
-        creationDate = proposition.creationDate!,
-        lastEditDate = proposition.lastEditDate!,
-        upVotes = proposition.upvoteCount!,
-        downVotes = proposition.downvoteCount!;
-
-   */
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -60,44 +39,57 @@ class PropositionCard extends StatelessWidget {
               children: [
                 Text(
                   title!,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'TitleFont',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1,
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 8),
-                  height: 1,
+                  height: 2,
                   color: Colors.grey[300],
                 ),
                 InkWell(
                   onTap: () {
-                    // Navigate to author's profile or perform related action
+
                   },
                   child: Text(
-                    'Author: $author',
+                    'Autheur: $author',
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.blue, // Change the author's name color
+                      fontSize: 21,
+                      decoration: TextDecoration.underline,
+                      letterSpacing: 1,
+                      color: Color.fromRGBO(207, 238, 247, 1),
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
-                Text('Path: $path', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                SizedBox(height: 8),
+                SizedBox(height: 10),
+                Text("$path", style: TextStyle(fontSize: 17, color: Colors.grey,fontFamily: "monospace")),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Created At: ${DateFormat('dd/MM/yyyy').format(creationDate!.toDate())}',
+                      'Créer le:\n ${DateFormat('dd/MM/yyyy').format(creationDate!.toDate())}',
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     Text(
-                      'Last Edit: ${DateFormat('dd/MM/yyyy').format(lastEditDate!.toDate())}',
+                      'dernière édition:\n ${DateFormat('dd/MM/yyyy').format(lastEditDate!.toDate())}',
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
+                ),
+                SizedBox(height: 12),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  height: 2,
+                  color: Colors.grey[300],
                 ),
                 SizedBox(height: 12),
                 Row(
@@ -108,9 +100,9 @@ class PropositionCard extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.thumb_up, color: Colors.green, size: 20),
+                          Icon(Icons.thumb_up, color: Colors.green, size: 30),
                           SizedBox(width: 4),
-                          Text('$upVotes', style: TextStyle(fontSize: 18)),
+                          Text('$upVotes', style: TextStyle(fontSize: 22)),
                         ],
                       ),
                     ),
@@ -121,9 +113,9 @@ class PropositionCard extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.thumb_down, color: Colors.red, size: 20),
+                          Icon(Icons.thumb_down, color: Colors.red, size: 30),
                           SizedBox(width: 4),
-                          Text('$downVotes', style: TextStyle(fontSize: 18)),
+                          Text('$downVotes', style: TextStyle(fontSize: 22)),
                         ],
                       ),
                     ),
@@ -136,7 +128,7 @@ class PropositionCard extends StatelessWidget {
                         children: [
                           Icon(Icons.more_horiz, size: 24), // Use a more descriptive icon
                           SizedBox(width: 4),
-                          Text('More Details', style: TextStyle(fontSize: 16)),
+                          Text('More Details', style: TextStyle(fontSize: 18)),
                         ],
                       ),
                     ),

@@ -44,29 +44,31 @@ class SearchPropositions extends StatelessWidget {
       appBar: AppBar(
         title: Text('Liste des Propositions'),
       ),
-      body: Column(
-        children: [
-          _buildSearchFilterSection(),
-          Expanded(
-            child: FutureBuilder<List<PropositionCard>> (
-              future: getPropositionCards(),
-              builder: (BuildContext context, AsyncSnapshot<List<PropositionCard>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return ListView(
+      body: FutureBuilder<List<PropositionCard>> (
+        future: getPropositionCards(),
+        builder: (BuildContext context, AsyncSnapshot<List<PropositionCard>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return Column(
+              children: [
+                _buildSearchFilterSection(),
+                Expanded(
+                  child: ListView(
                     children: snapshot.data!,
-                  );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+                  ),
+                ),
+              ],
+            );
+          };
+        }),
+      );
   }
+  /*
+
+   */
 
   Widget _buildSearchFilterSection() {
     return Container(
