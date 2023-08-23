@@ -1,7 +1,18 @@
 import 'package:edupulse/screens/proposition_card.dart';
 import 'package:flutter/material.dart';
+import '../../models/proposition.dart';
 
 class SearchPropositions extends StatelessWidget {
+  Map<String, Proposition>? propositionsList;
+  int fetchLimit = 1;
+
+  /*
+  Future<PropositionCard?> getPropositonCard(){
+    return PropositionCard(title: title, author: author, path: path, creationDate: creationDate, lastEditDate: lastEditDate, upVotes: upVotes, downVotes: downVotes);
+  }
+
+   */
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,10 +21,10 @@ class SearchPropositions extends StatelessWidget {
       ),
       body: Column(
         children: [
-          _buildSearchFilterSection(), // Add this line for the search and filter section
+          _buildSearchFilterSection(),
           Expanded(
             child: ListView.builder(
-              itemCount: 5, // Number of PropositionCard widgets
+              itemCount: 5,
               itemBuilder: (context, index) {
                 return PropositionCard(
                   title: "title",

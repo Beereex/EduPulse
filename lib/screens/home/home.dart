@@ -18,6 +18,7 @@ class Home extends StatelessWidget {
   double buttonFontSize = 25;
   double buttonBoxSize = 180;
   double buttonIconSize = 80;
+  Color _menuCategoriesColor = Color.fromRGBO(76 , 76, 76, 1);
 
   void showNotificationsMenu(BuildContext context) {
 
@@ -93,7 +94,7 @@ class Home extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.account_circle, size: 40),
-              tileColor: Colors.teal.shade900,
+              tileColor: _menuCategoriesColor,
               title: const Text(
                 'Mon compte',
                 style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
@@ -130,7 +131,7 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              tileColor: Colors.teal.shade900,
+              tileColor: _menuCategoriesColor,
               leading: const Icon(Icons.description, size: 40),
               title: const Text(
                 'Propositions',
@@ -183,7 +184,7 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              tileColor: Colors.teal.shade900,
+              tileColor: _menuCategoriesColor,
               leading: const Icon(Icons.how_to_vote, size: 40),
               title: const Text(
                 'Vote',
@@ -303,7 +304,8 @@ class Home extends StatelessWidget {
                         HomeButton(
                             iconData: Icons.add_circle,
                             text: "Créer Proposition",
-                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            //backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            backgroundColor: Color.fromRGBO(111, 97, 211, 1),
                             fontSize: buttonFontSize,
                             iconSize: buttonIconSize,
                             boxSize: buttonBoxSize,
