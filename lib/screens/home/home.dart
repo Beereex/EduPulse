@@ -33,6 +33,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppData.instance.getUserData();
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(size: titleBarFontSize+10),
@@ -236,7 +237,7 @@ class Home extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              color: Colors.blueGrey[900], // Dark theme color
+              color: Colors.blueGrey[900],
               padding: const EdgeInsets.symmetric(vertical: 12),
               alignment: Alignment.center,
               child: Text(

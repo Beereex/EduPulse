@@ -1,4 +1,5 @@
 import 'package:edupulse/screens/authenticate/sign_in.dart';
+import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,6 +15,7 @@ class Wrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
+            AppData.instance.currentUser = _auth.currentUser;
             return Home();
           } else {
             return SignIn();
