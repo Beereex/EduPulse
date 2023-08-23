@@ -13,14 +13,18 @@ class AppData {
   User? currentUser;
   UserInfos? userInfos;
 
-  Future<void> getUserData() async {
+  Future<String?> getUserRegion() async{
+    return await userInfos?.region;
+  }
+
+  Future<UserInfos?> getUserData() async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
       await FirebaseFirestore.instance.collection('users').doc(currentUser?.uid).get();
 
       if (snapshot.exists) {
         final userData = snapshot.data()!;
-        userInfos= UserInfos(
+        return UserInfos(
             uid: currentUser!.uid,
             firstName: userData['first_name'],
             lastName: userData['last_name'],

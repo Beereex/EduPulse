@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
 
       if (userCredential.user != null) {
         print(userCredential.user?.uid);
-        AppData.instance.setCurrentUser(userCredential.user!); // Set the authenticated user object in AppData
+        await AppData.instance.setCurrentUser(userCredential.user!);
 
         // Fetch user data from Firestore using the uid
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance

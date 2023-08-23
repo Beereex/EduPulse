@@ -8,9 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:edupulse/screens/account/show_account.dart';
 import 'package:edupulse/screens/vote/vote_list.dart';
+import '../../models/user_infos.dart';
 import '../settings/settings.dart';
 import '../authenticate/sign_in.dart';
-import 'home_button.dart'; // Import your login page
+import 'home_button.dart';
 
 class Home extends StatelessWidget {
   double titleBarFontSize = 24;
@@ -19,12 +20,11 @@ class Home extends StatelessWidget {
   double buttonIconSize = 80;
 
   void showNotificationsMenu(BuildContext context) {
-    // Add your code to show the notifications menu here
+
   }
 
   void logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut(); // Sign out from Firebase
-
+    await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => SignIn()),
@@ -33,7 +33,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppData.instance.getUserData();
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(size: titleBarFontSize+10),
@@ -232,138 +231,153 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              color: Colors.blueGrey[900],
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              alignment: Alignment.center,
-              child: Text(
-                AppData.instance.userInfos!.region,
-                //"oh shit",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 27,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              color: Colors.cyanAccent.shade100, // Accent color for current phase
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              alignment: Alignment.center,
+      body: FutureBuilder<UserInfos?>(
+        future: AppData.instance.getUserData(),
+        builder: (BuildContext context, AsyncSnapshot<UserInfos?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return CircularProgressIndicator();
+          else if (snapshot.hasError)
+            return Text("Error: ${snapshot.error}");
+          else {
+            AppData.instance.userInfos = snapshot.data;
+            return SingleChildScrollView(
               child: Column(
                 children: [
-                  Text(
-                    "Phase des",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.teal.shade900,
-                      fontWeight: FontWeight.w500,
+                  Container(
+                    width: double.infinity,
+                    color: Colors.blueGrey[900],
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    alignment: Alignment.center,
+                    child: Text(
+                      snapshot.data!.region,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  Text(
-                    "Votes",
-                    style: TextStyle(
-                      fontSize: 45,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.teal.shade900
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "De 01/08/2023 à 15/09/2023",
-                    style: TextStyle(
-                      fontSize: 23,
-                      color: Colors.blueGrey[900],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  Container(
+                    width: double.infinity,
+                    color: Colors.cyanAccent.shade100,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Phase des",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.teal.shade900,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "Votes",
+                          style: TextStyle(
+                              fontSize: 45,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.teal.shade900
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "De 01/08/2023 à 15/09/2023",
+                          style: TextStyle(
+                            fontSize: 23,
+                            color: Colors.blueGrey[900],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
 
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 100),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        HomeButton(
+                            iconData: Icons.add_circle,
+                            text: "Créer Proposition",
+                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            fontSize: buttonFontSize,
+                            iconSize: buttonIconSize,
+                            boxSize: buttonBoxSize,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CreateProposition()),
+                              );
+                            }
+                        ),
+                        HomeButton(
+                            iconData: Icons.list_alt,
+                            text: "Liste des Propositions",
+                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            fontSize: buttonFontSize,
+                            iconSize: buttonIconSize,
+                            boxSize: buttonBoxSize,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchPropositions()),
+                              );
+                            }
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        HomeButton(
+                            iconData: Icons.visibility,
+                            text: "Mes Propositions",
+                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            fontSize: buttonFontSize,
+                            iconSize: buttonIconSize,
+                            boxSize: buttonBoxSize,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyPropositions()),
+                              );
+                            }
+                        ),
+                        HomeButton(
+                            iconData: Icons.thumbs_up_down,
+                            text: "Mes Votes",
+                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            fontSize: buttonFontSize,
+                            iconSize: buttonIconSize,
+                            boxSize: buttonBoxSize,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyVotes()),
+                              );
+                            }
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(height: 100), // Add spacing between phase info and buttons
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  HomeButton(
-                      iconData: Icons.add_circle,
-                      text: "Créer Proposition",
-                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                      fontSize: buttonFontSize,
-                      iconSize: buttonIconSize,
-                      boxSize: buttonBoxSize,
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => CreateProposition()),
-                        );
-                      }
-                  ),
-                  HomeButton(
-                      iconData: Icons.list_alt,
-                      text: "Liste des Propositions",
-                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                      fontSize: buttonFontSize,
-                      iconSize: buttonIconSize,
-                      boxSize: buttonBoxSize,
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SearchPropositions()),
-                        );
-                      }
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  HomeButton(
-                      iconData: Icons.visibility,
-                      text: "Mes Propositions",
-                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                      fontSize: buttonFontSize,
-                      iconSize: buttonIconSize,
-                      boxSize: buttonBoxSize,
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyPropositions()),
-                        );
-                      }
-                  ),
-                  HomeButton(
-                      iconData: Icons.thumbs_up_down,
-                      text: "Mes Votes",
-                      backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                      fontSize: buttonFontSize,
-                      iconSize: buttonIconSize,
-                      boxSize: buttonBoxSize,
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyVotes()),
-                        );
-                      }
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
 
+            );
+          }
+        },
       ),
     );
   }
