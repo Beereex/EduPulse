@@ -18,7 +18,9 @@ class Home extends StatelessWidget {
   double buttonFontSize = 25;
   double buttonBoxSize = 180;
   double buttonIconSize = 80;
-  Color _menuCategoriesColor = Color.fromRGBO(76 , 76, 76, 1);
+  Color _menuCategoriesColor = Color.fromRGBO(111, 97, 211, 1);
+  Color _phaseTextColor = Color.fromRGBO(53, 21, 93, 1);
+  Color _phaseBarBackColor = Color.fromRGBO(207, 238, 247, 1);
 
   void showNotificationsMenu(BuildContext context) {
 
@@ -93,11 +95,20 @@ class Home extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.account_circle, size: 40),
-              tileColor: _menuCategoriesColor,
-              title: const Text(
+              leading: Icon(
+                Icons.account_circle,
+                size: 40,
+                color: _phaseTextColor,
+              ),
+              tileColor: _phaseBarBackColor,
+              title: Text(
                 'Mon compte',
-                style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
+                style: TextStyle(
+                  fontSize: 27,
+                  decoration: TextDecoration.underline,
+                  color: _phaseTextColor,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             ListTile(
@@ -131,11 +142,20 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              tileColor: _menuCategoriesColor,
-              leading: const Icon(Icons.description, size: 40),
-              title: const Text(
+              tileColor: _phaseBarBackColor,
+              leading: Icon(
+                Icons.description,
+                size: 40,
+                color: _phaseTextColor,
+              ),
+              title: Text(
                 'Propositions',
-                style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
+                style: TextStyle(
+                  fontSize: 27,
+                  decoration: TextDecoration.underline,
+                  color: _phaseTextColor,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             ListTile(
@@ -184,11 +204,20 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              tileColor: _menuCategoriesColor,
-              leading: const Icon(Icons.how_to_vote, size: 40),
-              title: const Text(
+              tileColor: _phaseBarBackColor,
+              leading: Icon(
+                Icons.how_to_vote,
+                size: 40,
+                color: _phaseTextColor,
+              ),
+              title: Text(
                 'Vote',
-                style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
+                style: TextStyle(
+                  fontSize: 27,
+                  decoration: TextDecoration.underline,
+                  color: _phaseTextColor,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             ListTile(
@@ -222,10 +251,20 @@ class Home extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.exit_to_app, size: 40),
-              title: const Text(
+              tileColor: _phaseBarBackColor,
+              leading: Icon(
+                Icons.exit_to_app,
+                size: 40,
+                color: _phaseTextColor,
+              ),
+              title: Text(
                 'Déconnexion',
-                style: TextStyle(fontSize: 25,decoration: TextDecoration.underline),
+                style: TextStyle(
+                  fontSize: 27,
+                  decoration: TextDecoration.underline,
+                  color: _phaseTextColor,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               onTap: () {logout(context);},
             ),
@@ -236,7 +275,7 @@ class Home extends StatelessWidget {
         future: AppData.instance.getUserData(),
         builder: (BuildContext context, AsyncSnapshot<UserInfos?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           else if (snapshot.hasError)
             return Text("Error: ${snapshot.error}");
           else {
@@ -261,7 +300,7 @@ class Home extends StatelessWidget {
                   ),
                   Container(
                     width: double.infinity,
-                    color: Colors.cyanAccent.shade100,
+                    color: _phaseBarBackColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     alignment: Alignment.center,
                     child: Column(
@@ -270,8 +309,8 @@ class Home extends StatelessWidget {
                           "Phase des",
                           style: TextStyle(
                             fontSize: 24,
-                            color: Colors.teal.shade900,
-                            fontWeight: FontWeight.w500,
+                            color: _phaseTextColor,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                         Text(
@@ -279,7 +318,7 @@ class Home extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 45,
                               fontWeight: FontWeight.w900,
-                              color: Colors.teal.shade900
+                              color: _phaseTextColor,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -287,8 +326,8 @@ class Home extends StatelessWidget {
                           "De 01/08/2023 à 15/09/2023",
                           style: TextStyle(
                             fontSize: 23,
-                            color: Colors.blueGrey[900],
-                            fontWeight: FontWeight.w500,
+                            color: _phaseTextColor,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
 
@@ -305,7 +344,7 @@ class Home extends StatelessWidget {
                             iconData: Icons.add_circle,
                             text: "Créer Proposition",
                             //backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                            backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                            backgroundColor: _menuCategoriesColor,
                             fontSize: buttonFontSize,
                             iconSize: buttonIconSize,
                             boxSize: buttonBoxSize,
@@ -320,7 +359,7 @@ class Home extends StatelessWidget {
                         HomeButton(
                             iconData: Icons.list_alt,
                             text: "Liste des Propositions",
-                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            backgroundColor: _menuCategoriesColor,
                             fontSize: buttonFontSize,
                             iconSize: buttonIconSize,
                             boxSize: buttonBoxSize,
@@ -344,7 +383,7 @@ class Home extends StatelessWidget {
                         HomeButton(
                             iconData: Icons.visibility,
                             text: "Mes Propositions",
-                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            backgroundColor: _menuCategoriesColor,
                             fontSize: buttonFontSize,
                             iconSize: buttonIconSize,
                             boxSize: buttonBoxSize,
@@ -359,7 +398,7 @@ class Home extends StatelessWidget {
                         HomeButton(
                             iconData: Icons.thumbs_up_down,
                             text: "Mes Votes",
-                            backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                            backgroundColor: _menuCategoriesColor,
                             fontSize: buttonFontSize,
                             iconSize: buttonIconSize,
                             boxSize: buttonBoxSize,

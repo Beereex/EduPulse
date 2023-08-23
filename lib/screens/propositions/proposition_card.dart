@@ -1,16 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PropositionCard extends StatelessWidget {
-  final String title;
-  final String author;
-  final String path;
-  final DateTime creationDate;
-  final DateTime lastEditDate;
-  final int upVotes;
-  final int downVotes;
+import '../../models/proposition.dart';
 
-  PropositionCard({
+class PropositionCard extends StatelessWidget {
+  final Proposition proposition;
+  String? title;
+  String? author;
+  String? path;
+  Timestamp? creationDate;
+  Timestamp? lastEditDate;
+  int? upVotes;
+  int? downVotes;
+
+  PropositionCard({required this.proposition}) {
+    this.title = proposition.title;
+    this.author = proposition.authorName;
+    this.path = proposition.getPath();
+    this.creationDate = proposition.creationDate;
+    this.lastEditDate = proposition.lastEditDate;
+    this.upVotes = proposition.upvoteCount;
+    this.downVotes = proposition.downvoteCount;
+  }
+
+  /*PropositionCard({
     required this.title,
     required this.author,
     required this.path,
@@ -19,6 +33,17 @@ class PropositionCard extends StatelessWidget {
     required this.upVotes,
     required this.downVotes,
   });
+
+  PropositionCard.fromProposition(Proposition proposition)
+      : title = proposition.title!,
+        author = proposition.authorId!,
+        path = proposition.getPath(),
+        creationDate = proposition.creationDate!,
+        lastEditDate = proposition.lastEditDate!,
+        upVotes = proposition.upvoteCount!,
+        downVotes = proposition.downvoteCount!;
+
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +59,7 @@ class PropositionCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title!,
                   style: TextStyle(
                     fontFamily: 'TitleFont',
                     fontSize: 22,
@@ -65,11 +90,11 @@ class PropositionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Created At: ${DateFormat('dd/MM/yyyy').format(creationDate)}',
+                      'Created At: ${DateFormat('dd/MM/yyyy').format(creationDate!.toDate())}',
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     Text(
-                      'Last Edit: ${DateFormat('dd/MM/yyyy').format(lastEditDate)}',
+                      'Last Edit: ${DateFormat('dd/MM/yyyy').format(lastEditDate!.toDate())}',
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],

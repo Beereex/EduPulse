@@ -4,14 +4,14 @@ class Proposition {
   final String? id;
   String? title;
   String? content;
-  String? type = "Undefined", grade = "Undefined", speciality = "Undefined", subject = "Undefined",cours = "Undefined";
+  String? type, grade, speciality, subject,cours;
   String? authorId;
   String? authorName = "Undefined";
   int? upvoteCount = 0;
   int? downvoteCount = 0;
   int? userVoteStatus = 0;
-  DateTime? creationDate;
-  DateTime? lastEditDate;
+  Timestamp? creationDate;
+  Timestamp? lastEditDate;
 
 
   Proposition({
@@ -28,9 +28,11 @@ class Proposition {
     this.grade,
     this.subject,
     this.cours,
+    this.creationDate,
+    this.lastEditDate,
   });
 
-  Future<Proposition?> getPropositionById(String id) async{
+  static Future<Proposition?> getPropositionById(String id) async{
     try {
       DocumentSnapshot propositionSnapshot =
       await FirebaseFirestore.instance.collection('propositions').doc(id).get();
@@ -38,15 +40,12 @@ class Proposition {
 
       if (propositionSnapshot.exists) {
         Map<String, dynamic> data = propositionSnapshot.data() as Map<String, dynamic>;
-        
         DocumentSnapshot userSnapShot =
-            await FirebaseFirestore.instance.collection(("users")).doc(data["author"]).get();
+            await FirebaseFirestore.instance.collection("users").doc(data["author"]).get();
         if(userSnapShot.exists) {
-          Map<String, dynamic> udata =
-              userSnapShot.data() as Map<String, dynamic>;
+          Map<String, dynamic> udata = userSnapShot.data() as Map<String, dynamic>;
           userName = udata["first_name"] + " " + udata["last_name"];
         }
-
         return Proposition(
           id: propositionSnapshot.id,
           title: data['title'],
@@ -61,6 +60,8 @@ class Proposition {
           grade: data['grade'],
           subject: data['subject'],
           cours: data['cours'],
+          creationDate: data['creationDate'],
+          lastEditDate: data['lastEditDate'],
         );
       } else {
         return null;

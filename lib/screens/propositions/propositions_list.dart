@@ -1,17 +1,42 @@
-import 'package:edupulse/screens/proposition_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edupulse/screens/propositions/proposition_card.dart';
 import 'package:flutter/material.dart';
 import '../../models/proposition.dart';
 
 class SearchPropositions extends StatelessWidget {
-  Map<String, Proposition>? propositionsList;
-  int fetchLimit = 1;
+  List<String>? propositionsIds = [];
+  List<Proposition>? propositionsList = [];
+  List<PropositionCard>? propositionCards = [];
+  int fetchLimit = 1, displayedNumber=0,currentPosition=0;
 
-  /*
-  Future<PropositionCard?> getPropositonCard(){
-    return PropositionCard(title: title, author: author, path: path, creationDate: creationDate, lastEditDate: lastEditDate, upVotes: upVotes, downVotes: downVotes);
+  Future<List<String>> getPropositionIds() async {
+    List<String> propositionIds = [];
+    QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection("propositions").get();
+    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+      propositionIds.add(documentSnapshot.id);
+    }
+    return propositionIds;
   }
 
-   */
+  Future<void> fillPropositionsList() async{
+    for(String id in propositionsIds!){
+      propositionsList?.add((await Proposition.getPropositionById(id))!);
+    }
+  }
+
+  Future<List<PropositionCard>> getPropositionCards() async{
+    propositionsIds = await getPropositionIds();
+    await fillPropositionsList();
+    for(Proposition proposition in propositionsList!){
+      print(proposition.getPath());
+      PropositionCard card = PropositionCard(proposition: proposition,);
+      print(card.title);
+      propositionCards?.add(card!);
+    }
+    return propositionCards!;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +48,18 @@ class SearchPropositions extends StatelessWidget {
         children: [
           _buildSearchFilterSection(),
           Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return PropositionCard(
-                  title: "title",
-                  author: "author",
-                  path: "path",
-                  creationDate: DateTime.parse("2023-08-01"),
-                  lastEditDate: DateTime.parse("2023-08-01"),
-                  upVotes: 0,
-                  downVotes: 0,
-                );
+            child: FutureBuilder<List<PropositionCard>> (
+              future: getPropositionCards(),
+              builder: (BuildContext context, AsyncSnapshot<List<PropositionCard>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return ListView(
+                    children: snapshot.data!,
+                  );
+                }
               },
             ),
           ),
