@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edupulse/screens/propositions/proposition_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -122,7 +123,12 @@ class PropositionCard extends StatelessWidget {
                     Spacer(),
                     InkWell(
                       onTap: () {
-                        // Navigate to the proposition page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PropositionScreen(proposition: proposition),
+                          ),
+                        );
                       },
                       child: Row(
                         children: [
