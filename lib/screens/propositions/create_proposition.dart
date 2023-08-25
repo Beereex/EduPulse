@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/proposition.dart'; // Import your Proposition class
+import '../../models/proposition.dart';
 
 class CreateProposition extends StatefulWidget {
   @override
@@ -13,17 +13,16 @@ class _CreatePropositionState extends State<CreateProposition> {
   String? _selectedSubject;
   String? _selectedCourse;
 
-  List<String> _types = ['Type 1', 'Type 2', 'Type 3']; // Example types
-  List<String> _grades = ['Grade 1', 'Grade 2', 'Grade 3']; // Example grades
-  List<String> _specialities = ['Speciality 1', 'Speciality 2', 'Speciality 3']; // Example specialities
-  List<String> _subjects = ['Subject 1', 'Subject 2', 'Subject 3']; // Example subjects
-  List<String> _courses = ['Course 1', 'Course 2', 'Course 3']; // Example courses
+  List<String> _types = ['Type 1', 'Type 2', 'Type 3'];
+  List<String> _grades = ['Grade 1', 'Grade 2', 'Grade 3'];
+  List<String> _specialities = ['Speciality 1', 'Speciality 2', 'Speciality 3'];
+  List<String> _subjects = ['Subject 1', 'Subject 2', 'Subject 3'];
+  List<String> _courses = ['Course 1', 'Course 2', 'Course 3'];
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
 
   void _createProposition() {
-    // Create a new Proposition object with the entered data
     Proposition newProposition = Proposition(
       title: _titleController.text,
       content: _contentController.text,
@@ -32,12 +31,9 @@ class _CreatePropositionState extends State<CreateProposition> {
       speciality: _selectedSpeciality,
       subject: _selectedSubject,
       cours: _selectedCourse,
-      // Add other fields as needed
     );
 
-    // Save the new proposition to your Firestore or backend here
-
-    Navigator.pop(context); // Navigate back to the previous page
+    Navigator.pop(context);
   }
 
   @override
@@ -64,7 +60,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white, // Title color
+                  color: Colors.white,
                 ),
               ),
               SizedBox(height: 16),
@@ -83,70 +79,171 @@ class _CreatePropositionState extends State<CreateProposition> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Type',
-                  labelStyle: TextStyle(color: Colors.white70), // Label color
+                  labelStyle: TextStyle(color: Colors.white70),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
-                  ),
-                ),
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedGrade,
-                items: _grades.map((String grade) {
-                  return DropdownMenuItem<String>(
-                    value: grade,
-                    child: Text(
-                      grade,
-                      style: TextStyle(color: Colors.black), // Text color
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedGrade = newValue!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Grade',
-                  labelStyle: TextStyle(color: Colors.white70), // Label color
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
               ),
               SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedGrade,
+                      items: _grades.map((String grade) {
+                        return DropdownMenuItem<String>(
+                          value: grade,
+                          child: Text(
+                            grade,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedGrade = newValue!;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Grade',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedCourse,
+                      items: _courses.map((String course) {
+                        return DropdownMenuItem<String>(
+                          value: course,
+                          child: Text(
+                            course,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedCourse = newValue!;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Course',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedSpeciality,
+                      items: _specialities.map((String speciality) {
+                        return DropdownMenuItem<String>(
+                          value: speciality,
+                          child: Text(
+                            speciality,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedSpeciality = newValue!;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Speciality',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedSubject,
+                      items: _subjects.map((String subject) {
+                        return DropdownMenuItem<String>(
+                          value: subject,
+                          child: Text(
+                            subject,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedSubject = newValue!;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Subject',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
               TextField(
                 controller: _titleController,
-                style: TextStyle(color: Colors.white), // Text color
+                style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Title',
-                  labelStyle: TextStyle(color: Colors.white70), // Label color
+                  labelStyle: TextStyle(color: Colors.white70),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
               ),
               SizedBox(height: 16),
               TextField(
                 controller: _contentController,
-                style: TextStyle(color: Colors.white), // Text color
+                style: TextStyle(color: Colors.white),
                 maxLines: null,
                 decoration: InputDecoration(
                   labelText: 'Content',
-                  labelStyle: TextStyle(color: Colors.white70), // Label color
+                  labelStyle: TextStyle(color: Colors.white70),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white), // Border color
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
               ),
@@ -154,15 +251,15 @@ class _CreatePropositionState extends State<CreateProposition> {
               ElevatedButton.icon(
                 onPressed: _createProposition,
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromRGBO(53, 21, 93, 1), // Button color
+                  backgroundColor: Color.fromRGBO(53, 21, 93, 1),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Button shape
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                icon: Icon(Icons.add, color: Colors.white), // Icon color
+                icon: Icon(Icons.add, color: Colors.white),
                 label: Text(
                   'Create Proposition',
-                  style: TextStyle(fontSize: 18, color: Colors.white), // Text style
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],
