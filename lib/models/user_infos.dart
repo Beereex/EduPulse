@@ -3,7 +3,6 @@ class UserInfos {
   String firstName;
   String lastName;
   String picUrl;
-  final String user_role;
   final String userType;
   final String region;
 
@@ -12,7 +11,6 @@ class UserInfos {
     required this.firstName,
     required this.lastName,
     required this.picUrl,
-    required this.user_role,
     required this.userType,
     required this.region,
   });
@@ -23,7 +21,6 @@ class UserInfos {
     print("Last Name: $lastName");
     print("Picture URL: $picUrl");
     print("Account Type: $userType");
-    print("Role: $user_role");
     print("Region: $region");
   }
 }

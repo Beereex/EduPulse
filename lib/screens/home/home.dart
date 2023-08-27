@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/account/edit_account.dart';
 import 'package:edupulse/screens/propositions/create_proposition.dart';
 import 'package:edupulse/screens/propositions/my_propositions.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:edupulse/screens/account/show_account.dart';
 import 'package:edupulse/screens/vote/vote_list.dart';
+import 'package:intl/intl.dart';
 import '../../models/user_infos.dart';
 import '../settings/settings.dart';
 import '../authenticate/sign_in.dart';
@@ -21,10 +23,10 @@ class Home extends StatelessWidget {
   Color _menuCategoriesColor = Color.fromRGBO(111, 97, 211, 1);
   Color _phaseTextColor = Color.fromRGBO(53, 21, 93, 1);
   Color _phaseBarBackColor = Color.fromRGBO(207, 238, 247, 1);
+  AppData data = AppData.instance;
+  Map<String, dynamic>? settings;
 
-  void showNotificationsMenu(BuildContext context) {
-
-  }
+  void showNotificationsMenu(BuildContext context) {}
 
   void logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
@@ -38,7 +40,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(size: titleBarFontSize+10),
+        iconTheme: IconThemeData(size: titleBarFontSize + 10),
         title: GestureDetector(
           child: Text('EduPulse', style: TextStyle(fontSize: titleBarFontSize)),
           onTap: () {
@@ -47,10 +49,11 @@ class Home extends StatelessWidget {
         ),
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.notifications,size: titleBarFontSize+10,),
-            onSelected: (value) {
-
-            },
+            icon: Icon(
+              Icons.notifications,
+              size: titleBarFontSize + 10,
+            ),
+            onSelected: (value) {},
             itemBuilder: (context) {
               return [
                 const PopupMenuItem(
@@ -65,11 +68,14 @@ class Home extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: Icon(Icons.settings,size: titleBarFontSize+10,),
+            icon: Icon(
+              Icons.settings,
+              size: titleBarFontSize + 10,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Settings()),
+                MaterialPageRoute(builder: (context) => SettingsPage()),
               );
             },
           ),
@@ -266,20 +272,22 @@ class Home extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              onTap: () {logout(context);},
+              onTap: () {
+                logout(context);
+              },
             ),
           ],
         ),
       ),
       body: FutureBuilder<UserInfos?>(
-        future: AppData.instance.getUserData(),
+        future: data.getUserData(),
         builder: (BuildContext context, AsyncSnapshot<UserInfos?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
           else if (snapshot.hasError)
             return Text("Error: ${snapshot.error}");
           else {
-            AppData.instance.userInfos = snapshot.data;
+            data.userInfos = snapshot.data;
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -298,41 +306,74 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    width: double.infinity,
-                    color: _phaseBarBackColor,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Phase des",
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: _phaseTextColor,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        Text(
-                          "Votes",
-                          style: TextStyle(
-                              fontSize: 45,
-                              fontWeight: FontWeight.w900,
-                              color: _phaseTextColor,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          "De 01/08/2023 à 15/09/2023",
-                          style: TextStyle(
-                            fontSize: 23,
-                            color: _phaseTextColor,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
+                  FutureBuilder<Map<String, dynamic>?>(
+                    future: data.getAppSettings(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<Map<String, dynamic>?> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text("Error while loading app settings!!!");
+                      } else {
+                        settings = snapshot.data;
+                        DateTime date = DateTime.now();
+                        DateTime phaseStart = (settings?["phase_start"] as Timestamp).toDate();
+                        DateTime phaseEnd = (settings?["phase_end"] as Timestamp).toDate();
+                        DateTime phaseSwitch = (settings?["phase_switch"] as Timestamp).toDate();
+                        String phase, dateString;
+                        dynamic display = DateFormat("dd/MM/yyyy").format;
 
-                      ],
-                    ),
+                        if(date.isBefore(phaseStart) || date.isAfter(phaseEnd)){
+                          phase = "pina coladas";
+                          dateString = "Prochaine phase: Undefined";
+                        }
+                        else if (date.isBefore(phaseSwitch)){
+                          phase = "Propositions";
+                          dateString = "de ${display(phaseStart)} à ${display(phaseSwitch)}";
+                        }
+                        else{
+                          phase = "Votes";
+                          dateString = "de ${display(phaseSwitch)} à ${display(phaseEnd)}";
+                        }
+                                 
+                        
+                        return Container(
+                          width: double.infinity,
+                          color: _phaseBarBackColor,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          alignment: Alignment.center,
+                          child: Column(
+                            children: [
+                              Text(
+                                "Phase des",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: _phaseTextColor,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              Text(
+                                "$phase",
+                                style: TextStyle(
+                                  fontSize: 45,
+                                  fontWeight: FontWeight.w900,
+                                  color: _phaseTextColor,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                "$dateString",
+                                style: TextStyle(
+                                  fontSize: 23,
+                                  color: _phaseTextColor,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 100),
                   Center(
@@ -354,8 +395,7 @@ class Home extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => CreateProposition()),
                               );
-                            }
-                        ),
+                            }),
                         HomeButton(
                             iconData: Icons.list_alt,
                             text: "Liste des Propositions",
@@ -369,8 +409,7 @@ class Home extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => SearchPropositions()),
                               );
-                            }
-                        ),
+                            }),
                       ],
                     ),
                   ),
@@ -393,8 +432,7 @@ class Home extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => MyPropositions()),
                               );
-                            }
-                        ),
+                            }),
                         HomeButton(
                             iconData: Icons.thumbs_up_down,
                             text: "Mes Votes",
@@ -408,14 +446,12 @@ class Home extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => MyVotes()),
                               );
-                            }
-                        ),
+                            }),
                       ],
                     ),
                   ),
                 ],
               ),
-
             );
           }
         },
