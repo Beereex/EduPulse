@@ -1,3 +1,4 @@
+import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
 import '../../models/proposition.dart';
 
@@ -12,8 +13,10 @@ class _CreatePropositionState extends State<CreateProposition> {
   String? _selectedSpeciality;
   String? _selectedSubject;
   String? _selectedCourse;
+  
+  AppData data = AppData.instance;
+  Map<String, String> educationTypes = {};
 
-  List<String> _types = ['Type 1', 'Type 2', 'Type 3'];
   List<String> _grades = ['Grade 1', 'Grade 2', 'Grade 3'];
   List<String> _specialities = ['Speciality 1', 'Speciality 2', 'Speciality 3'];
   List<String> _subjects = ['Subject 1', 'Subject 2', 'Subject 3'];
@@ -64,29 +67,49 @@ class _CreatePropositionState extends State<CreateProposition> {
                 ),
               ),
               SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: _selectedType,
-                items: _types.map((String type) {
-                  return DropdownMenuItem<String>(
-                    value: type,
-                    child: Text(type),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedType = newValue!;
-                  });
+              FutureBuilder<Map<String, String>>(
+                future: data.getEducationTypes(),
+                builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text("Error loading data");
+                  } else if (!snapshot.hasData) {
+                    return Text("No data available"); // Handle when data is null
+                  } else {
+                    Map<String, String> educationTypes = snapshot.data!;
+                    int _selectedTypeIndex = 0;
+                    return DropdownButtonFormField<String>(
+                      value: _selectedType,
+                      items: educationTypes.values.map((value) {
+                        final currentIndex = _selectedTypeIndex;
+                        _selectedTypeIndex++;
+
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedType = newValue!;
+                          _selectedTypeIndex = educationTypes.values.toList().indexOf(newValue);
+                          print("${educationTypes.keys.toList()[_selectedTypeIndex]}");
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Type',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  }
                 },
-                decoration: InputDecoration(
-                  labelText: 'Type',
-                  labelStyle: TextStyle(color: Colors.white70),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
               ),
               SizedBox(height: 16),
               Row(

@@ -17,10 +17,24 @@ class AppData {
     return await userInfos?.region;
   }
 
+  Future<Map<String, String>> getEducationTypes() async{
+    Map<String, String> educationTypes = {};
+    try{
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("educationTypes").get();
+      querySnapshot.docs.forEach((doc){
+        final String educationType = (doc.data() as Map<String, dynamic>)?["education_type"] as String;
+        educationTypes[doc.id] = educationType;
+      });
+    }
+    catch(e){
+      print("Unable to retrieve education type data!!!:\n$e");
+    }
+    return educationTypes;
+  }
+
   Future<Map<String, dynamic>?> getAppSettings()async {
     try
     {
-      Map<String, dynamic>? settings;
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance
               .collection("settings")
