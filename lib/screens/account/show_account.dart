@@ -24,7 +24,6 @@ class _ShowAccountState extends State<ShowAccount> {
     String firstName = userInfos!.firstName;
     String lastName = userInfos!.lastName;
     String userType = userInfos!.userType;
-    String userRole = userInfos!.user_role;
     String region = userInfos!.region;
 
     return Scaffold(
@@ -52,6 +51,14 @@ class _ShowAccountState extends State<ShowAccount> {
               ),
             ),
             SizedBox(height: 100),
+            Text(
+              "$userType",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: _dispFontSize+10,
+              ),
+            ),
+            SizedBox(height: 22,),
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -73,14 +80,6 @@ class _ShowAccountState extends State<ShowAccount> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: _dispFontSize+10,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              '$userType - $userRole',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.grey,
               ),
             ),
             SizedBox(height: 40),

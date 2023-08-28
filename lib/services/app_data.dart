@@ -17,6 +17,27 @@ class AppData {
     return await userInfos?.region;
   }
 
+  Future<Map<String, dynamic>?> getAppSettings()async {
+    try
+    {
+      Map<String, dynamic>? settings;
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection("settings")
+              .doc("tqu1LE7CZEmDBgaJzhiI")
+              .get();
+      if (snapshot.exists) {
+        return snapshot.data()!;
+      }
+      else{
+        print("settings not found!!");
+      }
+    }
+    catch(e){
+      print("Error occured while loading data: $e");
+    }
+  }
+
   Future<UserInfos?> getUserData() async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =
@@ -29,7 +50,6 @@ class AppData {
             firstName: userData['first_name'],
             lastName: userData['last_name'],
             picUrl: userData['pic_url'],
-            user_role: userData['user_role'],
             userType: userData['userType'],
             region: userData['region'],
         );
@@ -67,12 +87,12 @@ class AppData {
     String? firstName,
     String? lastName,
     String? picUrl,
-    // ... other fields you want to update ...
   }) {
     if (firstName != null) userInfos!.firstName = firstName;
     if (lastName != null) userInfos!.lastName = lastName;
     if (picUrl != null) userInfos!.picUrl = picUrl;
-    // ... update other fields ...
   }
+
+
 
 }
