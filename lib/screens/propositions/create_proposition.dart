@@ -16,6 +16,7 @@ class _CreatePropositionState extends State<CreateProposition> {
   
   AppData data = AppData.instance;
   Map<String, String> educationTypes = {};
+  Map<String, String> specialities = {};
 
   List<String> _grades = ['Grade 1', 'Grade 2', 'Grade 3'];
   List<String> _specialities = ['Speciality 1', 'Speciality 2', 'Speciality 3'];
@@ -75,16 +76,14 @@ class _CreatePropositionState extends State<CreateProposition> {
                   } else if (snapshot.hasError) {
                     return Text("Error loading data");
                   } else if (!snapshot.hasData) {
-                    return Text("No data available"); // Handle when data is null
+                    return Text("No data available");
                   } else {
-                    Map<String, String> educationTypes = snapshot.data!;
+                    educationTypes = snapshot.data!;
                     int _selectedTypeIndex = 0;
                     return DropdownButtonFormField<String>(
                       value: _selectedType,
                       items: educationTypes.values.map((value) {
-                        final currentIndex = _selectedTypeIndex;
                         _selectedTypeIndex++;
-
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -98,7 +97,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Type',
+                        labelText: 'Type d\'éducation',
                         labelStyle: TextStyle(color: Colors.white70),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -117,6 +116,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       value: _selectedGrade,
+
                       items: _grades.map((String grade) {
                         return DropdownMenuItem<String>(
                           value: grade,
@@ -132,7 +132,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Grade',
+                        labelText: 'Spécialité',
                         labelStyle: TextStyle(color: Colors.white70),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -162,7 +162,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Course',
+                        labelText: 'Niveau Scolaire',
                         labelStyle: TextStyle(color: Colors.white70),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -196,7 +196,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Speciality',
+                        labelText: 'Matière',
                         labelStyle: TextStyle(color: Colors.white70),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -226,7 +226,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Subject',
+                        labelText: 'Cours',
                         labelStyle: TextStyle(color: Colors.white70),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -244,7 +244,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                 controller: _titleController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Title',
+                  labelText: 'Titre de la proposition',
                   labelStyle: TextStyle(color: Colors.white70),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -260,7 +260,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                 style: TextStyle(color: Colors.white),
                 maxLines: null,
                 decoration: InputDecoration(
-                  labelText: 'Content',
+                  labelText: 'Contenu de la proposition',
                   labelStyle: TextStyle(color: Colors.white70),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -281,7 +281,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                 ),
                 icon: Icon(Icons.add, color: Colors.white),
                 label: Text(
-                  'Create Proposition',
+                  'Créer la proposition',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),

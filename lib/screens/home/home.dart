@@ -324,7 +324,7 @@ class Home extends StatelessWidget {
                         dynamic display = DateFormat("dd/MM/yyyy").format;
 
                         if(date.isBefore(phaseStart) || date.isAfter(phaseEnd)){
-                          phase = "pina coladas";
+                          phase = "Rest";
                           dateString = "Prochaine phase: Undefined";
                         }
                         else if (date.isBefore(phaseSwitch)){

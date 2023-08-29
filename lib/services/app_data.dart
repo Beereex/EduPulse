@@ -31,6 +31,22 @@ class AppData {
     }
     return educationTypes;
   }
+  
+  Future<Map<String, String>> getSpecialities(String eduTypeId) async{
+    Map<String, String> specialities = {};
+    try{
+      final QuerySnapshot querySnapshot = 
+          await FirebaseFirestore.instance.collection("educationTypes").doc(eduTypeId).collection("specialities").get();
+      querySnapshot.docs.forEach((doc) {
+        final String speciality = (doc.data() as Map<String, String>)?["speciality"] as String;
+        specialities[doc.id] = speciality;
+      });
+    }
+    catch(e){
+      print("Error loading specialities for $eduTypeId: $e");
+    }
+    return specialities;
+  }
 
   Future<Map<String, dynamic>?> getAppSettings()async {
     try
