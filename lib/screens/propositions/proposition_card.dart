@@ -5,24 +5,82 @@ import 'package:intl/intl.dart';
 
 import '../../models/proposition.dart';
 
-class PropositionCard extends StatelessWidget {
+class PropositionCard extends StatefulWidget {
   final Proposition proposition;
-  String? title;
-  String? author;
-  String? path;
-  Timestamp? creationDate;
-  Timestamp? lastEditDate;
-  int? upVotes;
-  int? downVotes;
 
-  PropositionCard({required this.proposition}) {
-    this.title = proposition.title;
-    this.author = proposition.authorName;
-    this.path = proposition.getPath();
-    this.creationDate = proposition.creationDate;
-    this.lastEditDate = proposition.lastEditDate;
-    this.upVotes = proposition.upvoteCount;
-    this.downVotes = proposition.downvoteCount;
+  PropositionCard({required this.proposition});
+
+  @override
+  _PropositionCardState createState() => _PropositionCardState();
+
+}
+class _PropositionCardState extends State<PropositionCard>{
+  String title = "";
+  String author = "";
+  String path = "";
+  Timestamp creationDate = Timestamp.now();
+  Timestamp lastEditDate = Timestamp.now();
+  int upVotes = 0;
+  int downVotes = 0;
+  int userVote = 0;
+  Color upSelectionColor = Colors.transparent;
+  Color downSelectionColor = Colors.transparent;
+  Color selectionColor = Colors.grey.shade700;
+
+  @override
+  void initState(){
+    super.initState();
+    this.title = widget.proposition.title ?? "Undefined";
+    this.author = widget.proposition.authorName ?? "Undefined";
+    this.path = widget.proposition.getPath();
+    this.creationDate = widget.proposition.creationDate ?? Timestamp.now();
+    this.lastEditDate = widget.proposition.lastEditDate ?? Timestamp.now();
+    this.upVotes = widget.proposition.upvoteCount ?? 0;
+    this.downVotes = widget.proposition.downvoteCount ?? 0;
+  }
+
+  void _upVote(){
+    setState(() {
+      if(userVote == 1){
+        upVotes--;
+        userVote = 0;
+        upSelectionColor = Colors.transparent;
+      }
+      else if(userVote == -1){
+        upVotes++;
+        downVotes--;
+        userVote = 1;
+        downSelectionColor = Colors.transparent;
+        upSelectionColor = selectionColor;
+      }
+      else{
+        upVotes++;
+        userVote = 1;
+        upSelectionColor = selectionColor;
+      }
+    });
+  }
+
+  void _downVote(){
+    setState(() {
+      if(userVote == -1){
+        downVotes--;
+        userVote = 0;
+        downSelectionColor = Colors.transparent;
+      }
+      else if(userVote == 1){
+        upVotes--;
+        downVotes++;
+        userVote = -1;
+        downSelectionColor = selectionColor;
+        upSelectionColor = Colors.transparent;
+      }
+      else{
+        downVotes++;
+        userVote = -1;
+        downSelectionColor = selectionColor;
+      }
+    });
   }
 
   @override
@@ -42,10 +100,10 @@ class PropositionCard extends StatelessWidget {
                   title!,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'TitleFont',
+                    fontFamily: 'helvetica',
                     fontSize: 25,
                     fontWeight: FontWeight.w900,
-                    letterSpacing: 1,
+                    letterSpacing: 0.5,
                   ),
                 ),
                 Container(
@@ -97,27 +155,43 @@ class PropositionCard extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Perform upvote action
+                        _upVote();
                       },
-                      child: Row(
-                        children: [
-                          Icon(Icons.thumb_up, color: Colors.green, size: 30),
-                          SizedBox(width: 4),
-                          Text('$upVotes', style: TextStyle(fontSize: 22)),
-                        ],
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: upSelectionColor,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.thumb_up, color: Colors.green, size: 30),
+                            SizedBox(width: 4),
+                            Text('$upVotes', style: TextStyle(fontSize: 22)),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(width: 12),
                     InkWell(
                       onTap: () {
-                        // Perform downvote action
+                        _downVote();
                       },
-                      child: Row(
-                        children: [
-                          Icon(Icons.thumb_down, color: Colors.red, size: 30),
-                          SizedBox(width: 4),
-                          Text('$downVotes', style: TextStyle(fontSize: 22)),
-                        ],
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: downSelectionColor,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.thumb_down, color: Colors.red, size: 30),
+                            SizedBox(width: 4),
+                            Text('$downVotes', style: TextStyle(fontSize: 22)),
+                          ],
+                        ),
                       ),
                     ),
                     Spacer(),
@@ -126,13 +200,13 @@ class PropositionCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PropositionScreen(proposition: proposition),
+                            builder: (context) => PropositionScreen(proposition: widget.proposition),
                           ),
                         );
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.more_horiz, size: 24), // Use a more descriptive icon
+                          Icon(Icons.more_horiz, size: 24),
                           SizedBox(width: 4),
                           Text('More Details', style: TextStyle(fontSize: 18)),
                         ],

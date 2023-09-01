@@ -10,12 +10,13 @@ class CreateProposition extends StatefulWidget {
 class _CreatePropositionState extends State<CreateProposition> {
   String? _selectedType;
   String? _selectedGrade;
+  String _selectedSpecialityId = "";
   String? _selectedSpeciality;
   String? _selectedSubject;
   String? _selectedCourse;
   
   AppData data = AppData.instance;
-  Map<String, String> educationTypes = {};
+  Map<String, dynamic> educationTypes = {};
   Map<String, String> specialities = {};
 
   List<String> _grades = ['Grade 1', 'Grade 2', 'Grade 3'];
@@ -32,7 +33,6 @@ class _CreatePropositionState extends State<CreateProposition> {
       content: _contentController.text,
       type: _selectedType,
       grade: _selectedGrade,
-      speciality: _selectedSpeciality,
       subject: _selectedSubject,
       cours: _selectedCourse,
     );
@@ -68,9 +68,9 @@ class _CreatePropositionState extends State<CreateProposition> {
                 ),
               ),
               SizedBox(height: 16),
-              FutureBuilder<Map<String, String>>(
+              FutureBuilder<Map<String, dynamic>>(
                 future: data.getEducationTypes(),
-                builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
@@ -93,7 +93,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         setState(() {
                           _selectedType = newValue!;
                           _selectedTypeIndex = educationTypes.values.toList().indexOf(newValue);
-                          print("${educationTypes.keys.toList()[_selectedTypeIndex]}");
+                          _selectedSpecialityId = educationTypes.keys.toList()[_selectedTypeIndex];
                         });
                       },
                       decoration: InputDecoration(
@@ -111,37 +111,48 @@ class _CreatePropositionState extends State<CreateProposition> {
                 },
               ),
               SizedBox(height: 16),
-              Row(
+              /*Row(
                 children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedGrade,
+                  FutureBuilder(
+                      future: data.getSpecialities(_selectedSpecialityId),
+                      builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot){
+                        if(snapshot.connectionState == ConnectionState.waiting)
+                          return CircularProgressIndicator();
+                        else if(snapshot.hasError)
+                          return Text("Error loading specialities");
+                        else{
+                          return Expanded(
+                            child: DropdownButtonFormField<String>(
+                              value: _selectedGrade,
 
-                      items: _grades.map((String grade) {
-                        return DropdownMenuItem<String>(
-                          value: grade,
-                          child: Text(
-                            grade,
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedGrade = newValue!;
-                        });
+                              items: _grades.map((String grade) {
+                                return DropdownMenuItem<String>(
+                                  value: grade,
+                                  child: Text(
+                                    grade,
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _selectedGrade = newValue!;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Spécialité',
+                                labelStyle: TextStyle(color: Colors.white70),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Spécialité',
-                        labelStyle: TextStyle(color: Colors.white70),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      ),
-                    ),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -156,11 +167,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                           ),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedCourse = newValue!;
-                        });
-                      },
+                      onChanged: null,
                       decoration: InputDecoration(
                         labelText: 'Niveau Scolaire',
                         labelStyle: TextStyle(color: Colors.white70),
@@ -240,7 +247,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                 ],
               ),
               SizedBox(height: 16),
-              TextField(
+              */TextField(
                 controller: _titleController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(

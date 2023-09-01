@@ -31,8 +31,8 @@ class SearchPropositions extends StatelessWidget {
     for(Proposition proposition in propositionsList!){
       print(proposition.getPath());
       PropositionCard card = PropositionCard(proposition: proposition,);
-      print(card.title);
-      propositionCards?.add(card!);
+      print(card.proposition.title);
+      propositionCards?.add(card);
     }
     return propositionCards!;
   }

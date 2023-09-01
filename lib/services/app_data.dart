@@ -124,5 +124,49 @@ class AppData {
   }
 
 
+  Future<int> getVoteStatus(String propositionId) async{
+    try{
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection("users").doc(userInfos?.uid)
+          .collection("votes").doc(propositionId).get();
+      if(snapshot.exists){
+        final vote = snapshot.data()! as Map<String, dynamic>;
+        return vote["voteValue"] as int;
+      }
+      else{
+        return 0;
+      }
+      return 1;
+    }
+    catch(e){
+      print("Error checking the vote status of the proposition: $e");
+      return 0;
+    }
+  }
+
+  Future<void> updateVote(String propositionId, int vote) async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(userInfos?.uid)
+          .collection("votes").doc(propositionId).update({
+            "voteValue" : vote,
+            "voteDate" : Timestamp.now(),
+      });
+    }
+    catch(e){
+      print("Error updating the vote: $e");
+    }
+  }
+
+  Future<void> addVote(String propositionId, int vote) async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(userInfos?.uid)
+          .collection("votes").doc(userInfos?.uid).set({
+            "voteValue": vote,
+            "voteDate" : Timestamp.now(),
+      });
+    }
+    catch(e){
+      print("Error adding the vote: $e");
+    }
+  }
 
 }
