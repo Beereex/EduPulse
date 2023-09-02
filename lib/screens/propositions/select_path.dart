@@ -12,11 +12,22 @@ class _PathSelectionState extends State<PathSelection> {
   String? selectedMatiere;
   String? selectedCours;
 
-  List<String> educationTypes = ['Type 1', 'Type 2', 'Type 3']; // Add your types
-  List<String> specialites = ['Spécialité 1', 'Spécialité 2', 'Spécialité 3']; // Add your specialités
-  List<String> niveauxScolaires = ['Niveau 1', 'Niveau 2', 'Niveau 3']; // Add your niveaux scolaires
-  List<String> matieres = ['Matière 1', 'Matière 2', 'Matière 3']; // Add your matières
-  List<String> cours = ['Cours 1', 'Cours 2', 'Cours 3']; // Add your cours
+  List<String> educationTypes = []; // Initialize as empty
+  List<String> specialites = [];
+  List<String> niveauxScolaires = [];
+  List<String> matieres = [];
+  List<String> cours = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize dropdown items here (e.g., from API call or other data source)
+    educationTypes = ['Type 1', 'Type 2', 'Type 3'];
+    specialites = ['Spécialité 1', 'Spécialité 2', 'Spécialité 3'];
+    niveauxScolaires = ['Niveau 1', 'Niveau 2', 'Niveau 3'];
+    matieres = ['Matière 1', 'Matière 2', 'Matière 3'];
+    cours = ['Cours 1', 'Cours 2', 'Cours 3'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +39,7 @@ class _PathSelectionState extends State<PathSelection> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center, // Center the contents
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 'Sélectionner les Éléments du Chemin',
@@ -95,7 +106,8 @@ class _PathSelectionState extends State<PathSelection> {
               SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  final selectedPath = '$selectedEducationType/$selectedSpecialite/$selectedNiveauScolaire/$selectedMatiere/$selectedCours';
+                  String selectedPath = '';
+                  selectedPath = '$selectedEducationType/$selectedSpecialite/$selectedNiveauScolaire/$selectedMatiere/$selectedCours';
                   Navigator.pop(context, selectedPath);
                 },
                 style: ElevatedButton.styleFrom(
