@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/propositions/proposition_screen.dart';
+import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +26,8 @@ class _PropositionCardState extends State<PropositionCard>{
   int userVote = 0;
   Color upSelectionColor = Colors.transparent;
   Color downSelectionColor = Colors.transparent;
-  Color selectionColor = Colors.grey.shade700;
+  Color upSelectedColor = Colors.green.shade600.withOpacity(0.2);
+  Color downSelectedColor = Colors.red.shade600.withOpacity(0.2);
 
   @override
   void initState(){
@@ -51,12 +53,12 @@ class _PropositionCardState extends State<PropositionCard>{
         downVotes--;
         userVote = 1;
         downSelectionColor = Colors.transparent;
-        upSelectionColor = selectionColor;
+        upSelectionColor = upSelectedColor;
       }
       else{
         upVotes++;
         userVote = 1;
-        upSelectionColor = selectionColor;
+        upSelectionColor = upSelectedColor;
       }
     });
   }
@@ -72,13 +74,13 @@ class _PropositionCardState extends State<PropositionCard>{
         upVotes--;
         downVotes++;
         userVote = -1;
-        downSelectionColor = selectionColor;
+        downSelectionColor = downSelectedColor;
         upSelectionColor = Colors.transparent;
       }
       else{
         downVotes++;
         userVote = -1;
-        downSelectionColor = selectionColor;
+        downSelectionColor = downSelectedColor;
       }
     });
   }
@@ -87,7 +89,7 @@ class _PropositionCardState extends State<PropositionCard>{
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -96,6 +98,22 @@ class _PropositionCardState extends State<PropositionCard>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  "$path",
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.grey.shade600,
+                    fontFamily: "monospace",
+                    backgroundColor: Colors.grey.shade900.withOpacity(0.05),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  height: 1,
+                  color: Colors.grey.shade600,
+                ),
+                SizedBox(height: 10),
                 Text(
                   title!,
                   textAlign: TextAlign.center,
@@ -113,7 +131,6 @@ class _PropositionCardState extends State<PropositionCard>{
                 ),
                 InkWell(
                   onTap: () {
-
                   },
                   child: Text(
                     'Autheur: $author',
@@ -126,8 +143,6 @@ class _PropositionCardState extends State<PropositionCard>{
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                Text("$path", style: TextStyle(fontSize: 17, color: Colors.grey,fontFamily: "monospace")),
                 SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,6 +169,7 @@ class _PropositionCardState extends State<PropositionCard>{
                 Row(
                   children: [
                     InkWell(
+                      customBorder: const CircleBorder(),
                       onTap: () {
                         _upVote();
                       },
@@ -165,8 +181,9 @@ class _PropositionCardState extends State<PropositionCard>{
                           color: upSelectionColor,
                         ),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.thumb_up, color: Colors.green, size: 30),
+                            Icon(Icons.thumb_up, color: Colors.green.shade600, size: 30),
                             SizedBox(width: 4),
                             Text('$upVotes', style: TextStyle(fontSize: 22)),
                           ],
@@ -175,6 +192,7 @@ class _PropositionCardState extends State<PropositionCard>{
                     ),
                     SizedBox(width: 12),
                     InkWell(
+                      customBorder: const CircleBorder(),
                       onTap: () {
                         _downVote();
                       },
@@ -186,8 +204,10 @@ class _PropositionCardState extends State<PropositionCard>{
                           color: downSelectionColor,
                         ),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.thumb_down, color: Colors.red, size: 30),
+                            Icon(Icons.thumb_down, color: Colors.red.shade600, size: 30),
                             SizedBox(width: 4),
                             Text('$downVotes', style: TextStyle(fontSize: 22)),
                           ],
