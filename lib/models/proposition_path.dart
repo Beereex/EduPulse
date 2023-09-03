@@ -1,47 +1,210 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+class PropositionPath {
+  final List<EducationType> educationTypes;
 
-
-
-class PropositionPath{
-  final List<EducationType> education_types;
-  PropositionPath({required this.education_types,});
+  PropositionPath({required this.educationTypes});
 }
 
-class EducationType{
+class EducationType {
   final String id;
-  final String education_type;
-  final List<Speciality> specialities_list;
+  final String educationType;
+  final List<Speciality> specialitiesList;
 
-  EducationType({required this.id, required this.education_type, required this.specialities_list,});
+  EducationType({
+    required this.id,
+    required this.educationType,
+    required this.specialitiesList,
+  });
 }
 
-class Speciality{
+class Speciality {
   final String id;
   final String speciality;
-  final List<Grade> grades_list;
+  final List<Grade> gradesList;
 
-  Speciality({required this.id, required this.speciality, required this.grades_list,});
+  Speciality({
+    required this.id,
+    required this.speciality,
+    required this.gradesList,
+  });
 }
 
-class Grade{
+class Grade {
   final String id;
   final String grade;
-  final List<Subject> subjects_list;
+  final List<Subject> subjectsList;
 
-  Grade({required this.id, required this.grade, required this.subjects_list,});
+  Grade({
+    required this.id,
+    required this.grade,
+    required this.subjectsList,
+  });
 }
 
-class Subject{
+class Subject {
   final String id;
   final String subject;
-  final List<Cours> cours_list;
+  final List<String> coursList;
 
-  Subject({required this.id, required this.subject, required this.cours_list,});
+  Subject({
+    required this.id,
+    required this.subject,
+    required this.coursList,
+  });
 }
 
-class Cours{
+class Cours {
   final String id;
   final String cours;
 
-  Cours({required this.id, required this.cours,});
+  Cours({
+    required this.id,
+    required this.cours,
+  });
+}
+
+Future<PropositionPath> fetchPropositionPath(FirebaseFirestore firestore) async {
+  final typesMap = await fillTypes(firestore);
+  final typesList = typesMap.entries
+      .map((entry) => EducationType(
+    id: entry.key,
+    educationType: entry.value,
+    specialitiesList: [],
+  ))
+      .toList();
+
+  return PropositionPath(educationTypes: typesList);
+}
+
+Future<void> populateSpecialities(
+    FirebaseFirestore firestore,
+    EducationType educationType,
+    ) async {
+  final specialitiesMap =
+  await fillSpecialities(firestore, educationType.id);
+  final specialitiesList = specialitiesMap.entries
+      .map((entry) => Speciality(
+    id: entry.key,
+    speciality: entry.value,
+    gradesList: [],
+  ))
+      .toList();
+
+  educationType.specialitiesList.clear();
+  educationType.specialitiesList.addAll(specialitiesList);
+}
+
+Future<void> populateGrades(
+    FirebaseFirestore firestore,
+    Speciality speciality,
+    ) async {
+  final gradesMap =
+  await fillGrades(firestore, speciality.id);
+  final gradesList = gradesMap.entries
+      .map((entry) => Grade(
+    id: entry.key,
+    grade: entry.value,
+    subjectsList: [],
+  ))
+      .toList();
+
+  speciality.gradesList.clear();
+  speciality.gradesList.addAll(gradesList);
+}
+
+Future<void> populateSubjects(
+    FirebaseFirestore firestore,
+    Grade grade,
+    ) async {
+  final subjectsMap =
+  await fillSubjects(firestore, grade.id);
+  final subjectsList = subjectsMap.entries
+      .map((entry) => Subject(
+    id: entry.key,
+    subject: entry.value,
+    coursList: [],
+  ))
+      .toList();
+
+  grade.subjectsList.clear();
+  grade.subjectsList.addAll(subjectsList);
+}
+
+Future<void> populateCourses(
+    FirebaseFirestore firestore,
+    Subject subject,
+    ) async {
+  final coursesList =
+  await fillCourses(firestore, subject.id);
+
+  subject.coursList.clear();
+  subject.coursList.addAll(coursesList);
+}
+
+Future<Map<String, String>> fillTypes(FirebaseFirestore firestore) async {
+  final typesQuery = await firestore.collection('educationTypes').get();
+  final typesMap = <String, String>{};
+
+  for (final doc in typesQuery.docs) {
+    typesMap[doc.id] = doc['education_type'] as String;
+  }
+
+  return typesMap;
+}
+
+Future<Map<String, String>> fillSpecialities(
+    FirebaseFirestore firestore, String educationTypeId) async {
+  final specialitiesQuery = await firestore
+      .collection('educationTypes/$educationTypeId/specialities')
+      .get();
+  final specialitiesMap = <String, String>{};
+
+  for (final doc in specialitiesQuery.docs) {
+    specialitiesMap[doc.id] = doc['speciality'] as String;
+  }
+
+  return specialitiesMap;
+}
+
+Future<Map<String, String>> fillGrades(
+    FirebaseFirestore firestore, String specialityId) async {
+  final gradesQuery = await firestore
+      .collection('educationTypes/$specialityId/grades')
+      .get();
+  final gradesMap = <String, String>{};
+
+  for (final doc in gradesQuery.docs) {
+    gradesMap[doc.id] = doc['grade'] as String;
+  }
+
+  return gradesMap;
+}
+
+Future<Map<String, String>> fillSubjects(
+    FirebaseFirestore firestore, String gradeId) async {
+  final subjectsQuery = await firestore
+      .collection('educationTypes/$gradeId/subjects')
+      .get();
+  final subjectsMap = <String, String>{};
+
+  for (final doc in subjectsQuery.docs) {
+    subjectsMap[doc.id] = doc['subject'] as String;
+  }
+
+  return subjectsMap;
+}
+
+Future<List<String>> fillCourses(
+    FirebaseFirestore firestore, String subjectId) async {
+  final coursesQuery = await firestore
+      .collection('educationTypes/$subjectId/cours')
+      .get();
+  final coursesList = <String>[];
+
+  for (final doc in coursesQuery.docs) {
+    coursesList.add(doc['cours'] as String);
+  }
+
+  return coursesList;
 }

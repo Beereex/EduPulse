@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PathSelection extends StatefulWidget {
@@ -7,26 +8,129 @@ class PathSelection extends StatefulWidget {
 
 class _PathSelectionState extends State<PathSelection> {
   String? selectedEducationType;
-  String? selectedSpecialite;
-  String? selectedNiveauScolaire;
-  String? selectedMatiere;
+  String? selectedSpeciality;
+  String? selectedGrade;
+  String? selectedSubject;
   String? selectedCours;
 
-  List<String> educationTypes = []; // Initialize as empty
-  List<String> specialites = [];
-  List<String> niveauxScolaires = [];
-  List<String> matieres = [];
-  List<String> cours = [];
+  Map<String, String> educationTypesMap = {};
+  Map<String, String> specialitiesMap = {};
+  Map<String, String> gradesMap = {};
+  Map<String, String> subjectsMap = {};
+  Map<String, String> coursesMap = {};
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    // Initialize dropdown items here (e.g., from API call or other data source)
-    educationTypes = ['Type 1', 'Type 2', 'Type 3'];
-    specialites = ['Spécialité 1', 'Spécialité 2', 'Spécialité 3'];
-    niveauxScolaires = ['Niveau 1', 'Niveau 2', 'Niveau 3'];
-    matieres = ['Matière 1', 'Matière 2', 'Matière 3'];
-    cours = ['Cours 1', 'Cours 2', 'Cours 3'];
+    _fillEducationTypesMap().then((result){
+      setState(() {
+        educationTypesMap = result;
+      });
+    });
+  }
+
+
+  Future<Map<String, String>> _fillEducationTypesMap() async{
+    Map<String, String> eduTypes = {};
+    try{
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("educationTypes").get();
+      snapshot.docs.forEach((type) {
+        eduTypes[type.id]= type["education_type"] as String;
+      });
+    }
+    catch(e){
+      print("Error loading types: $e");
+    }
+    return eduTypes;
+  }
+
+  Future<Map<String, String>> _fillSpecialities(String typeId) async{
+    Map<String, String> specs = {};
+    try{
+      final snapshot = await FirebaseFirestore.instance.collection("educationTypes")
+          .doc(typeId).collection("specialities").get();
+      snapshot.docs.forEach((speciality) {
+        specs[speciality.id] = speciality["speciality"] as String;
+      });
+    }
+    catch(e){
+      print("Error loading specialities: $e");
+    }
+    return specs;
+  }
+
+  Future<Map<String, String>> _fillGrades(String typeId, String specialityId) async{
+    Map<String, String> grades = {};
+    try{
+      final snapshot = await FirebaseFirestore.instance.collection("educationTypes")
+          .doc(typeId).collection("specialities").doc(specialityId)
+          .collection("grade").get();
+      snapshot.docs.forEach((grade) {
+        grades[grade.id] = grade["grade"] as String;
+      });
+    }
+    catch(e){
+      print("Error loading grades: $e");
+    }
+    return grades;
+  }
+
+  Future<Map<String, String>> _fillSubjects(String typeId, String specialityId, String gradeId) async{
+    Map<String, String> subjects = {};
+    try{
+      final snapshot = await FirebaseFirestore.instance.collection("educationTypes")
+          .doc(typeId).collection("specialities").doc(specialityId)
+          .collection("grade").doc(gradeId)
+          .collection("subjects").get();
+      snapshot.docs.forEach((subject) {
+        subjects[subject.id] = subject["subject"] as String;
+      });
+    }
+    catch(e){
+      print("Error loading subjects: $e");
+    }
+    return subjects;
+  }
+
+  Future<Map<String, String>> _fillCourses(String typeId, String specialityId,
+      String gradeId, String subjectId) async{
+    Map<String, String> courses = {};
+    try{
+      final snapshot = await FirebaseFirestore.instance.collection("educationTypes")
+          .doc(typeId).collection("specialities").doc(specialityId)
+          .collection("grade").doc(gradeId)
+          .collection("subjects").doc(subjectId)
+          .collection("courses").get();
+      snapshot.docs.forEach((cours) {
+        courses[cours.id] = cours["cours"] as String;
+      });
+    }
+    catch(e){
+      print("Error loading courses: $e");
+    }
+    return courses;
+  }
+
+  String _getIdfromValue(Map<String, String> map, String type){
+    String id = "";
+    map.entries.forEach((element) {
+      if(element.value == type)
+        id = element.key;
+    });
+    return id;
+  }
+
+  String _pathBuilder(){
+    String path = ("$selectedEducationType/" ?? "Undefined");
+    if(selectedSpeciality != null)
+      path += "$selectedSpeciality/";
+    if(selectedGrade != null)
+      path += "$selectedGrade/";
+    if(selectedSubject != null)
+      path += "$selectedSubject/";
+    if(selectedCours != null)
+      path += "$selectedCours";
+    return path;
   }
 
   @override
@@ -51,51 +155,76 @@ class _PathSelectionState extends State<PathSelection> {
               SizedBox(height: 16),
               _buildDropdown(
                 label: 'Type d\'éducation',
-                items: educationTypes,
+                items: educationTypesMap.entries.map((e) => e.value).toList(),
                 selectedItem: selectedEducationType,
-                onChanged: (value) {
-                  setState(() {
-                    selectedEducationType = value;
+                onChanged: (value){
+                  selectedEducationType = value;
+                  gradesMap = subjectsMap = coursesMap = {};
+                  selectedSpeciality = selectedGrade = selectedSubject = selectedCours = null;
+                  _fillSpecialities(_getIdfromValue(educationTypesMap, value ?? "")).then((result){
+                    setState(() {
+                      specialitiesMap = result;
+                    });
                   });
                 },
               ),
               SizedBox(height: 16),
               _buildDropdown(
                 label: 'Spécialité',
-                items: specialites,
-                selectedItem: selectedSpecialite,
+                items: specialitiesMap.entries.map((e) => e.value).toList(),
+                selectedItem: selectedSpeciality,
                 onChanged: (value) {
-                  setState(() {
-                    selectedSpecialite = value;
+                  selectedSpeciality = value;
+                  subjectsMap = coursesMap = {};
+                  selectedGrade = selectedSubject = selectedCours = null;
+                  _fillGrades(_getIdfromValue(educationTypesMap, selectedEducationType ?? ""),
+                      _getIdfromValue(specialitiesMap, selectedSpeciality ?? "")).then((result){
+                        setState(() {
+                          gradesMap = result;
+                        });
                   });
                 },
               ),
               SizedBox(height: 16),
               _buildDropdown(
                 label: 'Niveau scolaire',
-                items: niveauxScolaires,
-                selectedItem: selectedNiveauScolaire,
+                items: gradesMap.entries.map((e) => e.value).toList(),
+                selectedItem: selectedGrade,
                 onChanged: (value) {
-                  setState(() {
-                    selectedNiveauScolaire = value;
+                  selectedGrade = value;
+                  coursesMap = {};
+                  selectedSubject = selectedCours = null;
+                  _fillSubjects(_getIdfromValue(educationTypesMap, selectedEducationType ?? ""),
+                      _getIdfromValue(specialitiesMap, selectedSpeciality ?? ""),
+                      _getIdfromValue(gradesMap, selectedGrade ?? "")).then((result){
+                    setState(() {
+                      subjectsMap = result;
+                    });
                   });
                 },
               ),
               SizedBox(height: 16),
               _buildDropdown(
                 label: 'Matière',
-                items: matieres,
-                selectedItem: selectedMatiere,
+                items: subjectsMap.entries.map((e) => e.value).toList(),
+                selectedItem: selectedSubject,
                 onChanged: (value) {
-                  setState(() {
-                    selectedMatiere = value;
+                  selectedSubject = value;
+                  selectedCours = null;
+                  _fillCourses(_getIdfromValue(educationTypesMap, selectedEducationType ?? ""),
+                      _getIdfromValue(specialitiesMap, selectedSpeciality ?? ""),
+                      _getIdfromValue(gradesMap, selectedGrade ?? ""),
+                      _getIdfromValue(subjectsMap, selectedSubject ?? "")).then((result){
+                    setState(() {
+                      coursesMap = result;
+                    });
                   });
                 },
               ),
               SizedBox(height: 16),
               _buildDropdown(
                 label: 'Cours',
-                items: cours,
+                items: coursesMap.entries.map((e) => e.value).toList(),
                 selectedItem: selectedCours,
                 onChanged: (value) {
                   setState(() {
@@ -106,9 +235,7 @@ class _PathSelectionState extends State<PathSelection> {
               SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  String selectedPath = '';
-                  selectedPath = '$selectedEducationType/$selectedSpecialite/$selectedNiveauScolaire/$selectedMatiere/$selectedCours';
-                  Navigator.pop(context, selectedPath);
+                  Navigator.pop(context, _pathBuilder());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(53, 21, 93, 1),

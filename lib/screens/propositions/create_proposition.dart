@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/propositions/select_path.dart';
 import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,7 @@ class _CreatePropositionState extends State<CreateProposition> {
   String _selectedPathResult = "";
   
   AppData data = AppData.instance;
-  Map<String, dynamic> educationTypes = {};
-  Map<String, String> specialities = {};
+
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
@@ -41,6 +41,10 @@ class _CreatePropositionState extends State<CreateProposition> {
     _contentController.dispose();
     super.dispose();
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
