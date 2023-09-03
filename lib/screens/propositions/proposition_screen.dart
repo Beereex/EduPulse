@@ -31,27 +31,7 @@ class PropositionScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Type: ${proposition.type ?? ''}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Speciality: ${proposition.speciality ?? ''}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Grade: ${proposition.grade ?? ''}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Subject: ${proposition.subject ?? ''}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Course: ${proposition.cours ?? ''}',
+                    'Path: ${proposition.path ?? ''}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),

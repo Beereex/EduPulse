@@ -34,7 +34,7 @@ class _PropositionCardState extends State<PropositionCard>{
     super.initState();
     this.title = widget.proposition.title ?? "Undefined";
     this.author = widget.proposition.authorName ?? "Undefined";
-    this.path = widget.proposition.getPath();
+    this.path = widget.proposition.path ?? "Undefined";
     this.creationDate = widget.proposition.creationDate ?? Timestamp.now();
     this.lastEditDate = widget.proposition.lastEditDate ?? Timestamp.now();
     this.upVotes = widget.proposition.upvoteCount ?? 0;

@@ -4,7 +4,7 @@ class Proposition {
   final String? id;
   String? title;
   String? content;
-  String? type, grade, speciality, subject,cours;
+  String? path;
   String? authorId;
   String? authorName = "Undefined";
   int? upvoteCount = 0;
@@ -12,6 +12,8 @@ class Proposition {
   int? userVoteStatus = 0;
   Timestamp? creationDate;
   Timestamp? lastEditDate;
+  String? region;
+  int? status;
 
 
   Proposition({
@@ -23,13 +25,11 @@ class Proposition {
     this.userVoteStatus,
     this.authorId,
     this.authorName,
-    this.type,
-    this.speciality,
-    this.grade,
-    this.subject,
-    this.cours,
+    this.path,
     this.creationDate,
     this.lastEditDate,
+    this.region,
+    this.status,
   });
 
   static Future<Proposition?> getPropositionById(String id) async{
@@ -37,6 +37,7 @@ class Proposition {
       DocumentSnapshot propositionSnapshot =
       await FirebaseFirestore.instance.collection('propositions').doc(id).get();
       String userName = "Undefined";
+      int userVoteStatus = 0;
 
       if (propositionSnapshot.exists) {
         Map<String, dynamic> data = propositionSnapshot.data() as Map<String, dynamic>;
@@ -46,22 +47,26 @@ class Proposition {
           Map<String, dynamic> udata = userSnapShot.data() as Map<String, dynamic>;
           userName = udata["first_name"] + " " + udata["last_name"];
         }
+        DocumentSnapshot voteSnapShot =
+            await FirebaseFirestore.instance.collection("users").doc(data["author"])
+                .collection("votes").doc(propositionSnapshot.id).get();
+        if(voteSnapShot.exists){
+          userVoteStatus = (voteSnapShot.data() as Map<String, dynamic>)["vote"] as int;
+        }
         return Proposition(
           id: propositionSnapshot.id,
           title: data['title'],
           content: data['content'],
           upvoteCount: data['upVotes'],
           downvoteCount: data['downVotes'],
-          userVoteStatus: data['userVoteStatus'],//search the user's votes, if exists do something, if not do something else, or else...
+          userVoteStatus: userVoteStatus,
           authorId: data['author'],
           authorName: userName,
-          type: data['type'],
-          speciality: data['speciality'],
-          grade: data['grade'],
-          subject: data['subject'],
-          cours: data['cours'],
+          path: data['path'],
           creationDate: data['creationDate'],
           lastEditDate: data['lastEditDate'],
+          region: data["region"],
+          status: data["status"],
         );
       } else {
         return null;
@@ -70,9 +75,5 @@ class Proposition {
       print("Error fetching proposition: $error");
       return null;
     }
-  }
-
-  String getPath(){
-    return "$type/$grade/$speciality/$subject/$cours";
   }
 }

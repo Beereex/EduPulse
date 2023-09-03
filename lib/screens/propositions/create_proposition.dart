@@ -10,30 +10,11 @@ class CreateProposition extends StatefulWidget {
 }
 
 class _CreatePropositionState extends State<CreateProposition> {
-  String? _selectedType;
-  String? _selectedGrade;
-  String? _selectedSubject;
-  String? _selectedCourse;
   String _selectedPathResult = "";
-  
   AppData data = AppData.instance;
-
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
-
-  void _createProposition() {
-    Proposition newProposition = Proposition(
-      title: _titleController.text,
-      content: _contentController.text,
-      type: _selectedType,
-      grade: _selectedGrade,
-      subject: _selectedSubject,
-      cours: _selectedCourse,
-    );
-
-    Navigator.pop(context);
-  }
 
   @override
   void dispose() {
@@ -42,9 +23,29 @@ class _CreatePropositionState extends State<CreateProposition> {
     super.dispose();
   }
 
-
-
-
+  void _createProposition() async{
+    try{
+      CollectionReference propositions = FirebaseFirestore.instance.collection("propositions");
+      Map<String, dynamic> proposition = {
+        "title": _titleController.text,
+        "content": _contentController.text,
+        "path": _selectedPathResult,
+        "creationDate": Timestamp.now(),
+        "lastEditDate": Timestamp.now(),
+        "author": data.userInfos!.uid,
+        "status": 1,
+        "upvotes": 0,
+        "downvotes": 0,
+        "region": data.userInfos!.region,
+      };
+      DocumentReference newPropRef = await propositions.add(proposition);
+      print("new proposition created with id: ${newPropRef.id}");
+      Navigator.pop(context);
+    }
+    catch(e){
+      print("Error while creating a new proposition: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +69,17 @@ class _CreatePropositionState extends State<CreateProposition> {
               ),
               SizedBox(height: 16),
               ElevatedButton.icon(
-                onPressed: () async{
-                  final selectedPath = await
-                    Navigator.push<String>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PathSelection(),
-                      ),
-                    ) ?? "Undefined";
-                    setState(() {
-                      _selectedPathResult = selectedPath;
-                    });
+                onPressed: () async {
+                  final selectedPath = await Navigator.push<String>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PathSelection(),
+                        ),
+                      ) ??
+                      "Undefined";
+                  setState(() {
+                    _selectedPathResult = selectedPath;
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(53, 21, 93, 1),
@@ -112,7 +113,7 @@ class _CreatePropositionState extends State<CreateProposition> {
               SizedBox(height: 16),
               TextField(
                 controller: _contentController,
-                style: TextStyle(color: Colors.white,fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 20),
                 maxLines: null,
                 minLines: 10,
                 maxLength: 300,
