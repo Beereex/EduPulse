@@ -39,6 +39,72 @@ class _PropositionCardState extends State<PropositionCard>{
     this.lastEditDate = widget.proposition.lastEditDate ?? Timestamp.now();
     this.upVotes = widget.proposition.upvoteCount ?? 0;
     this.downVotes = widget.proposition.downvoteCount ?? 0;
+    this.userVote = widget.proposition.userVoteStatus ?? 0;
+    if(userVote == 1){
+      upSelectionColor = upSelectedColor;
+    }
+    else if(userVote == -1){
+      downSelectionColor = downSelectedColor;
+    }
+  }
+
+  Future<void> _addVote(int voteType) async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
+          .collection("votes").doc(widget.proposition.id).set({
+        "vote": voteType,
+        "voteDate": Timestamp.now(),
+      });
+      print("vote successfuly added");
+    }
+    catch(e){
+      print("Error adding a new vote: $e");
+    }
+  }
+
+  Future<void> _updateVote(int voteType) async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
+          .collection("votes").doc(widget.proposition.id).update({
+        "vote" : voteType,
+        "voteDate" : Timestamp.now(),
+      });
+      print("vote updated successfully");
+    }
+    catch(e){
+      print("Error updating the vote: $e");
+    }
+  }
+
+  Future<void> _removeVote() async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
+          .collection("votes").doc(widget.proposition.id).delete();
+      print("vote Deleted successfully");
+    }
+    catch(e){
+      print("Error remoing the vote: $e");
+    }
+  }
+
+  Future<void> _changeVote(String voteType, int changeValue) async{
+    try{
+      final propDoc = await FirebaseFirestore.instance.collection("propositions").doc(widget.proposition.id).get();
+      if(propDoc.exists){
+        Map<String, dynamic> votes = propDoc.data()!;
+        int vote = votes[voteType];
+        vote += changeValue;
+        await FirebaseFirestore.instance.collection("propositions").doc(widget.proposition.id).update({
+          voteType : vote,
+        });
+        print("Vote changed successfully");
+      }else{
+        print("Error updating vote");
+      }
+    }
+    catch(e){
+      print("Error updating vote: $e");
+    }
   }
 
   void _upVote(){
@@ -47,6 +113,8 @@ class _PropositionCardState extends State<PropositionCard>{
         upVotes--;
         userVote = 0;
         upSelectionColor = Colors.transparent;
+        _changeVote("upVotes", -1);
+        _removeVote();
       }
       else if(userVote == -1){
         upVotes++;
@@ -54,11 +122,16 @@ class _PropositionCardState extends State<PropositionCard>{
         userVote = 1;
         downSelectionColor = Colors.transparent;
         upSelectionColor = upSelectedColor;
+        _changeVote("upVotes", 1);
+        _changeVote("downVotes", -1);
+        _updateVote(1);
       }
       else{
         upVotes++;
         userVote = 1;
         upSelectionColor = upSelectedColor;
+        _changeVote("upVotes", 1);
+        _addVote(1);
       }
     });
   }
@@ -69,6 +142,8 @@ class _PropositionCardState extends State<PropositionCard>{
         downVotes--;
         userVote = 0;
         downSelectionColor = Colors.transparent;
+        _changeVote("downVotes", -1);
+        _removeVote();
       }
       else if(userVote == 1){
         upVotes--;
@@ -76,11 +151,16 @@ class _PropositionCardState extends State<PropositionCard>{
         userVote = -1;
         downSelectionColor = downSelectedColor;
         upSelectionColor = Colors.transparent;
+        _changeVote("upVotes", -1);
+        _changeVote("downVotes", 1);
+        _updateVote(-1);
       }
       else{
         downVotes++;
         userVote = -1;
         downSelectionColor = downSelectedColor;
+        _changeVote("downVotes", 1);
+        _addVote(-1);
       }
     });
   }
