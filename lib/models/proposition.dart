@@ -68,8 +68,6 @@ class Proposition {
           region: data["region"],
           status: data["status"],
         );
-      } else {
-        return null;
       }
     } catch (error) {
       print("Error fetching proposition: $error");

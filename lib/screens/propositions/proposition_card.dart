@@ -46,6 +46,7 @@ class _PropositionCardState extends State<PropositionCard>{
     else if(userVote == -1){
       downSelectionColor = downSelectedColor;
     }
+    else print("userVote not initialized");
   }
 
   Future<void> _addVote(int voteType) async{
@@ -87,19 +88,43 @@ class _PropositionCardState extends State<PropositionCard>{
     }
   }
 
-  Future<void> _changeVote(String voteType, int changeValue) async{
+  Future<void> _changedownVotesCounter(int value) async{
     try{
-      final propDoc = await FirebaseFirestore.instance.collection("propositions").doc(widget.proposition.id).get();
+      final propDoc = await FirebaseFirestore.instance.collection("propositions")
+          .doc(widget.proposition.id).get();
       if(propDoc.exists){
         Map<String, dynamic> votes = propDoc.data()!;
-        int vote = votes[voteType];
-        vote += changeValue;
-        await FirebaseFirestore.instance.collection("propositions").doc(widget.proposition.id).update({
-          voteType : vote,
+        int vote = votes["downVotes"] as int ?? 1000;
+        vote += value;
+        await FirebaseFirestore.instance.collection("propositions")
+            .doc(widget.proposition.id).update({
+          "downVotes" : vote,
         });
-        print("Vote changed successfully");
+        print("downVote changed successfully");
       }else{
-        print("Error updating vote");
+        print("Error changin downVote");
+      }
+    }
+    catch(e){
+      print("Error updating vote: $e");
+    }
+  }
+
+  Future<void> _changeUpVotesCounter(int value) async{
+    try{
+      final propDoc = await FirebaseFirestore.instance.collection("propositions")
+          .doc(widget.proposition.id).get();
+      if(propDoc.exists){
+        Map<String, dynamic> votes = propDoc.data()!;
+        int vote = votes["upVotes"] as int ?? 1000;
+        vote += value;
+        await FirebaseFirestore.instance.collection("propositions")
+            .doc(widget.proposition.id).update({
+          "upVotes" : vote,
+        });
+        print("upVote changed successfully");
+      }else{
+        print("Error changing upVote");
       }
     }
     catch(e){
@@ -108,61 +133,69 @@ class _PropositionCardState extends State<PropositionCard>{
   }
 
   void _upVote(){
-    setState(() {
-      if(userVote == 1){
+    if(userVote == 1){
+      _changeUpVotesCounter(-1);
+      _removeVote();
+      setState(() {
         upVotes--;
         userVote = 0;
         upSelectionColor = Colors.transparent;
-        _changeVote("upVotes", -1);
-        _removeVote();
-      }
-      else if(userVote == -1){
+      });
+    }
+    else if(userVote == -1){
+      _changeUpVotesCounter(1);
+      _changedownVotesCounter(-1);
+      _updateVote(1);
+      setState(() {
         upVotes++;
         downVotes--;
         userVote = 1;
         downSelectionColor = Colors.transparent;
         upSelectionColor = upSelectedColor;
-        _changeVote("upVotes", 1);
-        _changeVote("downVotes", -1);
-        _updateVote(1);
-      }
-      else{
+      });
+    }
+    else{
+      _changeUpVotesCounter(1);
+      _addVote(1);
+      setState(() {
         upVotes++;
         userVote = 1;
         upSelectionColor = upSelectedColor;
-        _changeVote("upVotes", 1);
-        _addVote(1);
-      }
-    });
+      });
+    }
   }
 
   void _downVote(){
-    setState(() {
-      if(userVote == -1){
+    if(userVote == -1){
+      _changedownVotesCounter(-1);
+      _removeVote();
+      setState(() {
         downVotes--;
         userVote = 0;
         downSelectionColor = Colors.transparent;
-        _changeVote("downVotes", -1);
-        _removeVote();
-      }
-      else if(userVote == 1){
+      });
+    }
+    else if(userVote == 1){
+      _changeUpVotesCounter(-1);
+      _changedownVotesCounter(1);
+      _updateVote(-1);
+      setState(() {
         upVotes--;
         downVotes++;
         userVote = -1;
         downSelectionColor = downSelectedColor;
         upSelectionColor = Colors.transparent;
-        _changeVote("upVotes", -1);
-        _changeVote("downVotes", 1);
-        _updateVote(-1);
-      }
-      else{
+      });
+    }
+    else{
+      _changedownVotesCounter(1);
+      _addVote(-1);
+      setState(() {
         downVotes++;
         userVote = -1;
         downSelectionColor = downSelectedColor;
-        _changeVote("downVotes", 1);
-        _addVote(-1);
-      }
-    });
+      });
+    }
   }
 
   @override
