@@ -52,6 +52,7 @@ class Proposition {
                 .collection("votes").doc(propositionSnapshot.id).get();
         if(voteSnapShot.exists){
           userVoteStatus = (voteSnapShot.data() as Map<String, dynamic>)["vote"] as int;
+          print("userVote at prop class: $userVoteStatus type: ${userVoteStatus.runtimeType}");
         }
         return Proposition(
           id: propositionSnapshot.id,

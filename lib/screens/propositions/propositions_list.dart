@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/propositions/proposition_card.dart';
 import 'package:flutter/material.dart';
 import '../../models/proposition.dart';
+import '../search_filter_zone.dart';
 
 class SearchPropositions extends StatelessWidget {
   List<String>? propositionsIds = [];
   List<Proposition>? propositionsList = [];
   List<PropositionCard>? propositionCards = [];
   int fetchLimit = 1, displayedNumber=0,currentPosition=0;
+  SearchFilterZone searchFilter = SearchFilterZone(onSearch: (String ) {  }, onFilter: () {  },);
 
   Future<List<String>> getPropositionIds() async {
     List<String> propositionIds = [];
@@ -20,8 +22,11 @@ class SearchPropositions extends StatelessWidget {
   }
 
   Future<void> fillPropositionsList() async{
+    int i = 0;
     for(String id in propositionsIds!){
       propositionsList?.add((await Proposition.getPropositionById(id))!);
+      print("userVote from prop list: ${propositionsList![i].userVoteStatus ?? 'null'}");
+      i++;
     }
   }
 
@@ -52,7 +57,7 @@ class SearchPropositions extends StatelessWidget {
           } else {
             return Column(
               children: [
-                _buildSearchFilterSection(),
+                searchFilter,
                 Expanded(
                   child: ListView(
                     children: snapshot.data!,
@@ -63,27 +68,5 @@ class SearchPropositions extends StatelessWidget {
           };
         }),
       );
-  }
-  /*
-
-   */
-
-  Widget _buildSearchFilterSection() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Text(
-            'Filter and Search Options',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8),
-          Text('Option 1'),
-          Text('Option 2'),
-          Text('Option 3'),
-          // Add more options as needed
-        ],
-      ),
-    );
   }
 }

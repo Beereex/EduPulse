@@ -46,7 +46,6 @@ class _PropositionCardState extends State<PropositionCard>{
     else if(userVote == -1){
       downSelectionColor = downSelectedColor;
     }
-    else print("userVote not initialized");
   }
 
   Future<void> _addVote(int voteType) async{
@@ -202,83 +201,76 @@ class _PropositionCardState extends State<PropositionCard>{
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "$path",
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.grey.shade600,
-                    fontFamily: "monospace",
-                    backgroundColor: Colors.grey.shade900.withOpacity(0.05),
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  height: 1,
-                  color: Colors.grey.shade600,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  title!,
-                  textAlign: TextAlign.center,
+                  (title!+" initiative pour les ecoles").length < 50 ? (title!+" initiative pour les ecoles") : (title!+" initiative pour les ecoles").substring(0,47)+'...' ,
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'helvetica',
-                    fontSize: 25,
-                    fontWeight: FontWeight.w900,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.5,
+                    height: 1.2,
                   ),
                 ),
-                Container(
+                SizedBox(height: 12),
+                /*Container(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   height: 2,
                   color: Colors.grey[300],
-                ),
-                InkWell(
+                ),*/
+                /*InkWell(
                   onTap: () {
                   },
                   child: Text(
-                    'Autheur: $author',
+                    '$author',
                     style: TextStyle(
-                      fontSize: 21,
+                      fontSize: 17,
                       decoration: TextDecoration.underline,
                       letterSpacing: 1,
                       color: Color.fromRGBO(207, 238, 247, 1),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
+                ),*/
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Créer le:\n ${DateFormat('dd/MM/yyyy').format(creationDate!.toDate())}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 30.5,
+                          backgroundImage: AssetImage('assets/default_profile_pic.jpg'),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(author+" done"),
+                      ],
                     ),
-                    Text(
-                      'dernière édition:\n ${DateFormat('dd/MM/yyyy').format(lastEditDate!.toDate())}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(17.0),
+                          child: Text(
+                              widget.proposition.content!.length > 100
+                                  ? widget.proposition.content!.substring(0,100)+'...'
+                                  : widget.proposition.content!,
+                            style: TextStyle(fontSize: 15,letterSpacing: 1,height: 1.2),
+                          ),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 8),
-                  height: 2,
+                  height: 1,
                   color: Colors.grey[300],
                 ),
-                SizedBox(height: 12),
                 Row(
                   children: [
                     InkWell(
@@ -287,8 +279,8 @@ class _PropositionCardState extends State<PropositionCard>{
                         _upVote();
                       },
                       child: Container(
-                        width: 60,
-                        height: 60,
+                        width: 40,
+                        height: 40,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: upSelectionColor,
@@ -296,9 +288,9 @@ class _PropositionCardState extends State<PropositionCard>{
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.thumb_up, color: Colors.green.shade600, size: 30),
+                            Icon(Icons.thumb_up, color: Colors.green.shade600, size: 20),
                             SizedBox(width: 4),
-                            Text('$upVotes', style: TextStyle(fontSize: 22)),
+                            Text('$upVotes', style: TextStyle(fontSize: 17)),
                           ],
                         ),
                       ),
@@ -310,8 +302,8 @@ class _PropositionCardState extends State<PropositionCard>{
                         _downVote();
                       },
                       child: Container(
-                        width: 60,
-                        height: 60,
+                        width: 40,
+                        height: 40,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: downSelectionColor,
@@ -320,9 +312,9 @@ class _PropositionCardState extends State<PropositionCard>{
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.thumb_down, color: Colors.red.shade600, size: 30),
+                            Icon(Icons.thumb_down, color: Colors.red.shade600, size: 20),
                             SizedBox(width: 4),
-                            Text('$downVotes', style: TextStyle(fontSize: 22)),
+                            Text('$downVotes', style: TextStyle(fontSize: 17)),
                           ],
                         ),
                       ),
@@ -337,12 +329,18 @@ class _PropositionCardState extends State<PropositionCard>{
                           ),
                         );
                       },
-                      child: Row(
-                        children: [
-                          Icon(Icons.more_horiz, size: 24),
-                          SizedBox(width: 4),
-                          Text('More Details', style: TextStyle(fontSize: 18)),
-                        ],
+                      child: ElevatedButton(
+                        onPressed: () {
+
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                          shape: CircleBorder(), // Make the button circular
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -350,7 +348,6 @@ class _PropositionCardState extends State<PropositionCard>{
               ],
             ),
           ),
-          Divider(height: 1, color: Colors.grey[300]),
         ],
       ),
     );

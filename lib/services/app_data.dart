@@ -143,6 +143,10 @@ class AppData {
     }
   }
 
+  String? getFullName(){
+    return userInfos!.firstName + " " + userInfos!.lastName;
+  }
+
   Future<void> updateVote(String propositionId, int vote) async{
     try{
       await FirebaseFirestore.instance.collection("users").doc(userInfos?.uid)
