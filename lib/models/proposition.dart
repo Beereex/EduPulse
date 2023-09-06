@@ -6,10 +6,10 @@ class Proposition {
   String? content;
   String? path;
   String? authorId;
-  String? authorName = "Undefined";
-  int? upvoteCount = 0;
-  int? downvoteCount = 0;
-  int? userVoteStatus = 0;
+  String? authorName;
+  int? upvoteCount;
+  int? downvoteCount;
+  int? userVoteStatus;
   Timestamp? creationDate;
   Timestamp? lastEditDate;
   String? region;
@@ -37,7 +37,7 @@ class Proposition {
       DocumentSnapshot propositionSnapshot =
       await FirebaseFirestore.instance.collection('propositions').doc(id).get();
       String userName = "Undefined";
-      int userVoteStatus = 0;
+      int? userVoteStatus;
 
       if (propositionSnapshot.exists) {
         Map<String, dynamic> data = propositionSnapshot.data() as Map<String, dynamic>;
@@ -47,13 +47,13 @@ class Proposition {
           Map<String, dynamic> udata = userSnapShot.data() as Map<String, dynamic>;
           userName = udata["first_name"] + " " + udata["last_name"];
         }
-        DocumentSnapshot voteSnapShot =
-            await FirebaseFirestore.instance.collection("users").doc(data["author"])
-                .collection("votes").doc(propositionSnapshot.id).get();
-        if(voteSnapShot.exists){
-          userVoteStatus = (voteSnapShot.data() as Map<String, dynamic>)["vote"] as int;
-          print("userVote at prop class: $userVoteStatus type: ${userVoteStatus.runtimeType}");
-        }
+        await FirebaseFirestore.instance.collection("users").doc(data["author"])
+            .collection("votes").doc(propositionSnapshot.id).get().then((result){
+          if(result.exists){
+            userVoteStatus = (result.data() as Map<String, dynamic>)["vote"] as int;
+          }
+        });
+
         return Proposition(
           id: propositionSnapshot.id,
           title: data['title'],

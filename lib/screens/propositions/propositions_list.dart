@@ -22,11 +22,8 @@ class SearchPropositions extends StatelessWidget {
   }
 
   Future<void> fillPropositionsList() async{
-    int i = 0;
     for(String id in propositionsIds!){
       propositionsList?.add((await Proposition.getPropositionById(id))!);
-      print("userVote from prop list: ${propositionsList![i].userVoteStatus ?? 'null'}");
-      i++;
     }
   }
 

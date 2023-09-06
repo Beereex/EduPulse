@@ -46,6 +46,10 @@ class _PropositionCardState extends State<PropositionCard>{
     else if(userVote == -1){
       downSelectionColor = downSelectedColor;
     }
+    else{
+      upSelectionColor = Colors.transparent;
+      downSelectionColor = Colors.transparent;
+    }
   }
 
   Future<void> _addVote(int voteType) async{
@@ -55,7 +59,6 @@ class _PropositionCardState extends State<PropositionCard>{
         "vote": voteType,
         "voteDate": Timestamp.now(),
       });
-      print("vote successfuly added");
     }
     catch(e){
       print("Error adding a new vote: $e");
@@ -69,7 +72,6 @@ class _PropositionCardState extends State<PropositionCard>{
         "vote" : voteType,
         "voteDate" : Timestamp.now(),
       });
-      print("vote updated successfully");
     }
     catch(e){
       print("Error updating the vote: $e");
@@ -80,51 +82,18 @@ class _PropositionCardState extends State<PropositionCard>{
     try{
       await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
           .collection("votes").doc(widget.proposition.id).delete();
-      print("vote Deleted successfully");
     }
     catch(e){
       print("Error remoing the vote: $e");
     }
   }
 
-  Future<void> _changedownVotesCounter(int value) async{
+  Future<void> _updatePropVotesCounter() async{
     try{
-      final propDoc = await FirebaseFirestore.instance.collection("propositions")
-          .doc(widget.proposition.id).get();
-      if(propDoc.exists){
-        Map<String, dynamic> votes = propDoc.data()!;
-        int vote = votes["downVotes"] as int ?? 1000;
-        vote += value;
-        await FirebaseFirestore.instance.collection("propositions")
-            .doc(widget.proposition.id).update({
-          "downVotes" : vote,
-        });
-        print("downVote changed successfully");
-      }else{
-        print("Error changin downVote");
-      }
-    }
-    catch(e){
-      print("Error updating vote: $e");
-    }
-  }
-
-  Future<void> _changeUpVotesCounter(int value) async{
-    try{
-      final propDoc = await FirebaseFirestore.instance.collection("propositions")
-          .doc(widget.proposition.id).get();
-      if(propDoc.exists){
-        Map<String, dynamic> votes = propDoc.data()!;
-        int vote = votes["upVotes"] as int ?? 1000;
-        vote += value;
-        await FirebaseFirestore.instance.collection("propositions")
-            .doc(widget.proposition.id).update({
-          "upVotes" : vote,
-        });
-        print("upVote changed successfully");
-      }else{
-        print("Error changing upVote");
-      }
+      await FirebaseFirestore.instance.collection("propositions").doc(widget.proposition.id).update({
+        "upVotes" : upVotes,
+        "downVotes" : downVotes,
+      });
     }
     catch(e){
       print("Error updating vote: $e");
@@ -133,7 +102,6 @@ class _PropositionCardState extends State<PropositionCard>{
 
   void _upVote(){
     if(userVote == 1){
-      _changeUpVotesCounter(-1);
       _removeVote();
       setState(() {
         upVotes--;
@@ -142,8 +110,6 @@ class _PropositionCardState extends State<PropositionCard>{
       });
     }
     else if(userVote == -1){
-      _changeUpVotesCounter(1);
-      _changedownVotesCounter(-1);
       _updateVote(1);
       setState(() {
         upVotes++;
@@ -154,7 +120,6 @@ class _PropositionCardState extends State<PropositionCard>{
       });
     }
     else{
-      _changeUpVotesCounter(1);
       _addVote(1);
       setState(() {
         upVotes++;
@@ -162,11 +127,13 @@ class _PropositionCardState extends State<PropositionCard>{
         upSelectionColor = upSelectedColor;
       });
     }
+    setState(() {
+      _updatePropVotesCounter();
+    });
   }
 
   void _downVote(){
     if(userVote == -1){
-      _changedownVotesCounter(-1);
       _removeVote();
       setState(() {
         downVotes--;
@@ -175,8 +142,6 @@ class _PropositionCardState extends State<PropositionCard>{
       });
     }
     else if(userVote == 1){
-      _changeUpVotesCounter(-1);
-      _changedownVotesCounter(1);
       _updateVote(-1);
       setState(() {
         upVotes--;
@@ -187,7 +152,6 @@ class _PropositionCardState extends State<PropositionCard>{
       });
     }
     else{
-      _changedownVotesCounter(1);
       _addVote(-1);
       setState(() {
         downVotes++;
@@ -195,6 +159,9 @@ class _PropositionCardState extends State<PropositionCard>{
         downSelectionColor = downSelectedColor;
       });
     }
+    setState(() {
+      _updatePropVotesCounter();
+    });
   }
 
   @override
@@ -222,37 +189,8 @@ class _PropositionCardState extends State<PropositionCard>{
                   ),
                 ),
                 SizedBox(height: 12),
-                /*Container(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  height: 2,
-                  color: Colors.grey[300],
-                ),*/
-                /*InkWell(
-                  onTap: () {
-                  },
-                  child: Text(
-                    '$author',
-                    style: TextStyle(
-                      fontSize: 17,
-                      decoration: TextDecoration.underline,
-                      letterSpacing: 1,
-                      color: Color.fromRGBO(207, 238, 247, 1),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),*/
                 Row(
                   children: [
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 30.5,
-                          backgroundImage: AssetImage('assets/default_profile_pic.jpg'),
-                        ),
-                        SizedBox(height: 10,),
-                        Text(author+" done"),
-                      ],
-                    ),
                     Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(17.0),
@@ -273,69 +211,87 @@ class _PropositionCardState extends State<PropositionCard>{
                 ),
                 Row(
                   children: [
-                    InkWell(
-                      customBorder: const CircleBorder(),
-                      onTap: () {
-                        _upVote();
-                      },
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: upSelectionColor,
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0,0,8.0,0),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage('assets/default_profile_pic.jpg'),
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.thumb_up, color: Colors.green.shade600, size: 20),
-                            SizedBox(width: 4),
-                            Text('$upVotes', style: TextStyle(fontSize: 17)),
-                          ],
-                        ),
-                      ),
+                        Text(author,style: TextStyle(fontSize: 15),),
+                      ],
                     ),
-                    SizedBox(width: 12),
-                    InkWell(
-                      customBorder: const CircleBorder(),
-                      onTap: () {
-                        _downVote();
-                      },
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: downSelectionColor,
+                    Spacer(),
+                    Row(
+                      children: [
+                        InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () {
+                            _upVote();
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: upSelectionColor,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.thumb_up, color: Colors.green.shade600, size: 20),
+                                SizedBox(width: 4),
+                                Text('$upVotes', style: TextStyle(fontSize: 17)),
+                              ],
+                            ),
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.thumb_down, color: Colors.red.shade600, size: 20),
-                            SizedBox(width: 4),
-                            Text('$downVotes', style: TextStyle(fontSize: 17)),
-                          ],
+                        SizedBox(width: 12),
+                        InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () {
+                            _downVote();
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: downSelectionColor,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.thumb_down, color: Colors.red.shade600, size: 20),
+                                SizedBox(width: 4),
+                                Text('$downVotes', style: TextStyle(fontSize: 17)),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     Spacer(),
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PropositionScreen(proposition: widget.proposition),
-                          ),
-                        );
+
+
                       },
                       child: ElevatedButton(
                         onPressed: () {
-
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PropositionScreen(proposition: widget.proposition),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromRGBO(111, 97, 211, 1),
-                          shape: CircleBorder(), // Make the button circular
+                          shape: CircleBorder(),
                         ),
                         child: Icon(
                           Icons.add,
