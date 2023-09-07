@@ -7,22 +7,40 @@ import 'package:edupulse/screens/vote/vote_card.dart';
 import 'package:edupulse/services/app_data.dart';
 
 class VoteMethods{
-  static Future<Map<String, Vote>> getVotesList(String filter, int fetchCount, bool desc) async{
+  static Future<Map<String, Vote>> getVotesList(String filter, int fetchCount, bool desc) async {
     Map<String, Vote> votesList = {};
-    try{
-      final snapShot = await FirebaseFirestore.instance.collection("users")
-          .doc(AppData.instance.userInfos!.uid).collection("votes").get();
-      snapShot.docs.forEach((voteDoc) {
+    try {
+      final snapShot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(AppData.instance.userInfos!.uid)
+          .collection("votes")
+          .get();
+
+      final futures = snapShot.docs.map((voteDoc) async {
         final voteData = voteDoc.data();
-        Vote vote = Vote(vote: voteData["vote"], date: voteData["voteDate"], propositionId: voteDoc.id);
-        votesList[voteDoc.id] = vote;
+        final propTitleSnapShot =
+        await FirebaseFirestore.instance.collection("propositions").doc(voteDoc.id).get();
+        if (propTitleSnapShot.exists) {
+          final propTitleData = propTitleSnapShot.data()!;
+          Vote vote = Vote(
+            vote: voteData["vote"],
+            date: voteData["voteDate"],
+            propositionId: voteDoc.id,
+            propositionTitle: propTitleData["title"],
+          );
+          votesList[voteDoc.id] = vote;
+        } else {
+          print("Error loading proposition title");
+        }
       });
-    }
-    catch(e){
+
+      await Future.wait(futures);
+    } catch (e) {
       print("Error loading votes list: $e");
     }
     return votesList;
   }
+
 
   static Map<String, VoteCard> buildPropCardsFromPropMap(Map<String, Vote> votesMap){
     Map<String, VoteCard> voteCardsList = {};

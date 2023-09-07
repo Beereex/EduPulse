@@ -51,4 +51,22 @@ class PropositionMethods{
     });
     return propCardsList;
   }
+
+  static Future<String> getPropositionTitleFromId(String propositionId) async{
+    String title = "";
+    try{
+      final documentSnapshot = await FirebaseFirestore.instance.collection("propositions").doc(propositionId).get();
+      if(documentSnapshot.exists){
+        final docData = documentSnapshot.data()!;
+        title = docData["title"];
+      }
+      else{
+        print("proposition id incorrect!");
+      }
+    }
+    catch(e){
+      print("Error reading proposition title: $e");
+    }
+    return title;
+  }
 }

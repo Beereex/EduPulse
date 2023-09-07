@@ -1,5 +1,4 @@
 import 'package:edupulse/models/vote.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VoteCard extends StatefulWidget {
@@ -7,6 +6,7 @@ class VoteCard extends StatefulWidget {
   VoteCard({
     required this.vote,
       });
+
 
   @override
   State<VoteCard> createState() => _VoteCardState();
@@ -27,7 +27,7 @@ class _VoteCardState extends State<VoteCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "SpaceHolder",
+                  widget.vote.propositionTitle,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'helvetica',
@@ -69,82 +69,6 @@ class _VoteCardState extends State<VoteCard> {
                         ),
                         Text("SpaceHolder",style: TextStyle(fontSize: 15),),
                       ],
-                    ),
-                    Spacer(),
-                    Row(
-                      children: [
-                        InkWell(
-                          customBorder: const CircleBorder(),
-                          onTap: () {
-
-                          },
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.thumb_up, color: Colors.green.shade600, size: 20),
-                                SizedBox(width: 4),
-                                Text("SpaceHolder", style: TextStyle(fontSize: 17)),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        InkWell(
-                          customBorder: const CircleBorder(),
-                          onTap: () {
-
-                          },
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.red,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.thumb_down, color: Colors.red.shade600, size: 20),
-                                SizedBox(width: 4),
-                                Text("SpaceHolder", style: TextStyle(fontSize: 17)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {
-
-
-                      },
-                      child: ElevatedButton(
-                        onPressed: () {
-                          /*Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PropositionScreen(proposition: widget.proposition),
-                            ),
-                          );*/
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(111, 97, 211, 1),
-                          shape: CircleBorder(),
-                        ),
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
                   ],
                 ),
