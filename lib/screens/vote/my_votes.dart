@@ -1,32 +1,54 @@
+import 'package:edupulse/models/vote.dart';
+import 'package:edupulse/screens/search_filter_zone.dart';
+import 'package:edupulse/screens/vote/vote_card.dart';
+import 'package:edupulse/screens/vote/vote_methods.dart';
 import 'package:flutter/material.dart';
 
-class MyVotes extends StatelessWidget {
+class MyVotes extends StatefulWidget {
+  int fetchCount = 5;
+  String filter = "voteDate";
+  bool desc = false;
+  Map<String, VoteCard> myVoteCards = {};
+
+  MyVotes({super.key});
+
+  @override
+  State<MyVotes> createState() => _MyVotesState();
+}
+
+class _MyVotesState extends State<MyVotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Page Title'),
+        title: Text("Mes Votes"),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.thumbs_up_down,
-              size: 80,
-              color: Colors.teal,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Your Page Content',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+          child: Column(
+            children: [
+              SearchFilterZone(onSearch: (search){}, onFilter: (){}),
+              FutureBuilder<Map<String,Vote>>(
+                future: VoteMethods.getVotesList(widget.filter, widget.fetchCount, widget.desc),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if(snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if(snapshot.hasError){
+                    return const Text("Error loading propositions");
+                  }
+                  else{
+                    widget.myVoteCards = VoteMethods.buildPropCardsFromPropMap(snapshot.data);
+                    return Expanded(
+                      child: ListView(
+                        children: widget.myVoteCards.values.toList(),
+                      ),
+                    );
+                  }
+                },
               ),
-            ),
-          ],
-        ),
+            ],
+          )
       ),
     );
   }
 }
+
