@@ -26,8 +26,6 @@ class _PropositionCardState extends State<PropositionCard>{
   int userVote = 0;
   Color upSelectionColor = Colors.transparent;
   Color downSelectionColor = Colors.transparent;
-  Color upSelectedColor = Colors.green.shade600.withOpacity(0.2);
-  Color downSelectedColor = Colors.red.shade600.withOpacity(0.2);
 
   @override
   void initState(){
@@ -40,16 +38,34 @@ class _PropositionCardState extends State<PropositionCard>{
     this.upVotes = widget.proposition.upvoteCount ?? 0;
     this.downVotes = widget.proposition.downvoteCount ?? 0;
     this.userVote = widget.proposition.userVoteStatus ?? 0;
+    print(AppData.instance.userInfos!.uid);
+    print(userVote);
+    resetSelectionColors();
     if(userVote == 1){
-      upSelectionColor = upSelectedColor;
+      selectUpColor();
     }
     else if(userVote == -1){
-      downSelectionColor = downSelectedColor;
+      selectDownColor();
     }
-    else{
+  }
+
+  void resetSelectionColors(){
+    setState(() {
       upSelectionColor = Colors.transparent;
       downSelectionColor = Colors.transparent;
-    }
+    });
+  }
+
+  void selectUpColor(){
+    setState(() {
+      upSelectionColor = Colors.green.shade600.withOpacity(0.2);
+    });
+  }
+
+  void selectDownColor(){
+    setState(() {
+      downSelectionColor = Colors.red.shade600.withOpacity(0.2);
+    });
   }
 
   Future<void> _addVote(int voteType) async{
@@ -101,12 +117,12 @@ class _PropositionCardState extends State<PropositionCard>{
   }
 
   void _upVote(){
+    resetSelectionColors();
     if(userVote == 1){
       _removeVote();
       setState(() {
         upVotes--;
         userVote = 0;
-        upSelectionColor = Colors.transparent;
       });
     }
     else if(userVote == -1){
@@ -115,8 +131,7 @@ class _PropositionCardState extends State<PropositionCard>{
         upVotes++;
         downVotes--;
         userVote = 1;
-        downSelectionColor = Colors.transparent;
-        upSelectionColor = upSelectedColor;
+        selectUpColor();
       });
     }
     else{
@@ -124,7 +139,7 @@ class _PropositionCardState extends State<PropositionCard>{
       setState(() {
         upVotes++;
         userVote = 1;
-        upSelectionColor = upSelectedColor;
+        selectUpColor();
       });
     }
     setState(() {
@@ -133,12 +148,12 @@ class _PropositionCardState extends State<PropositionCard>{
   }
 
   void _downVote(){
+    resetSelectionColors();
     if(userVote == -1){
       _removeVote();
       setState(() {
         downVotes--;
         userVote = 0;
-        downSelectionColor = Colors.transparent;
       });
     }
     else if(userVote == 1){
@@ -147,8 +162,7 @@ class _PropositionCardState extends State<PropositionCard>{
         upVotes--;
         downVotes++;
         userVote = -1;
-        downSelectionColor = downSelectedColor;
-        upSelectionColor = Colors.transparent;
+        selectDownColor();
       });
     }
     else{
@@ -156,7 +170,7 @@ class _PropositionCardState extends State<PropositionCard>{
       setState(() {
         downVotes++;
         userVote = -1;
-        downSelectionColor = downSelectedColor;
+        selectDownColor();
       });
     }
     setState(() {
@@ -167,7 +181,7 @@ class _PropositionCardState extends State<PropositionCard>{
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 1,
+      elevation: 5,
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +192,7 @@ class _PropositionCardState extends State<PropositionCard>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  (title!+" initiative pour les ecoles").length < 50 ? (title!+" initiative pour les ecoles") : (title!+" initiative pour les ecoles").substring(0,47)+'...' ,
+                  title!.length < 50 ? title! : "${title!.substring(0,47)}..." ,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'helvetica',
@@ -196,7 +210,7 @@ class _PropositionCardState extends State<PropositionCard>{
                           padding: const EdgeInsets.all(17.0),
                           child: Text(
                               widget.proposition.content!.length > 100
-                                  ? widget.proposition.content!.substring(0,100)+'...'
+                                  ? "${widget.proposition.content!.substring(0,100)}..."
                                   : widget.proposition.content!,
                             style: TextStyle(fontSize: 15,letterSpacing: 1,height: 1.2),
                           ),

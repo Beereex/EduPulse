@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:edupulse/services/app_data.dart';
 
 class Proposition {
   final String? id;
@@ -32,7 +33,7 @@ class Proposition {
     this.status,
   });
 
-  static Future<Proposition?> getPropositionById(String id) async{
+  static Future<Proposition> getPropositionById(String id) async{
     try {
       DocumentSnapshot propositionSnapshot =
       await FirebaseFirestore.instance.collection('propositions').doc(id).get();
@@ -47,7 +48,7 @@ class Proposition {
           Map<String, dynamic> udata = userSnapShot.data() as Map<String, dynamic>;
           userName = udata["first_name"] + " " + udata["last_name"];
         }
-        await FirebaseFirestore.instance.collection("users").doc(data["author"])
+        await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
             .collection("votes").doc(propositionSnapshot.id).get().then((result){
           if(result.exists){
             userVoteStatus = (result.data() as Map<String, dynamic>)["vote"] as int;
@@ -72,7 +73,7 @@ class Proposition {
       }
     } catch (error) {
       print("Error fetching proposition: $error");
-      return null;
     }
+    return Proposition();
   }
 }

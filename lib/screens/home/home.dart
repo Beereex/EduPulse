@@ -282,9 +282,9 @@ class Home extends StatelessWidget {
       body: FutureBuilder<UserInfos?>(
         future: data.getUserData(),
         builder: (BuildContext context, AsyncSnapshot<UserInfos?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
-          else if (snapshot.hasError)
+          } else if (snapshot.hasError)
             return Text("Error: ${snapshot.error}");
           else {
             data.userInfos = snapshot.data;
