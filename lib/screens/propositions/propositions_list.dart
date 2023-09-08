@@ -9,7 +9,7 @@ class SearchPropositions extends StatelessWidget {
   List<Proposition>? propositionsList = [];
   List<PropositionCard>? propositionCards = [];
   int fetchLimit = 1, displayedNumber=0,currentPosition=0;
-  SearchFilterZone searchFilter = SearchFilterZone(onSearch: (String ) {  }, onFilter: () {  },);
+  SearchFilterZone searchFilter = SearchFilterZone(onSearch: (string) {  }, onFilter: () {  },);
 
   Future<List<String>> getPropositionIds() async {
     List<String> propositionIds = [];

@@ -4,10 +4,7 @@ class SearchFilterZone extends StatefulWidget {
   final Function(String) onSearch;
   final Function() onFilter;
 
-  SearchFilterZone({
-    required this.onSearch,
-    required this.onFilter,
-  });
+  SearchFilterZone({super.key, required this.onSearch, required this.onFilter,});
 
   @override
   _SearchFilterZoneState createState() => _SearchFilterZoneState();
@@ -19,33 +16,33 @@ class _SearchFilterZoneState extends State<SearchFilterZone> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.grey[800], // Dark background color
+                borderRadius: BorderRadius.circular(1.0),
+                color: Colors.grey[800],
               ),
               child: Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.search,
-                      color: Colors.white, // White icon color
+                      color: Colors.white,
                     ),
                     onPressed: () {
-                      // Implement search functionality here
+
                     },
                   ),
                   Expanded(
                     child: TextField(
-                      style: TextStyle(color: Colors.white), // White text color
+                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: 'Search...',
-                        hintStyle: TextStyle(color: Colors.grey[400]), // Light gray hint text color
+                        hintStyle: TextStyle(color: Colors.grey[400]),
                         border: InputBorder.none,
                       ),
                     ),
@@ -54,21 +51,21 @@ class _SearchFilterZoneState extends State<SearchFilterZone> {
               ),
             ),
           ),
-          SizedBox(width: 16.0),
+          const SizedBox(width: 16.0),
           InkWell(
             onTap: () {
-              // Implement filter functionality here
+
             },
-            child: Row(
+            child: const Row(
               children: <Widget>[
                 Icon(
                   Icons.filter_list,
-                  color: Colors.white, // White icon color
+                  color: Colors.white,
                 ),
                 SizedBox(width: 8.0),
                 Text(
                   'Filter',
-                  style: TextStyle(color: Colors.white), // White text color
+                  style: TextStyle(color: Colors.white),
                 ),
               ],
             ),

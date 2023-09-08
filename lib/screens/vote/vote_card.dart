@@ -8,32 +8,37 @@ class VoteCard extends StatefulWidget {
   Vote vote;
   Icon upVote = Icon(Icons.thumb_up,size: 50,color: Colors.green.shade600,);
   Icon downVote = Icon(Icons.thumb_down, size: 50, color: Colors.red.shade600,);
-  VoteCard({
-    required this.vote,
-      });
 
+  VoteCard({super.key, required this.vote,});
 
   @override
   State<VoteCard> createState() => _VoteCardState();
 }
 
 class _VoteCardState extends State<VoteCard> {
+
+  Future<Proposition> getProp() async{
+    return Proposition.getPropositionById(widget.vote.propositionId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: ()async{
-        Proposition proposition = await Proposition.getPropositionById(widget.vote.propositionId);
+      onTap: (){
+        Proposition prop = Proposition();
+        getProp().then((result){
+          prop = result;
+        });
         Navigator.push(
           context,
           MaterialPageRoute(
-
-            builder: (context) => PropositionScreen(proposition: proposition),
+            builder: (context) => PropositionScreen(proposition: prop),
           ),
         );
       },
       child: Card(
         elevation: 5,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -43,14 +48,14 @@ class _VoteCardState extends State<VoteCard> {
               child: widget.vote.vote == 1 ? widget.upVote : widget.downVote,
             ),
             Padding(
-              padding: EdgeInsets.all(14),
+              padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.vote.propositionTitle,
                     textAlign: TextAlign.start,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'helvetica',
                       fontSize: 26,
                       fontWeight: FontWeight.w600,
@@ -58,7 +63,7 @@ class _VoteCardState extends State<VoteCard> {
                       height: 1.2,
                     ),
                   ),
-                  SizedBox(height: 15,),
+                  const SizedBox(height: 15,),
                   Text("Votée le: ${DateFormat("dd/MM/yyyy").format(widget.vote.date.toDate())}"),
                 ],
               ),
