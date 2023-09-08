@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edupulse/screens/propositions/select_path.dart';
+import 'package:edupulse/screens/propositions/path_selection.dart';
 import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
 import '../../models/proposition.dart';
@@ -73,7 +73,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                   final selectedPath = await Navigator.push<String>(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PathSelection(),
+                          builder: (context) => PathSelection(showTitle: true,),
                         ),
                       ) ??
                       "Undefined";

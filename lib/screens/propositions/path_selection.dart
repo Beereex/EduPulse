@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PathSelection extends StatefulWidget {
+  bool showTitle = true;
+  PathSelection({required this.showTitle});
   @override
   _PathSelectionState createState() => _PathSelectionState();
 }
@@ -136,9 +138,9 @@ class _PathSelectionState extends State<PathSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sélectionner le Chemin'),
-      ),
+      appBar: widget.showTitle
+          ? AppBar(title: Text('Sélectionner le Chemin'),)
+          : null,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
