@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/propositions/proposition_screen.dart';
 import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import '../../models/proposition.dart';
 
 class PropositionCard extends StatefulWidget {

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../propositions/path_selection.dart';
 
 class AdminPanel extends StatefulWidget {
-  const AdminPanel({super.key});
+  String path = "";
+  AdminPanel({super.key});
 
   @override
   State<AdminPanel> createState() => _AdminPanelState();
@@ -18,7 +19,7 @@ class _AdminPanelState extends State<AdminPanel> {
         child: Scaffold(
           appBar: AppBar(
             title: Text("Paneau d'administration"),
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: [
                 Tab(text: 'Comptes',icon: Icon(Icons.account_circle)),
                 Tab(text: 'Management',icon: Icon(Icons.schedule),),
@@ -28,7 +29,7 @@ class _AdminPanelState extends State<AdminPanel> {
           ),
           body: TabBarView(
             children: [
-              PathSelection(showTitle: false,),
+              PathSelection(isPathSelection: false,),
               Center(child: Text('Tab 2 Content')),
               Center(child: Text('Tab 3 Content')),
             ],

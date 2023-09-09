@@ -73,7 +73,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                   final selectedPath = await Navigator.push<String>(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PathSelection(showTitle: true,),
+                          builder: (context) => PathSelection(isPathSelection: true,),
                         ),
                       ) ??
                       "Undefined";
