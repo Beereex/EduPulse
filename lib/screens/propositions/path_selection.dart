@@ -169,11 +169,12 @@ class _PathSelectionState extends State<PathSelection> {
       String educationTypeId = getIdFromValue(educationTypesMap, selectedEducationType!);
       String specialityId = getIdFromValue(specialitiesMap, selectedSpeciality!);
 
-      await FirebaseFirestore.instance.collection("educationTypes").doc(educationTypeId)
+      final ref = await FirebaseFirestore.instance.collection("educationTypes").doc(educationTypeId)
           .collection("specialities").doc(specialityId)
-          .collection("grades").add({
+          .collection("grade").add({
         "grade" : newGrade,
       });
+      print(ref.id);
     }
     catch(e){
       print("Error inserting path elements: $e");
@@ -388,6 +389,9 @@ class _PathSelectionState extends State<PathSelection> {
                       _getIdFromValue(gradesMap, selectedGrade ?? "")).then((result){
                     setState(() {
                       subjectsMap = result;
+                      if(selectedGrade != ""){
+                        activateSubjectFunc();
+                      }
                     });
                   });
                 },
@@ -408,6 +412,9 @@ class _PathSelectionState extends State<PathSelection> {
                       _getIdFromValue(subjectsMap, selectedSubject ?? "")).then((result){
                     setState(() {
                       coursesMap = result;
+                      if(selectedSubject != ""){
+                        activateCourseFunc();
+                      }
                     });
                   });
                 },
