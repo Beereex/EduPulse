@@ -9,9 +9,8 @@ import 'package:edupulse/services/app_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:edupulse/screens/account/show_account.dart';
-import 'package:edupulse/screens/vote/vote_list.dart';
+import 'package:edupulse/screens/vote/national_voting_list.dart';
 import 'package:intl/intl.dart';
-import '../../models/user_infos.dart';
 import '../settings/preferences.dart';
 import '../authenticate/sign_in.dart';
 import 'home_button.dart';
@@ -26,9 +25,9 @@ class Home extends StatefulWidget {
   final Color _phaseBarBackColor = const Color.fromRGBO(207, 238, 247, 1);
   AppData data = AppData.instance;
   Map<String, dynamic>? settings;
-  bool _isAdmin = false;
   String? phase;
   String? dateString;
+  String? phaseIntro;
 
   @override
   State<StatefulWidget> createState() => _HomeState();
@@ -49,6 +48,19 @@ class _HomeState extends State<Home>{
     await widget.data.getUserData().then((result){
       widget.data.userInfos = result;
     });
+  }
+
+  void logout(BuildContext context) async {
+    FirebaseAuth.instance.signOut().then((value){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignIn()),
+      );
+    });
+  }
+
+  Future<List<String>> initializeText()async{
+    List<String> text = [];
     await widget.data.getAppSettings().then((result){
       widget.settings = result;
       DateTime date = DateTime.now();
@@ -58,40 +70,27 @@ class _HomeState extends State<Home>{
       dynamic display = DateFormat("dd/MM/yyyy").format;
 
       if(date.isBefore(phaseStart) || date.isAfter(phaseEnd)){
-        widget.phase = "Rest";
+        AppData.instance.currentPhase = widget.phase = "Rest";
         widget.dateString = "Prochaine phase: Undefined";
+        widget.phaseIntro = "Phase de";
       }
-      else if (date.isBefore(phaseSwitch)){
-        widget.phase = "Propositions";
-        widget.dateString = "de ${display(phaseStart)} à ${display(phaseSwitch)}";
-      }
-      else{
-        widget.phase = "Votes";
-        widget.dateString = "de ${display(phaseSwitch)} à ${display(phaseEnd)}";
+      else {
+        widget.phaseIntro = "Phases des";
+        if (date.isBefore(phaseSwitch)) {
+          AppData.instance.currentPhase = widget.phase = "Propositions";
+          widget.dateString =
+              "de ${display(phaseStart)} à ${display(phaseSwitch)}";
+        } else {
+          AppData.instance.currentPhase = widget.phase = "Votes";
+          widget.dateString =
+              "de ${display(phaseSwitch)} à ${display(phaseEnd)}";
+        }
       }
     });
-    setAdmin(widget.data.userInfos?.userType ?? "");
-  }
-
-  void setAdmin(String type){
-    if(type == "admin"){
-      setState(() {
-        widget._isAdmin = true;
-      });
-    }
-    else{
-      setState(() {
-        widget._isAdmin = false;
-      });
-    }
-  }
-
-  void logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignIn()),
-    );
+    text.add(widget.phaseIntro!);
+    text.add(widget.phase!);
+    text.add(widget.dateString!);
+    return text;
   }
 
   @override
@@ -303,14 +302,14 @@ class _HomeState extends State<Home>{
               contentPadding: EdgeInsets.only(left: 55),
               leading: const Icon(Icons.list, size: 35),
               title: const Text(
-                'Liste des votes',
+                'Vote nationale',
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VoteList()),
+                  MaterialPageRoute(builder: (context) => NationalVotingList()),
                 );
               },
             ),
@@ -409,34 +408,47 @@ class _HomeState extends State<Home>{
               color: widget._phaseBarBackColor,
               padding: const EdgeInsets.symmetric(vertical: 16),
               alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text(
-                    "Phase des",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: widget._phaseTextColor,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(
-                    "${widget.phase}",
-                    style: TextStyle(
-                      fontSize: 45,
-                      fontWeight: FontWeight.w900,
-                      color: widget._phaseTextColor,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "${widget.dateString}",
-                    style: TextStyle(
-                      fontSize: 23,
-                      color: widget._phaseTextColor,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ],
+              child: FutureBuilder<List<String>>(
+                future: initializeText(),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return const CircularProgressIndicator();
+                  }
+                  else if(snapshot.hasError){
+                    return Text("Error: ${snapshot.error}");
+                  }
+                  else{
+                    return Column(
+                      children: [
+                        Text(
+                          snapshot.data[0],
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: widget._phaseTextColor,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          snapshot.data[1],
+                          style: TextStyle(
+                            fontSize: 45,
+                            fontWeight: FontWeight.w900,
+                            color: widget._phaseTextColor,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          snapshot.data[2],
+                          style: TextStyle(
+                            fontSize: 23,
+                            color: widget._phaseTextColor,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
             ),
             const SizedBox(height: 100),

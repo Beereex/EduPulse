@@ -12,6 +12,7 @@ class AppData {
 
   User? currentUser;
   UserInfos? userInfos;
+  String? currentPhase;
 
   Future<String?> getUserRegion() async{
     return await userInfos?.region;

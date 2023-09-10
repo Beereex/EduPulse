@@ -129,8 +129,9 @@ class _PathSelectionState extends State<PathSelection> {
   String _getIdFromValue(Map<String, String> map, String type){
     String id = "";
     map.entries.forEach((element) {
-      if(element.value == type)
+      if(element.value == type) {
         id = element.key;
+      }
     });
     return id;
   }
@@ -189,9 +190,9 @@ class _PathSelectionState extends State<PathSelection> {
 
       await FirebaseFirestore.instance.collection("educationTypes").doc(educationTypeId)
           .collection("specialities").doc(specialityId)
-          .collection("grades").doc(gradeId).collection("subjects").add({
+          .collection("grade").doc(gradeId).collection("subjects").add({
         "subject" : newSubject,
-      });
+      }).then((value) => print(value));
     }
     catch(e){
       print("Error inserting path elements: $e");
@@ -203,14 +204,14 @@ class _PathSelectionState extends State<PathSelection> {
       String educationTypeId = getIdFromValue(educationTypesMap, selectedEducationType!);
       String specialityId = getIdFromValue(specialitiesMap, selectedSpeciality!);
       String gradeId = getIdFromValue(gradesMap, selectedGrade!);
-      String coursId = getIdFromValue(coursesMap, selectedCours!);
+      String subjectId = getIdFromValue(subjectsMap, selectedSubject!);
 
       await FirebaseFirestore.instance.collection("educationTypes").doc(educationTypeId)
           .collection("specialities").doc(specialityId)
-          .collection("grade").doc(gradeId).collection("subjects").doc(coursId)
+          .collection("grade").doc(gradeId).collection("subjects").doc(subjectId)
           .collection("courses").add({
         "cours" : newCours,
-      });
+      }).then((value) => print(value));
     }
     catch(e){
       print("Error inserting path elements: $e");
@@ -312,7 +313,7 @@ class _PathSelectionState extends State<PathSelection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.isPathSelection
-          ? AppBar(title: Text('Sélectionner le Chemin'),)
+          ? AppBar(title: const Text('Sélectionner le Chemin'),)
           : null,
       body: SingleChildScrollView(
         child: Padding(
@@ -324,7 +325,7 @@ class _PathSelectionState extends State<PathSelection> {
                 widget.isPathSelection
                     ? "Sélectionner les Éléments du Chemin"
                     : "Créer les Éléments du Chemin",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -333,7 +334,7 @@ class _PathSelectionState extends State<PathSelection> {
                 visible: !widget.isPathSelection,
                   child: const SizedBox(height: 40,),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDropdown(
                 label: "Type d'éducation",
                 items: educationTypesMap.entries.map((e) => e.value).toList(),
@@ -353,7 +354,7 @@ class _PathSelectionState extends State<PathSelection> {
                 },
                 isAdd: true,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDropdown(
                 label: 'Spécialité',
                 items: specialitiesMap.entries.map((e) => e.value).toList(),
@@ -375,7 +376,7 @@ class _PathSelectionState extends State<PathSelection> {
                 isAdd: widget.isPathSelection,
                 func: specialityFunc,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDropdown(
                 label: 'Niveau scolaire',
                 items: gradesMap.entries.map((e) => e.value).toList(),
@@ -398,7 +399,7 @@ class _PathSelectionState extends State<PathSelection> {
                 isAdd: widget.isPathSelection,
                 func: gradeFunc,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDropdown(
                 label: 'Matière',
                 items: subjectsMap.entries.map((e) => e.value).toList(),
@@ -421,7 +422,7 @@ class _PathSelectionState extends State<PathSelection> {
                 isAdd: widget.isPathSelection,
                 func: subjectFunc,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildDropdown(
                 label: 'Cours',
                 items: coursesMap.entries.map((e) => e.value).toList(),
@@ -449,7 +450,7 @@ class _PathSelectionState extends State<PathSelection> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "Confirmer la Sélection",
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
@@ -478,7 +479,7 @@ class _PathSelectionState extends State<PathSelection> {
             children: [
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -497,11 +498,12 @@ class _PathSelectionState extends State<PathSelection> {
             ],
           ),
         ),
+        Visibility(visible: !isAdd,child: const SizedBox(width: 15,),),
         Visibility(
           visible: !isAdd,
           child: ElevatedButton(
             onPressed: func,
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add,size: 30,),
           ),
         ),
       ],

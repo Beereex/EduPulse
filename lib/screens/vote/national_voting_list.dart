@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class VoteList extends StatelessWidget {
+class NationalVotingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
