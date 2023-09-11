@@ -51,7 +51,7 @@ class _CreatePropositionState extends State<CreateProposition> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Proposition'),
+        title: Text('Créer une proposition'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -59,38 +59,33 @@ class _CreatePropositionState extends State<CreateProposition> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Create a New Proposition',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
               SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final selectedPath = await Navigator.push<String>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PathSelection(isPathSelection: true,),
-                        ),
-                      ) ??
-                      "Undefined";
-                  setState(() {
-                    _selectedPathResult = selectedPath;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(53, 21, 93, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    final selectedPath = await Navigator.push<String>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PathSelection(isPathSelection: true,),
+                          ),
+                        ) ??
+                        "Undefined";
+                    setState(() {
+                      _selectedPathResult = selectedPath;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(53, 21, 93, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                icon: Icon(Icons.location_on, color: Colors.white),
-                label: Text(
-                  'Select Path',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  icon: Icon(Icons.location_on, color: Colors.white),
+                  label: Text(
+                    'Cible',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
               ),
               SizedBox(height: 16),
@@ -130,18 +125,21 @@ class _CreatePropositionState extends State<CreateProposition> {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: _createProposition,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(53, 21, 93, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: _createProposition,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(53, 21, 93, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                icon: Icon(Icons.add, color: Colors.white),
-                label: Text(
-                  'Créer la proposition',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  icon: Icon(Icons.add, color: Colors.white),
+                  label: Text(
+                    'Créer la proposition',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
               ),
             ],

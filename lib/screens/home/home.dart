@@ -29,29 +29,50 @@ class Home extends StatefulWidget {
   String? dateString;
   String? phaseIntro;
 
+  bool isAdmin = false;
+
   @override
   State<StatefulWidget> createState() => _HomeState();
 }
 
-
-
-class _HomeState extends State<Home>{
+class _HomeState extends State<Home> {
   void showNotificationsMenu(BuildContext context) {}
 
   @override
   void initState() {
     init();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        widget.isAdmin = widget.data.userInfos!.userType == "admin" ? true : false;
+      });
+    });
   }
 
-  Future init() async{
-    await widget.data.getUserData().then((result){
+  Future init() async {
+    await widget.data.getUserData().then((result) {
       widget.data.userInfos = result;
     });
   }
 
+  Future<String?> getRegion() async {
+    String? region;
+    await widget.data.getUserData().then((result) {
+      region = result?.region;
+    });
+    return region;
+  }
+
+  Future<bool?> getAdminState() async {
+    bool isAdmin = false;
+    await widget.data.getUserData().then((result) {
+      isAdmin = result?.userType == "admin" ? true : false;
+    });
+    return isAdmin;
+  }
+
   void logout(BuildContext context) async {
-    FirebaseAuth.instance.signOut().then((value){
+    FirebaseAuth.instance.signOut().then((value) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignIn()),
@@ -59,22 +80,23 @@ class _HomeState extends State<Home>{
     });
   }
 
-  Future<List<String>> initializeText()async{
+  Future<List<String>> initializeText() async {
     List<String> text = [];
-    await widget.data.getAppSettings().then((result){
+    await widget.data.getAppSettings().then((result) {
       widget.settings = result;
       DateTime date = DateTime.now();
-      DateTime phaseStart = (widget.settings?["phase_start"] as Timestamp).toDate();
+      DateTime phaseStart =
+          (widget.settings?["phase_start"] as Timestamp).toDate();
       DateTime phaseEnd = (widget.settings?["phase_end"] as Timestamp).toDate();
-      DateTime phaseSwitch = (widget.settings?["phase_switch"] as Timestamp).toDate();
+      DateTime phaseSwitch =
+          (widget.settings?["phase_switch"] as Timestamp).toDate();
       dynamic display = DateFormat("dd/MM/yyyy").format;
 
-      if(date.isBefore(phaseStart) || date.isAfter(phaseEnd)){
+      if (date.isBefore(phaseStart) || date.isAfter(phaseEnd)) {
         AppData.instance.currentPhase = widget.phase = "Rest";
         widget.dateString = "Prochaine phase: Undefined";
         widget.phaseIntro = "Phase de";
-      }
-      else {
+      } else {
         widget.phaseIntro = "Phases des";
         if (date.isBefore(phaseSwitch)) {
           AppData.instance.currentPhase = widget.phase = "Propositions";
@@ -99,7 +121,8 @@ class _HomeState extends State<Home>{
       appBar: AppBar(
         iconTheme: IconThemeData(size: widget.titleBarFontSize + 10),
         title: GestureDetector(
-          child: Text('EduPulse', style: TextStyle(fontSize: widget.titleBarFontSize)),
+          child: Text('EduPulse',
+              style: TextStyle(fontSize: widget.titleBarFontSize)),
           onTap: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
@@ -345,23 +368,56 @@ class _HomeState extends State<Home>{
                 );
               },
             ),
-            (widget.data.userInfos?.userType == "admin")
-                ? (ListTile(
-                  contentPadding: EdgeInsets.only(left: 55),
-                  leading: const Icon(Icons.admin_panel_settings, size: 35),
-                  title: const Text(
-                    'Administration',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AdminPanel()),
+            /*FutureBuilder<bool?>(
+                future: getAdminState(),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return CircularProgressIndicator();
+                  }
+                  else if(snapshot.hasError){
+                    print("${snapshot.error}");
+                    return Container();
+                  }
+                  else{
+                    return Visibility(
+                      visible: snapshot.data,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.only(left: 55),
+                        leading: const Icon(Icons.admin_panel_settings, size: 35),
+                        title: const Text(
+                          'Administration',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AdminPanel()),
+                          );
+                        },
+                      ),
                     );
-                  },
-                ))
-              : SizedBox(),
+                  }
+                }
+            ),*/
+            Visibility(
+              visible: widget.isAdmin,
+              child: ListTile(
+                contentPadding: EdgeInsets.only(left: 55),
+                leading: const Icon(Icons.admin_panel_settings, size: 35),
+                title: const Text(
+                  'Administration',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AdminPanel()),
+                  );
+                },
+              ),
+            ),
             ListTile(
               tileColor: widget._phaseBarBackColor,
               leading: Icon(
@@ -388,20 +444,31 @@ class _HomeState extends State<Home>{
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              color: Colors.blueGrey[900],
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              alignment: Alignment.center,
-              child: Text(
-                widget.data.userInfos?.region ?? "Undefined",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 27,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            FutureBuilder<String?>(
+              future: getRegion(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text("Error loading the region");
+                } else {
+                  return Container(
+                    width: double.infinity,
+                    color: Colors.blueGrey[900],
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    alignment: Alignment.center,
+                    child: Text(
+                      snapshot.data,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
             Container(
               width: double.infinity,
@@ -410,14 +477,12 @@ class _HomeState extends State<Home>{
               alignment: Alignment.center,
               child: FutureBuilder<List<String>>(
                 future: initializeText(),
-                builder: (BuildContext context, AsyncSnapshot snapshot){
-                  if(snapshot.connectionState == ConnectionState.waiting){
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
-                  }
-                  else if(snapshot.hasError){
+                  } else if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
-                  }
-                  else{
+                  } else {
                     return Column(
                       children: [
                         Text(
@@ -460,7 +525,6 @@ class _HomeState extends State<Home>{
                   HomeButton(
                       iconData: Icons.add_circle,
                       text: "Créer Proposition",
-                      //backgroundColor: Colors.tealAccent.withOpacity(0.1),
                       backgroundColor: widget._menuCategoriesColor,
                       fontSize: widget.buttonFontSize,
                       iconSize: widget.buttonIconSize,
@@ -519,8 +583,7 @@ class _HomeState extends State<Home>{
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => MyVotes()),
+                          MaterialPageRoute(builder: (context) => MyVotes()),
                         );
                       }),
                 ],
