@@ -26,12 +26,12 @@ class PropositionScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Author: ${proposition.authorName ?? 'Unknown'}',
+                    'Auteur: ${proposition.authorName ?? 'Unknown'}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Path: ${proposition.path ?? ''}',
+                    'Chemin du cible: ${proposition.path ?? ''}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
@@ -57,7 +57,7 @@ class PropositionScreen extends StatelessWidget {
             snap: true,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
-                color: Colors.grey[800], // Dark background color
+                color: Colors.grey[800],
                 child: ListView(
                   controller: scrollController,
                   children: [
@@ -72,20 +72,19 @@ class PropositionScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            '10 Comments', // Placeholder for the number of comments
+                            '10 Comments',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
                     ),
-                    // Simulate message cards with ListView.builder
                     ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(), // Prevent nested ListView from scrolling
-                      itemCount: 10, // Number of message cards
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 10,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
-                          color: Colors.grey[900], // Dark card color
+                          color: Colors.grey[900],
                           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -93,22 +92,22 @@ class PropositionScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Message ${index + 1}', // Placeholder for the message
+                                  'Message ${index + 1}',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Author Name', // Placeholder for author
+                                  'Author Name',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  'Creation Date', // Placeholder for creation date
+                                  'Creation Date',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  'Last Edit Date', // Placeholder for last edit date
+                                  'Last Edit Date',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ],
