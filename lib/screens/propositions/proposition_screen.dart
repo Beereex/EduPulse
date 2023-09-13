@@ -1,16 +1,187 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../models/proposition.dart';
+import '../../services/app_data.dart';
 
-class PropositionScreen extends StatelessWidget {
+class PropositionScreen extends StatefulWidget {
   final Proposition proposition;
 
   PropositionScreen({required this.proposition});
 
   @override
+  State<StatefulWidget> createState() => _PropositionScreenState();
+
+
+
+}
+
+class _PropositionScreenState extends State<PropositionScreen>{
+  String title = "";
+  String author = "";
+  String path = "";
+  Timestamp creationDate = Timestamp.now();
+  Timestamp lastEditDate = Timestamp.now();
+  int upVotes = 0;
+  int downVotes = 0;
+  int userVote = 0;
+  Color upSelectionColor = Colors.transparent;
+  Color downSelectionColor = Colors.transparent;
+
+  @override
+  void initState(){
+    super.initState();
+    this.title = widget.proposition.title ?? "Undefined";
+    this.author = widget.proposition.authorName ?? "Undefined";
+    this.path = widget.proposition.path ?? "Undefined";
+    this.creationDate = widget.proposition.creationDate ?? Timestamp.now();
+    this.lastEditDate = widget.proposition.lastEditDate ?? Timestamp.now();
+    this.upVotes = widget.proposition.upvoteCount ?? 0;
+    this.downVotes = widget.proposition.downvoteCount ?? 0;
+    this.userVote = widget.proposition.userVoteStatus ?? 0;
+    resetSelectionColors();
+    if(userVote == 1){
+      selectUpColor();
+    }
+    else if(userVote == -1){
+      selectDownColor();
+    }
+  }
+
+  void resetSelectionColors(){
+    setState(() {
+      upSelectionColor = Colors.transparent;
+      downSelectionColor = Colors.transparent;
+    });
+  }
+
+  void selectUpColor(){
+    setState(() {
+      upSelectionColor = Colors.green.shade600.withOpacity(0.2);
+    });
+  }
+
+  void selectDownColor(){
+    setState(() {
+      downSelectionColor = Colors.red.shade600.withOpacity(0.2);
+    });
+  }
+
+  Future<void> _addVote(int voteType) async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
+          .collection("votes").doc(widget.proposition.id).set({
+        "vote": voteType,
+        "voteDate": Timestamp.now(),
+      });
+    }
+    catch(e){
+      print("Error adding a new vote: $e");
+    }
+  }
+
+  Future<void> _updateVote(int voteType) async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
+          .collection("votes").doc(widget.proposition.id).update({
+        "vote" : voteType,
+        "voteDate" : Timestamp.now(),
+      });
+    }
+    catch(e){
+      print("Error updating the vote: $e");
+    }
+  }
+
+  Future<void> _removeVote() async{
+    try{
+      await FirebaseFirestore.instance.collection("users").doc(AppData.instance.userInfos!.uid)
+          .collection("votes").doc(widget.proposition.id).delete();
+    }
+    catch(e){
+      print("Error remoing the vote: $e");
+    }
+  }
+
+  Future<void> _updatePropVotesCounter() async{
+    try{
+      await FirebaseFirestore.instance.collection("propositions").doc(widget.proposition.id).update({
+        "upVotes" : upVotes,
+        "downVotes" : downVotes,
+      });
+    }
+    catch(e){
+      print("Error updating vote: $e");
+    }
+  }
+
+  void _upVote(){
+    resetSelectionColors();
+    if(userVote == 1){
+      _removeVote();
+      setState(() {
+        upVotes--;
+        userVote = 0;
+      });
+    }
+    else if(userVote == -1){
+      _updateVote(1);
+      setState(() {
+        upVotes++;
+        downVotes--;
+        userVote = 1;
+        selectUpColor();
+      });
+    }
+    else{
+      _addVote(1);
+      setState(() {
+        upVotes++;
+        userVote = 1;
+        selectUpColor();
+      });
+    }
+    setState(() {
+      _updatePropVotesCounter();
+    });
+  }
+
+  void _downVote(){
+    resetSelectionColors();
+    if(userVote == -1){
+      _removeVote();
+      setState(() {
+        downVotes--;
+        userVote = 0;
+      });
+    }
+    else if(userVote == 1){
+      _updateVote(-1);
+      setState(() {
+        upVotes--;
+        downVotes++;
+        userVote = -1;
+        selectDownColor();
+      });
+    }
+    else{
+      _addVote(-1);
+      setState(() {
+        downVotes++;
+        userVote = -1;
+        selectDownColor();
+      });
+    }
+    setState(() {
+      _updatePropVotesCounter();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(proposition.title ?? 'Untitled'),
+        title: Text("Proposition"),
       ),
       body: Stack(
         children: [
@@ -20,31 +191,116 @@ class PropositionScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FutureBuilder<String>(
+                          future: AppData.instance.getPicUrlFromId(widget.proposition.authorId!),
+                          builder: (BuildContext context, AsyncSnapshot snapshot){
+                            if(snapshot.connectionState == ConnectionState.waiting){
+                              return CircularProgressIndicator();
+                            }
+                            else if(snapshot.hasError || snapshot.data == "none"){
+                              return CircleAvatar(
+                                backgroundImage: AssetImage('assets/default_profile_pic.jpg'),
+                                radius: 50,
+                              );
+                            }
+                            else{
+                              print(snapshot.data);
+                              return CircleAvatar(
+                                backgroundImage: NetworkImage(snapshot.data),
+                                radius: 50,
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      Flexible(
+                        child: Text(
+                          widget.proposition.title ?? '',
+                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 26),
                   Text(
-                    proposition.content ?? '',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    widget.proposition.content ?? '',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Author: ${proposition.authorName ?? 'Unknown'}',
+                    'Auteur: ${widget.proposition.authorName ?? 'Unknown'}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Path: ${proposition.path ?? ''}',
+                    'Cible: ${widget.proposition.path ?? ''}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Upvotes: ${proposition.upvoteCount ?? 0}',
+                    'Date de création: ${DateFormat("dd/MM/yyyy").format(widget.proposition.creationDate!.toDate()) ?? ''}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Downvotes: ${proposition.downvoteCount ?? 0}',
+                    'Date de dérnière édition: ${DateFormat("dd/MM/yyyy").format(widget.proposition.lastEditDate!.toDate()) ?? ''}',
                     style: TextStyle(fontSize: 16),
                   ),
-                  // Add more fields as needed
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () {
+                          _upVote();
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: upSelectionColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.thumb_up, color: Colors.green.shade600, size: 20),
+                              SizedBox(width: 4),
+                              Text('$upVotes', style: TextStyle(fontSize: 17)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () {
+                          _downVote();
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: downSelectionColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.thumb_down, color: Colors.red.shade600, size: 20),
+                              SizedBox(width: 4),
+                              Text('$downVotes', style: TextStyle(fontSize: 17)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

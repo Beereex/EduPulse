@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/account/edit_account.dart';
+import 'package:edupulse/screens/home/menu_section.dart';
 import 'package:edupulse/screens/propositions/create_proposition.dart';
 import 'package:edupulse/screens/propositions/my_propositions.dart';
 import 'package:edupulse/screens/propositions/propositions_list.dart';
@@ -180,7 +181,57 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            ListTile(
+            MenuSection(
+              menuData: {
+                'Profil' : EditAccount(),
+                'Modifier Profil' : EditAccount(),
+              },
+              icons: [
+                Icon(Icons.account_circle),
+                Icon(Icons.visibility),
+              ],
+            ),
+            MenuSection(
+              menuData: {
+                'Liste des Propositions' : SearchPropositions(),
+                'Mes Propositions' : MyPropositions(),
+                'Publier une Proposition' : CreateProposition(),
+              },
+              icons: [
+                Icon(Icons.list_alt),
+                Icon(Icons.assignment),
+                Icon(Icons.publish),
+              ],
+            ),
+            MenuSection(
+              menuData: {
+                'Vote National' : NationalVotingList(),
+                'Mes Votes' : MyVotes(),
+              },
+              icons: [
+                Icon(Icons.how_to_vote),
+                Icon(Icons.my_library_add),
+              ],
+            ),
+            MenuSection(
+              menuData: {
+                'Préferences' : Settings(),
+                'Administration' : AdminPanel(),
+              },
+              icons: [
+                Icon(Icons.settings),
+                Icon(Icons.admin_panel_settings),
+              ],
+            ),
+            MenuSection(
+              menuData: {
+                'Déconnexion' : (){logout(context);}
+              },
+              icons: [
+                Icon(Icons.logout),
+              ],
+            ),
+            /*ListTile(
               leading: Icon(
                 Icons.account_circle,
                 size: 40,
@@ -437,7 +488,7 @@ class _HomeState extends State<Home> {
               onTap: () {
                 logout(context);
               },
-            ),
+            ),*/
           ],
         ),
       ),

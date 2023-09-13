@@ -36,8 +36,6 @@ class _PropositionCardState extends State<PropositionCard>{
     this.upVotes = widget.proposition.upvoteCount ?? 0;
     this.downVotes = widget.proposition.downvoteCount ?? 0;
     this.userVote = widget.proposition.userVoteStatus ?? 0;
-    print(AppData.instance.userInfos!.uid);
-    print(userVote);
     resetSelectionColors();
     if(userVote == 1){
       selectUpColor();
@@ -306,7 +304,7 @@ class _PropositionCardState extends State<PropositionCard>{
                           shape: CircleBorder(),
                         ),
                         child: Icon(
-                          Icons.add,
+                          Icons.more_horiz_rounded,
                           color: Colors.white,
                         ),
                       ),

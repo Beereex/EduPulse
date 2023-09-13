@@ -124,6 +124,20 @@ class AppData {
     if (picUrl != null) userInfos!.picUrl = picUrl;
   }
 
+  Future<String> getPicUrlFromId(String id)async{
+    String url = "none";
+    try{
+      final doc = await FirebaseFirestore.instance.collection("users").doc(id).get();
+      if(doc.exists){
+        url = doc.data()!["picUrl"];
+      }
+    }
+    catch(e){
+      print("Error loading profile picture: $e");
+    }
+    return url;
+  }
+
 
   Future<int> getVoteStatus(String propositionId) async{
     try{
