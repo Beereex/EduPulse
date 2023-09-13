@@ -232,12 +232,20 @@ class _PropositionScreenState extends State<PropositionScreen>{
                   ),
                   SizedBox(height: 16),
                   Text(
+<<<<<<< HEAD
                     'Auteur: ${widget.proposition.authorName ?? 'Unknown'}',
+=======
+                    'Auteur: ${proposition.authorName ?? 'Unknown'}',
+>>>>>>> 24c8d3034485f143d19a152de223d18fa5952c1d
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
+<<<<<<< HEAD
                     'Cible: ${widget.proposition.path ?? ''}',
+=======
+                    'Chemin du cible: ${proposition.path ?? ''}',
+>>>>>>> 24c8d3034485f143d19a152de223d18fa5952c1d
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
@@ -313,7 +321,7 @@ class _PropositionScreenState extends State<PropositionScreen>{
             snap: true,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
-                color: Colors.grey[800], // Dark background color
+                color: Colors.grey[800],
                 child: ListView(
                   controller: scrollController,
                   children: [
@@ -328,20 +336,19 @@ class _PropositionScreenState extends State<PropositionScreen>{
                           ),
                           SizedBox(height: 8),
                           Text(
-                            '10 Comments', // Placeholder for the number of comments
+                            '10 Comments',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
                     ),
-                    // Simulate message cards with ListView.builder
                     ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(), // Prevent nested ListView from scrolling
-                      itemCount: 10, // Number of message cards
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 10,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
-                          color: Colors.grey[900], // Dark card color
+                          color: Colors.grey[900],
                           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -349,22 +356,22 @@ class _PropositionScreenState extends State<PropositionScreen>{
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Message ${index + 1}', // Placeholder for the message
+                                  'Message ${index + 1}',
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Author Name', // Placeholder for author
+                                  'Author Name',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  'Creation Date', // Placeholder for creation date
+                                  'Creation Date',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  'Last Edit Date', // Placeholder for last edit date
+                                  'Last Edit Date',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ],

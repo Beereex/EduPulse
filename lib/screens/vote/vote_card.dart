@@ -36,39 +36,43 @@ class _VoteCardState extends State<VoteCard> {
           ),
         );
       },
-      child: Card(
-        elevation: 5,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: widget.vote.vote == 1 ? widget.upVote : widget.downVote,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.vote.propositionTitle,
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(
-                      fontFamily: 'helvetica',
-                      fontSize: 26,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 15,),
-                  Text("Votée le: ${DateFormat("dd/MM/yyyy").format(widget.vote.date.toDate())}"),
-                ],
+      child: Flexible(
+        child: Card(
+          elevation: 5,
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: widget.vote.vote == 1 ? widget.upVote : widget.downVote,
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.vote.propositionTitle.length > 20
+                          ? widget.vote.propositionTitle.substring(0,20)
+                          : widget.vote.propositionTitle,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        fontFamily: 'helvetica',
+                        fontSize: 26,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 15,),
+                    Text("Votée le: ${DateFormat("dd/MM/yyyy").format(widget.vote.date.toDate())}"),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
