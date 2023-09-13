@@ -232,20 +232,12 @@ class _PropositionScreenState extends State<PropositionScreen>{
                   ),
                   SizedBox(height: 16),
                   Text(
-<<<<<<< HEAD
                     'Auteur: ${widget.proposition.authorName ?? 'Unknown'}',
-=======
-                    'Auteur: ${proposition.authorName ?? 'Unknown'}',
->>>>>>> 24c8d3034485f143d19a152de223d18fa5952c1d
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
                   Text(
-<<<<<<< HEAD
-                    'Cible: ${widget.proposition.path ?? ''}',
-=======
-                    'Chemin du cible: ${proposition.path ?? ''}',
->>>>>>> 24c8d3034485f143d19a152de223d18fa5952c1d
+                    'Chemin du cible: ${widget.proposition.path ?? ''}',
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 8),
