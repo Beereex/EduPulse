@@ -35,7 +35,12 @@ class MenuSection extends StatelessWidget {
                 children: <Widget>[
                   ListTile(
                     leading: icons[menuData.keys.toList().indexOf(entry.key)],
-                    title: Text(entry.key),
+                    title: Text(
+                      entry.key,
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
                   ),
                   if (entry != menuData.entries.last)
                     Divider(

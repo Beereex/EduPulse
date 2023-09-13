@@ -22,13 +22,14 @@ class Home extends StatefulWidget {
   double buttonBoxSize = 180;
   double buttonIconSize = 80;
   final Color _menuCategoriesColor = const Color.fromRGBO(111, 97, 211, 1);
-  final Color _phaseTextColor = const Color.fromRGBO(53, 21, 93, 1);
-  final Color _phaseBarBackColor = const Color.fromRGBO(207, 238, 247, 1);
+  final Color _phaseTextColor = const Color.fromRGBO(255, 255, 255, 1);//Color.fromRGBO(53, 21, 93, 1);
+  final Color _phaseBarBackColor = const Color.fromRGBO(207, 238, 247, 0);
   AppData data = AppData.instance;
   Map<String, dynamic>? settings;
   String? phase;
   String? dateString;
   String? phaseIntro;
+  double menuIconSize = 30;
 
   bool isAdmin = false;
 
@@ -187,8 +188,8 @@ class _HomeState extends State<Home> {
                 'Modifier Profil' : EditAccount(),
               },
               icons: [
-                Icon(Icons.account_circle),
-                Icon(Icons.visibility),
+                Icon(Icons.account_circle, size: widget.menuIconSize,),
+                Icon(Icons.visibility, size: widget.menuIconSize,),
               ],
             ),
             MenuSection(
@@ -198,9 +199,9 @@ class _HomeState extends State<Home> {
                 'Publier une Proposition' : CreateProposition(),
               },
               icons: [
-                Icon(Icons.list_alt),
-                Icon(Icons.assignment),
-                Icon(Icons.publish),
+                Icon(Icons.list_alt, size: widget.menuIconSize,),
+                Icon(Icons.assignment, size: widget.menuIconSize,),
+                Icon(Icons.publish, size: widget.menuIconSize,),
               ],
             ),
             MenuSection(
@@ -209,8 +210,8 @@ class _HomeState extends State<Home> {
                 'Mes Votes' : MyVotes(),
               },
               icons: [
-                Icon(Icons.how_to_vote),
-                Icon(Icons.my_library_add),
+                Icon(Icons.how_to_vote, size: widget.menuIconSize,),
+                Icon(Icons.my_library_add, size: widget.menuIconSize,),
               ],
             ),
             MenuSection(
@@ -219,8 +220,8 @@ class _HomeState extends State<Home> {
                 'Administration' : AdminPanel(),
               },
               icons: [
-                Icon(Icons.settings),
-                Icon(Icons.admin_panel_settings),
+                Icon(Icons.settings, size: widget.menuIconSize,),
+                Icon(Icons.admin_panel_settings, size: widget.menuIconSize,),
               ],
             ),
             MenuSection(
@@ -228,7 +229,7 @@ class _HomeState extends State<Home> {
                 'Déconnexion' : (){logout(context);}
               },
               icons: [
-                Icon(Icons.logout),
+                Icon(Icons.logout, size: widget.menuIconSize,),
               ],
             ),
             /*ListTile(
@@ -503,18 +504,21 @@ class _HomeState extends State<Home> {
                 } else if (snapshot.hasError) {
                   return Text("Error loading the region");
                 } else {
-                  return Container(
-                    width: double.infinity,
-                    color: Colors.blueGrey[900],
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    alignment: Alignment.center,
-                    child: Text(
-                      snapshot.data,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 27,
-                        fontWeight: FontWeight.bold,
+                  return Card(
+                    elevation: 5,
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.blueGrey.shade900.withOpacity(0.5),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      alignment: Alignment.center,
+                      child: Text(
+                        snapshot.data,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 27,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   );
