@@ -40,7 +40,6 @@ class _SignInState extends State<SignIn> {
         print(userCredential.user?.uid);
         await AppData.instance.setCurrentUser(userCredential.user!);
 
-        // Fetch user data from Firestore using the uid
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
@@ -94,81 +93,84 @@ class _SignInState extends State<SignIn> {
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.dark,
       home: Scaffold(
+        backgroundColor: Color(0xFF1E1E1E),//Color.fromRGBO(1, 1, 1, 1),
         appBar: AppBar(
           title: Text('Connexion'),
         ),
-        body: SingleChildScrollView( // Wrap with SingleChildScrollView
+        body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                color: Colors.black,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 150,
-                      height: 150,
-                    ),
+              SizedBox(height: 30,),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: Image.asset(
+                    'assets/YasserLogo.png',
+                    width: 230,
+                    height: 330,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextField(
-                      controller: _emailController,
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                      decoration: InputDecoration(
-                        labelText: 'Adresse e-mail',
-                        labelStyle: TextStyle(color: Colors.white),
-                        errorText: _isEmailValid ? null : 'Adresse e-mail non valide',
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: _isEmailValid ? Colors.white : Colors.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12.0),
-                    TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                      decoration: InputDecoration(
-                        labelText: 'Mot de passe',
-                        labelStyle: TextStyle(color: Colors.white),
-                        errorText: _isPasswordValid
-                            ? null
-                            : 'Mot de passe non valide (6 à 30 caractères, lettres, chiffres et _)',
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: _isPasswordValid ? Colors.white : Colors.red),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+              Card(
+                elevation: 5,
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: _emailController,
+                        style: TextStyle(fontSize: 17, color: Colors.white),
+                        decoration: InputDecoration(
+                          labelText: 'Adresse e-mail',
+                          labelStyle: TextStyle(color: Colors.white),
+                          errorText: _isEmailValid ? null : 'Adresse e-mail non valide',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: _isEmailValid ? Colors.white : Colors.red),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text(
-                      _errorMessage,
-                      style: TextStyle(color: Colors.red, fontSize: 18),
-                    ),
-                    SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: _signIn,
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        textStyle: TextStyle(fontSize: 22),
+                      SizedBox(height: 12.0),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        style: TextStyle(fontSize: 17, color: Colors.white),
+                        decoration: InputDecoration(
+                          labelText: 'Mot de passe',
+                          labelStyle: TextStyle(color: Colors.white),
+                          errorText: _isPasswordValid
+                              ? null
+                              : 'Mot de passe non valide (6 à 30 caractères, lettres, chiffres et _)',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: _isPasswordValid ? Colors.white : Colors.red),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        ),
                       ),
-                      child: Text('Connexion'),
-                    ),
-                  ],
+                      SizedBox(height: 8.0),
+                      Text(
+                        _errorMessage,
+                        style: TextStyle(color: Colors.red, fontSize: 15),
+                      ),
+                      SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: _signIn,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                          textStyle: TextStyle(fontSize: 20),
+                          padding: EdgeInsets.all(11),
+                        ),
+                        child: Text('Connexion'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -23,7 +23,7 @@ class HomeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Attach the onTap callback here
+      onTap: onTap,
       child: Container(
         width: boxSize,
         height: boxSize,
@@ -37,15 +37,15 @@ class HomeButton extends StatelessWidget {
           children: [
             Icon(
               iconData,
-              size: iconSize,
-              color: Colors.white,
+              size: iconSize - 10,
+              color: Color.fromRGBO(232, 232, 232, 1),
             ),
             SizedBox(height: 5),
             Text(
               text,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: fontSize,
+                fontSize: fontSize - 5,
               ),
               textAlign: TextAlign.center,
             ),

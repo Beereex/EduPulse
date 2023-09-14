@@ -28,53 +28,55 @@ class _ShowAccountState extends State<ShowAccount> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mon Compte'),
+        title: Text('Profil'),
       ),
       body: Center(
         child: Column(
 
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: double.infinity,
-              color: Colors.blueGrey[900], // Dark theme color
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              alignment: Alignment.center,
-              child: Text(
-                region,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 27,
-                  fontWeight: FontWeight.bold,
+            Card(
+              elevation: 5,
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                alignment: Alignment.center,
+                child: Text(
+                  region,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color.fromRGBO(232, 232, 232, 1),
+                    fontSize: 23,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
             SizedBox(height: 100),
-            Text(
-              "$userType",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: _dispFontSize+10,
-              ),
-            ),
-            SizedBox(height: 22,),
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.teal.shade700.withOpacity(0.7),
-                  width: 5.0,
+                  color: Color.fromRGBO(111, 97, 211, 1),
+                  width: 2.0,
                 ),
               ),
               child: CircleAvatar(
                 backgroundImage: picUrl == 'none'
                     ? AssetImage('assets/default_profile_pic.jpg')
                     : NetworkImage(picUrl) as ImageProvider,
-                radius: 120,
+                radius: 110,
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 13,),
+            Text(
+              "[ $userType ]",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: _dispFontSize+5,
+              ),
+            ),
+            SizedBox(height: 13,),
             Text(
               '$firstName $lastName',
               style: TextStyle(
@@ -85,8 +87,8 @@ class _ShowAccountState extends State<ShowAccount> {
             SizedBox(height: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                minimumSize: Size(120, 60),
+                backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                //minimumSize: Size(120, 60),
               ),
               onPressed: () {
                 Navigator.push(
@@ -97,7 +99,7 @@ class _ShowAccountState extends State<ShowAccount> {
               child: Text(
                 'Modifier',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 19,
                 ),
               ),
             ),

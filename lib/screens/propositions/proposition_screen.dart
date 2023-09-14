@@ -193,7 +193,7 @@ class _PropositionScreenState extends State<PropositionScreen>{
                 children: [
                   Row(
                     children: [
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FutureBuilder<String>(
                           future: AppData.instance.getPicUrlFromId(widget.proposition.authorId!),
@@ -216,7 +216,7 @@ class _PropositionScreenState extends State<PropositionScreen>{
                             }
                           },
                         ),
-                      ),
+                      ),*/
                       Flexible(
                         child: Text(
                           widget.proposition.title ?? '',

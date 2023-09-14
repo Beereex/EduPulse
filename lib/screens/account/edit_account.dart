@@ -22,7 +22,6 @@ class _EditAccountState extends State<EditAccount> {
   @override
   void initState() {
     super.initState();
-    // Initialize text fields with existing user data
     _firstNameController.text = userInfos.firstName;
     _lastNameController.text = userInfos.lastName;
   }
@@ -31,34 +30,50 @@ class _EditAccountState extends State<EditAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modifier Mon Compte'),
+        title: Text('Modifier Mon Profil'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 120,
-              backgroundImage: _selectedImageFile == null
-                ? userInfos.picUrl == "none"
-                  ? AssetImage('assets/default_profile_pic.jpg') as ImageProvider
-                  : NetworkImage(userInfos.picUrl)
-                : FileImage(_selectedImageFile!)
+            SizedBox(height: 70,),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Color.fromRGBO(111, 97, 211, 1),
+                  width: 2.0,
+                ),
+              ),
+              child: CircleAvatar(
+                backgroundImage: _selectedImageFile == null
+                    ? userInfos.picUrl == "none"
+                    ? AssetImage('assets/default_profile_pic.jpg') as ImageProvider
+                    : NetworkImage(userInfos.picUrl)
+                    : FileImage(_selectedImageFile!),
+                radius: 110,
+              ),
             ),
-            SizedBox(height: 20),
-            Column(
+            SizedBox(height: 30),
+            Row(
               children: [
                 ElevatedButton.icon(
                   onPressed: _takePicture,
                   icon: Icon(Icons.camera_alt),
                   label: Text('Prendre une Photo'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                  ),
                 ),
-                SizedBox(height: 10),
+                Spacer(),
                 ElevatedButton.icon(
                   onPressed: _pickImage,
                   icon: Icon(Icons.photo),
-                  label: Text('Choisir depuis la Galerie'),
+                  label: Text('Depuis la Galerie'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                  ),
                 ),
               ],
             ),
@@ -80,6 +95,9 @@ class _EditAccountState extends State<EditAccount> {
             ElevatedButton(
               onPressed: _saveChanges,
               child: Text('Enregistrer'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+              ),
             ),
           ],
         ),
@@ -94,28 +112,18 @@ class _EditAccountState extends State<EditAccount> {
     String newLastName = _lastNameController.text;
 
     String newImageUrl;
-
-    // Check if a new image was selected
     if (_selectedImageFile != null) {
-      // Upload the image to Firebase Cloud Storage
       final storageRef = FirebaseStorage.instance.ref().child('profile_images/$uid');
       await storageRef.putFile(_selectedImageFile!);
-
-      // Get the download URL of the uploaded image
       newImageUrl = await storageRef.getDownloadURL();
       _selectedImageFile = null;
     } else {
       newImageUrl = "none";
     }
-
-    // Update user profile data in Firestore
     AppData.instance.updateUserProfile(uid!, newImageUrl, newFirstName, newLastName);
-
-    Navigator.of(context).pop(); // Close the EditAccount page
+    Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Home()));
   }
-
-
 
   void _pickImage() async {
     final pickedImage = await _imagePicker.pickImage(source: ImageSource.gallery);

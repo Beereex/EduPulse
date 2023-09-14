@@ -22,14 +22,16 @@ class Home extends StatefulWidget {
   double buttonBoxSize = 180;
   double buttonIconSize = 80;
   final Color _menuCategoriesColor = const Color.fromRGBO(111, 97, 211, 1);
-  final Color _phaseTextColor = const Color.fromRGBO(255, 255, 255, 1);//Color.fromRGBO(53, 21, 93, 1);
   final Color _phaseBarBackColor = const Color.fromRGBO(207, 238, 247, 0);
+  final Color _textColor = const Color.fromRGBO(232, 232, 232, 1);
   AppData data = AppData.instance;
   Map<String, dynamic>? settings;
   String? phase;
   String? dateString;
   String? phaseIntro;
   double menuIconSize = 30;
+
+
 
   bool isAdmin = false;
 
@@ -65,22 +67,29 @@ class _HomeState extends State<Home> {
     return region;
   }
 
-  Future<bool?> getAdminState() async {
+  bool getAdminState(){
     bool isAdmin = false;
-    await widget.data.getUserData().then((result) {
+    widget.data.getUserData().then((result) {
       isAdmin = result?.userType == "admin" ? true : false;
     });
     return isAdmin;
   }
 
-  void logout(BuildContext context) async {
-    FirebaseAuth.instance.signOut().then((value) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SignIn()),
-      );
-    });
-  }
+  /*Future<int> logout(BuildContext context) async {
+    try
+    {
+      FirebaseAuth.instance.signOut().then((value) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SignIn()),
+        );
+      });
+      return 0;
+    }
+    catch(e){
+      return 1;
+    }
+  }*/
 
   Future<List<String>> initializeText() async {
     List<String> text = [];
@@ -124,7 +133,7 @@ class _HomeState extends State<Home> {
         iconTheme: IconThemeData(size: widget.titleBarFontSize + 10),
         title: GestureDetector(
           child: Text('EduPulse',
-              style: TextStyle(fontSize: widget.titleBarFontSize)),
+              style: TextStyle(fontSize: widget.titleBarFontSize, color: widget._textColor),),
           onTap: () {
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
@@ -134,17 +143,18 @@ class _HomeState extends State<Home> {
             icon: Icon(
               Icons.notifications,
               size: widget.titleBarFontSize + 10,
+              color: Color.fromRGBO(232, 232, 232, 1)
             ),
             onSelected: (value) {},
             itemBuilder: (context) {
               return [
                 const PopupMenuItem(
                   value: 1,
-                  child: Text('Notification 1'),
+                  child: Text('Notification 1', style: TextStyle(color: Color.fromRGBO(232, 232, 232, 1)),),
                 ),
                 const PopupMenuItem(
                   value: 2,
-                  child: Text('Notification 2'),
+                  child: Text('Notification 2', style: TextStyle(color: Color.fromRGBO(232, 232, 232, 1)),),
                 ),
               ];
             },
@@ -153,6 +163,7 @@ class _HomeState extends State<Home> {
             icon: Icon(
               Icons.settings,
               size: widget.titleBarFontSize + 10,
+              color: Color.fromRGBO(232, 232, 232, 1),
             ),
             onPressed: () {
               Navigator.push(
@@ -165,18 +176,15 @@ class _HomeState extends State<Home> {
       ),
       drawer: Drawer(
         child: ListView(
-          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),//EdgeInsets.zero,
+          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
           children: [
             SizedBox(
               height: 90,
               child: DrawerHeader(
-                /*decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),*/
                 child: Text(
                   'Menu',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: widget._textColor,
                     fontSize: widget.titleBarFontSize,
                   ),
                 ),
@@ -184,12 +192,12 @@ class _HomeState extends State<Home> {
             ),
             MenuSection(
               menuData: {
-                'Profil' : EditAccount(),
+                'Profil' : ShowAccount(),
                 'Modifier Profil' : EditAccount(),
               },
               icons: [
-                Icon(Icons.account_circle, size: widget.menuIconSize,),
-                Icon(Icons.edit, size: widget.menuIconSize,),
+                Icon(Icons.account_circle, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
+                Icon(Icons.edit, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
               ],
             ),
             MenuSection(
@@ -199,9 +207,9 @@ class _HomeState extends State<Home> {
                 'Publier une Proposition' : CreateProposition(),
               },
               icons: [
-                Icon(Icons.list_alt, size: widget.menuIconSize,),
-                Icon(Icons.assignment, size: widget.menuIconSize,),
-                Icon(Icons.publish, size: widget.menuIconSize,),
+                Icon(Icons.list_alt, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
+                Icon(Icons.assignment, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
+                Icon(Icons.publish, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
               ],
             ),
             MenuSection(
@@ -210,286 +218,28 @@ class _HomeState extends State<Home> {
                 'Mes Votes' : MyVotes(),
               },
               icons: [
-                Icon(Icons.how_to_vote, size: widget.menuIconSize,),
-                Icon(Icons.thumbs_up_down, size: widget.menuIconSize,),
+                Icon(Icons.how_to_vote, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
+                Icon(Icons.thumbs_up_down, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
               ],
             ),
             MenuSection(
               menuData: {
-                'Préferences' : Settings(),
+                'Préferences' : Preferences(),
                 'Administration' : AdminPanel(),
               },
               icons: [
-                Icon(Icons.settings, size: widget.menuIconSize,),
-                Icon(Icons.admin_panel_settings, size: widget.menuIconSize,),
+                Icon(Icons.settings, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
+                Icon(Icons.admin_panel_settings, size: widget.menuIconSize, color: widget._menuCategoriesColor,),
               ],
             ),
             MenuSection(
               menuData: {
-                'Déconnexion' : (){logout(context);}
+                'Déconnexion' : null,
               },
               icons: [
-                Icon(Icons.logout, size: widget.menuIconSize,),
+                Icon(Icons.logout, size: widget.menuIconSize, color: Colors.red.shade400,),
               ],
             ),
-            /*ListTile(
-              leading: Icon(
-                Icons.account_circle,
-                size: 40,
-                color: widget._phaseTextColor,
-              ),
-              tileColor: widget._phaseBarBackColor,
-              title: Text(
-                'Mon compte',
-                style: TextStyle(
-                  fontSize: 27,
-                  decoration: TextDecoration.underline,
-                  color: widget._phaseTextColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.visibility, size: 35),
-              title: const Text(
-                'Consulter',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ShowAccount()),
-                );
-              },
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.edit, size: 35),
-              title: const Text(
-                'Modifier',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EditAccount()),
-                );
-              },
-            ),
-            ListTile(
-              tileColor: widget._phaseBarBackColor,
-              leading: Icon(
-                Icons.description,
-                size: 40,
-                color: widget._phaseTextColor,
-              ),
-              title: Text(
-                'Propositions',
-                style: TextStyle(
-                  fontSize: 27,
-                  decoration: TextDecoration.underline,
-                  color: widget._phaseTextColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.list_alt, size: 35),
-              title: const Text(
-                'Liste des propositions',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPropositions()),
-                );
-              },
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.assignment, size: 35),
-              title: const Text(
-                'Mes propositions',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyPropositions()),
-                );
-              },
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.add_circle, size: 35),
-              title: const Text(
-                'Créer proposition',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreateProposition()),
-                );
-              },
-            ),
-            ListTile(
-              tileColor: widget._phaseBarBackColor,
-              leading: Icon(
-                Icons.how_to_vote,
-                size: 40,
-                color: widget._phaseTextColor,
-              ),
-              title: Text(
-                'Vote',
-                style: TextStyle(
-                  fontSize: 27,
-                  decoration: TextDecoration.underline,
-                  color: widget._phaseTextColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.thumbs_up_down, size: 35),
-              title: const Text(
-                'Mes vote',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyVotes()),
-                );
-              },
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.list, size: 35),
-              title: const Text(
-                'Vote nationale',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NationalVotingList()),
-                );
-              },
-            ),
-            ListTile(
-              tileColor: widget._phaseBarBackColor,
-              leading: Icon(
-                Icons.settings,
-                size: 40,
-                color: widget._phaseTextColor,
-              ),
-              title: Text(
-                'Paramètres',
-                style: TextStyle(
-                  fontSize: 27,
-                  decoration: TextDecoration.underline,
-                  color: widget._phaseTextColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 55),
-              leading: const Icon(Icons.person, size: 35),
-              title: const Text(
-                'Préférences',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Preferences()),
-                );
-              },
-            ),
-            /*FutureBuilder<bool?>(
-                future: getAdminState(),
-                builder: (BuildContext context, AsyncSnapshot snapshot){
-                  if(snapshot.connectionState == ConnectionState.waiting){
-                    return CircularProgressIndicator();
-                  }
-                  else if(snapshot.hasError){
-                    print("${snapshot.error}");
-                    return Container();
-                  }
-                  else{
-                    return Visibility(
-                      visible: snapshot.data,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.only(left: 55),
-                        leading: const Icon(Icons.admin_panel_settings, size: 35),
-                        title: const Text(
-                          'Administration',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => AdminPanel()),
-                          );
-                        },
-                      ),
-                    );
-                  }
-                }
-            ),*/
-            Visibility(
-              visible: widget.isAdmin,
-              child: ListTile(
-                contentPadding: EdgeInsets.only(left: 55),
-                leading: const Icon(Icons.admin_panel_settings, size: 35),
-                title: const Text(
-                  'Administration',
-                  style: TextStyle(fontSize: 20),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AdminPanel()),
-                  );
-                },
-              ),
-            ),
-            ListTile(
-              tileColor: widget._phaseBarBackColor,
-              leading: Icon(
-                Icons.exit_to_app,
-                size: 40,
-                color: widget._phaseTextColor,
-              ),
-              title: Text(
-                'Déconnexion',
-                style: TextStyle(
-                  fontSize: 27,
-                  decoration: TextDecoration.underline,
-                  color: widget._phaseTextColor,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              onTap: () {
-                logout(context);
-              },
-            ),*/
           ],
         ),
       ),
@@ -507,17 +257,16 @@ class _HomeState extends State<Home> {
                   return Card(
                     elevation: 5,
                     child: Container(
-                      width: double.infinity,
-                      color: Colors.blueGrey.shade900.withOpacity(0.5),
+                      color: Colors.transparent,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       alignment: Alignment.center,
                       child: Text(
                         snapshot.data,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 27,
-                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(232, 232, 232, 1),
+                          fontSize: 23,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -525,6 +274,7 @@ class _HomeState extends State<Home> {
                 }
               },
             ),
+            const SizedBox(height: 40),
             Container(
               width: double.infinity,
               color: widget._phaseBarBackColor,
@@ -544,7 +294,7 @@ class _HomeState extends State<Home> {
                           snapshot.data[0],
                           style: TextStyle(
                             fontSize: 24,
-                            color: widget._phaseTextColor,
+                            color: Color.fromRGBO(232, 232, 232, 1),
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -553,7 +303,7 @@ class _HomeState extends State<Home> {
                           style: TextStyle(
                             fontSize: 45,
                             fontWeight: FontWeight.w900,
-                            color: widget._phaseTextColor,
+                            color: Color.fromRGBO(232, 232, 232, 1),
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -561,7 +311,7 @@ class _HomeState extends State<Home> {
                           snapshot.data[2],
                           style: TextStyle(
                             fontSize: 23,
-                            color: widget._phaseTextColor,
+                            color: Color.fromRGBO(232, 232, 232, 1),
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -571,7 +321,7 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            const SizedBox(height: 100),
+            const SizedBox(height: 60),
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
