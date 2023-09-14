@@ -165,14 +165,14 @@ class _HomeState extends State<Home> {
       ),
       drawer: Drawer(
         child: ListView(
-          padding: EdgeInsets.zero,
+          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),//EdgeInsets.zero,
           children: [
             SizedBox(
               height: 90,
               child: DrawerHeader(
-                decoration: BoxDecoration(
+                /*decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                ),
+                ),*/
                 child: Text(
                   'Menu',
                   style: TextStyle(
@@ -189,7 +189,7 @@ class _HomeState extends State<Home> {
               },
               icons: [
                 Icon(Icons.account_circle, size: widget.menuIconSize,),
-                Icon(Icons.visibility, size: widget.menuIconSize,),
+                Icon(Icons.edit, size: widget.menuIconSize,),
               ],
             ),
             MenuSection(
@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
               },
               icons: [
                 Icon(Icons.how_to_vote, size: widget.menuIconSize,),
-                Icon(Icons.my_library_add, size: widget.menuIconSize,),
+                Icon(Icons.thumbs_up_down, size: widget.menuIconSize,),
               ],
             ),
             MenuSection(

@@ -42,11 +42,11 @@ class MenuSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (entry != menuData.entries.last)
+                  /*if (entry != menuData.entries.last)
                     Divider(
                       color: Colors.grey,
                       height: 1,
-                    ),
+                    ),*/
                 ],
               ),
             ),
