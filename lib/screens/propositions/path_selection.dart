@@ -312,9 +312,9 @@ class _PathSelectionState extends State<PathSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.isPathSelection
+      /*appBar: widget.isPathSelection
           ? AppBar(title: const Text('Sélectionner le Chemin'),)
-          : null,
+          : null,*/
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

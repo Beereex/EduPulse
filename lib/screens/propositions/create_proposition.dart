@@ -12,6 +12,8 @@ class CreateProposition extends StatefulWidget {
 class _CreatePropositionState extends State<CreateProposition> {
   String _selectedPathResult = "";
   AppData data = AppData.instance;
+  bool _isContentExpanded = true;
+  bool _isPathExpanded = false;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
@@ -90,13 +92,13 @@ class _CreatePropositionState extends State<CreateProposition> {
               ),
               SizedBox(height: 16),
               Text("$_selectedPathResult"),
-              SizedBox(height: 16),
+              /*SizedBox(height: 16),
               TextField(
                 controller: _titleController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Titre de la proposition',
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelText: 'Titre',
+                  labelStyle: TextStyle(color: Colors.grey),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -108,14 +110,14 @@ class _CreatePropositionState extends State<CreateProposition> {
               SizedBox(height: 16),
               TextField(
                 controller: _contentController,
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 17),
                 maxLines: null,
                 minLines: 10,
                 maxLength: 300,
-                decoration: InputDecoration(
-                  labelText: 'Contenu de la proposition',
+                decoration: const InputDecoration(
+                  labelText: 'Contenu',
                   alignLabelWithHint: true,
-                  labelStyle: TextStyle(color: Colors.white70),
+                  labelStyle: TextStyle(color: Colors.grey),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -123,21 +125,114 @@ class _CreatePropositionState extends State<CreateProposition> {
                     borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
+              ),*/
+              SingleChildScrollView(
+                child: ExpansionPanelList(
+                  elevation: 1,
+                  expandedHeaderPadding: EdgeInsets.all(0),
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      _isContentExpanded = !_isContentExpanded;
+
+                    });
+                  },
+                  children: [
+                    ExpansionPanel(
+
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          title: Text('Foldable Section'),
+                        );
+                      },
+                      body: Container(
+                        constraints: BoxConstraints(maxHeight: 400),
+                        child: Scaffold(
+                          body: Column(children: [
+                            SizedBox(height: 36),
+                            TextField(
+                              controller: _titleController,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Titre',
+                                labelStyle: TextStyle(color: Colors.grey),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            TextField(
+                              controller: _contentController,
+                              style: TextStyle(color: Colors.white, fontSize: 17),
+                              maxLines: null,
+                              minLines: 10,
+                              maxLength: 300,
+                              decoration: const InputDecoration(
+                                labelText: 'Contenu',
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(color: Colors.grey),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],),
+                        )
+                      ),
+                      isExpanded: _isContentExpanded,
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 20),
+              SingleChildScrollView(
+                child: ExpansionPanelList(
+                  elevation: 1,
+                  expandedHeaderPadding: EdgeInsets.all(0),
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      _isPathExpanded = !_isPathExpanded;
+
+                    });
+                  },
+                  children: [
+                    ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return ListTile(
+                          title: Text('Cible: ${_selectedPathResult}'),
+                        );
+                      },
+                      body: Container(
+                        constraints: BoxConstraints(maxHeight: 600),
+                        child: PathSelection(
+                          isPathSelection: true,
+                        ),
+                      ),
+                      isExpanded: _isPathExpanded,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.center,
                 child: ElevatedButton.icon(
                   onPressed: _createProposition,
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(10),
                     backgroundColor: Color.fromRGBO(53, 21, 93, 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  icon: Icon(Icons.add, color: Colors.white),
-                  label: Text(
-                    'Créer la proposition',
+                  icon: const Icon(Icons.publish, color: Colors.white),
+                  label: const Text(
+                    'Publiez la proposition',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
