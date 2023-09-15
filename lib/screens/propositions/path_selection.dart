@@ -435,7 +435,7 @@ class _PathSelectionState extends State<PathSelection> {
                 isAdd: widget.isPathSelection,
                 func: coursFunc,
               ),
-              const SizedBox(height: 32),
+              /*const SizedBox(height: 32),
               Visibility(
                 visible: widget.isPathSelection,
                 child: ElevatedButton(
@@ -455,7 +455,7 @@ class _PathSelectionState extends State<PathSelection> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

@@ -62,86 +62,32 @@ class _CreatePropositionState extends State<CreateProposition> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final selectedPath = await Navigator.push<String>(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PathSelection(isPathSelection: true,),
-                          ),
-                        ) ??
-                        "Undefined";
-                    setState(() {
-                      _selectedPathResult = selectedPath;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(53, 21, 93, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  icon: Icon(Icons.location_on, color: Colors.white),
-                  label: Text(
-                    'Cible',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              Text("$_selectedPathResult"),
-              /*SizedBox(height: 16),
-              TextField(
-                controller: _titleController,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Titre',
-                  labelStyle: TextStyle(color: Colors.grey),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: _contentController,
-                style: TextStyle(color: Colors.white, fontSize: 17),
-                maxLines: null,
-                minLines: 10,
-                maxLength: 300,
-                decoration: const InputDecoration(
-                  labelText: 'Contenu',
-                  alignLabelWithHint: true,
-                  labelStyle: TextStyle(color: Colors.grey),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                ),
-              ),*/
               SingleChildScrollView(
                 child: ExpansionPanelList(
-                  elevation: 1,
+                  elevation: 0,
                   expandedHeaderPadding: EdgeInsets.all(0),
                   expansionCallback: (int index, bool isExpanded) {
                     setState(() {
+                      if(!_isContentExpanded && _isPathExpanded) {
+                        _isPathExpanded = false;
+                      }
                       _isContentExpanded = !_isContentExpanded;
-
                     });
                   },
                   children: [
                     ExpansionPanel(
-
+                      //backgroundColor: Color.fromRGBO(111, 97, 211, 1),
                       headerBuilder: (BuildContext context, bool isExpanded) {
                         return ListTile(
-                          title: Text('Foldable Section'),
+                          title: Text(
+                            'Proposition',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(232, 232, 232, 1),
+                              //color: Color.fromRGBO(111, 97, 211, 1),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         );
                       },
                       body: Container(
@@ -190,25 +136,36 @@ class _CreatePropositionState extends State<CreateProposition> {
                   ],
                 ),
               ),
+              SizedBox(height: 16),
               SingleChildScrollView(
                 child: ExpansionPanelList(
-                  elevation: 1,
+                  elevation: 0,
                   expandedHeaderPadding: EdgeInsets.all(0),
                   expansionCallback: (int index, bool isExpanded) {
                     setState(() {
+                      if(_isContentExpanded && !_isPathExpanded) {
+                        _isContentExpanded = false;
+                      }
                       _isPathExpanded = !_isPathExpanded;
-
                     });
                   },
                   children: [
                     ExpansionPanel(
+                      //backgroundColor: Color.fromRGBO(111, 97, 211, 1),
                       headerBuilder: (BuildContext context, bool isExpanded) {
                         return ListTile(
-                          title: Text('Cible: ${_selectedPathResult}'),
+                          title: Text(
+                            'Cible: $_selectedPathResult',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(232, 232, 232, 1),
+                              //color: Color.fromRGBO(111, 97, 211, 1),
+                              fontWeight: FontWeight.w500,
+                            ),),
                         );
                       },
                       body: Container(
-                        constraints: BoxConstraints(maxHeight: 600),
+                        constraints: BoxConstraints(maxHeight: 500),
                         child: PathSelection(
                           isPathSelection: true,
                         ),
@@ -221,19 +178,22 @@ class _CreatePropositionState extends State<CreateProposition> {
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.center,
-                child: ElevatedButton.icon(
-                  onPressed: _createProposition,
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(10),
-                    backgroundColor: Color.fromRGBO(53, 21, 93, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _createProposition,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(10),
+                      backgroundColor: Color.fromRGBO(111, 97, 211, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  ),
-                  icon: const Icon(Icons.publish, color: Colors.white),
-                  label: const Text(
-                    'Publiez la proposition',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                    icon: const Icon(Icons.publish, color: Color.fromRGBO(232, 232, 232, 1),),
+                    label: const Text(
+                      'Publiez la proposition',
+                      style: TextStyle(fontSize: 18, color: Color.fromRGBO(232, 232, 232, 1),),
+                    ),
                   ),
                 ),
               ),
