@@ -6,12 +6,18 @@ import 'package:flutter/material.dart';
 
 class PathSelection extends StatefulWidget {
   bool isPathSelection = true;
-  PathSelection({required this.isPathSelection});
+  dynamic? updateFunction;
+  PathSelection({
+    required this.isPathSelection,
+    required this.updateFunction,
+  });
   @override
   _PathSelectionState createState() => _PathSelectionState();
 }
 
 class _PathSelectionState extends State<PathSelection> {
+  static const int _educationTypeIndex = 0, _specialityIndex = 1,
+      _gradeIndex = 2, _subjectIndex = 3, _coursIndex = 4;
   String? selectedEducationType;
   String? selectedSpeciality;
   String? selectedGrade;
@@ -312,9 +318,6 @@ class _PathSelectionState extends State<PathSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: widget.isPathSelection
-          ? AppBar(title: const Text('Sélectionner le Chemin'),)
-          : null,*/
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -348,6 +351,9 @@ class _PathSelectionState extends State<PathSelection> {
                       specialitiesMap = result;
                       if(selectedEducationType != ""){
                         activateSpecialityFunc();
+                        if(widget.isPathSelection){
+                          widget.updateFunction(_educationTypeIndex,selectedEducationType);
+                        }
                       }
                     });
                   });
@@ -369,6 +375,9 @@ class _PathSelectionState extends State<PathSelection> {
                           gradesMap = result;
                           if(selectedSpeciality != ""){
                             activateGradeFunc();
+                            if(widget.isPathSelection){
+                              widget.updateFunction(_specialityIndex,selectedSpeciality);
+                            }
                           }
                         });
                   });
@@ -392,6 +401,9 @@ class _PathSelectionState extends State<PathSelection> {
                       subjectsMap = result;
                       if(selectedGrade != ""){
                         activateSubjectFunc();
+                        if(widget.isPathSelection){
+                          widget.updateFunction(_gradeIndex,selectedGrade);
+                        }
                       }
                     });
                   });
@@ -415,6 +427,9 @@ class _PathSelectionState extends State<PathSelection> {
                       coursesMap = result;
                       if(selectedSubject != ""){
                         activateCourseFunc();
+                        if(widget.isPathSelection){
+                          widget.updateFunction(_subjectIndex,selectedSubject);
+                        }
                       }
                     });
                   });
@@ -430,32 +445,14 @@ class _PathSelectionState extends State<PathSelection> {
                 onChanged: (value) {
                   setState(() {
                     selectedCours = value;
+                    if(selectedCours != "" && widget.isPathSelection){
+                      widget.updateFunction(_coursIndex,selectedCours);
+                    }
                   });
                 },
                 isAdd: widget.isPathSelection,
                 func: coursFunc,
               ),
-              /*const SizedBox(height: 32),
-              Visibility(
-                visible: widget.isPathSelection,
-                child: ElevatedButton(
-                  onPressed: () {
-                    widget.isPathSelection
-                        ? Navigator.pop(context, _pathBuilder())
-                        : (){};
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(53, 21, 93, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    "Confirmer la Sélection",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),*/
             ],
           ),
         ),

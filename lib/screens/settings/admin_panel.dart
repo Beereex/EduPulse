@@ -34,7 +34,7 @@ class _AdminPanelState extends State<AdminPanel> {
           ),
           body: TabBarView(
             children: [
-              PathSelection(isPathSelection: false,),
+              PathSelection(isPathSelection: false, updateFunction: null, ),
               Planning(),
               CreateUser(),
               Text("data"),

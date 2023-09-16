@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edupulse/screens/propositions/path_selection.dart';
 import 'package:edupulse/services/app_data.dart';
 import 'package:flutter/material.dart';
-import '../../models/proposition.dart';
 
 class CreateProposition extends StatefulWidget {
   @override
@@ -10,7 +9,9 @@ class CreateProposition extends StatefulWidget {
 }
 
 class _CreatePropositionState extends State<CreateProposition> {
+  List<String> _pathElements = ["","","","",""];
   String _selectedPathResult = "";
+  String _separator = " . ";
   AppData data = AppData.instance;
   bool _isContentExpanded = true;
   bool _isPathExpanded = false;
@@ -25,13 +26,36 @@ class _CreatePropositionState extends State<CreateProposition> {
     super.dispose();
   }
 
+  void _pathBuilder(String separator){
+    int coursIndex = 4;
+    setState(() {
+      _selectedPathResult = "";
+      for(int i = 0; i < 4 ; i++){
+        _selectedPathResult += (_pathElements[i] != "")
+            ? "${(i != 0) ? separator : ""}${_pathElements[i]}"
+            : "";
+      }
+      _selectedPathResult += _pathElements[coursIndex];
+    });
+  }
+
+  void updatePathElement(int index, String element){
+    _pathElements[index] = element;
+    if(index != 4){
+      for(int i = index + 1; i <= 4 ; i++){
+        _pathElements[i] = "";
+      }
+    }
+    _pathBuilder(_separator);
+  }
+
   void _createProposition() async{
     try{
       CollectionReference propositions = FirebaseFirestore.instance.collection("propositions");
       Map<String, dynamic> proposition = {
         "title": _titleController.text,
         "content": _contentController.text,
-        "path": _selectedPathResult,
+        "path": _selectedPathResult.replaceAll(_separator, "/"),
         "creationDate": Timestamp.now(),
         "lastEditDate": Timestamp.now(),
         "author": data.userInfos!.uid,
@@ -151,15 +175,13 @@ class _CreatePropositionState extends State<CreateProposition> {
                   },
                   children: [
                     ExpansionPanel(
-                      //backgroundColor: Color.fromRGBO(111, 97, 211, 1),
                       headerBuilder: (BuildContext context, bool isExpanded) {
                         return ListTile(
                           title: Text(
                             'Cible: $_selectedPathResult',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 15,
                               color: Color.fromRGBO(232, 232, 232, 1),
-                              //color: Color.fromRGBO(111, 97, 211, 1),
                               fontWeight: FontWeight.w500,
                             ),),
                         );
@@ -168,6 +190,7 @@ class _CreatePropositionState extends State<CreateProposition> {
                         constraints: BoxConstraints(maxHeight: 500),
                         child: PathSelection(
                           isPathSelection: true,
+                          updateFunction: updatePathElement,
                         ),
                       ),
                       isExpanded: _isPathExpanded,

@@ -7,20 +7,18 @@ import 'package:edupulse/screens/propositions/propositions_list.dart';
 import 'package:edupulse/screens/settings/admin_panel.dart';
 import 'package:edupulse/screens/vote/my_votes.dart';
 import 'package:edupulse/services/app_data.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:edupulse/screens/account/show_account.dart';
 import 'package:edupulse/screens/vote/national_voting_list.dart';
 import 'package:intl/intl.dart';
 import '../settings/preferences.dart';
-import '../authenticate/sign_in.dart';
 import 'home_button.dart';
 
 class Home extends StatefulWidget {
-  double titleBarFontSize = 24;
-  double buttonFontSize = 25;
-  double buttonBoxSize = 180;
-  double buttonIconSize = 80;
+  final double titleBarFontSize = 24;
+  final double buttonFontSize = 25;
+  final double buttonBoxSize = 180;
+  final double buttonIconSize = 80;
   final Color _menuCategoriesColor = const Color.fromRGBO(111, 97, 211, 1);
   final Color _phaseBarBackColor = const Color.fromRGBO(207, 238, 247, 0);
   final Color _textColor = const Color.fromRGBO(232, 232, 232, 1);
@@ -75,21 +73,6 @@ class _HomeState extends State<Home> {
     return isAdmin;
   }
 
-  /*Future<int> logout(BuildContext context) async {
-    try
-    {
-      FirebaseAuth.instance.signOut().then((value) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SignIn()),
-        );
-      });
-      return 0;
-    }
-    catch(e){
-      return 1;
-    }
-  }*/
 
   Future<List<String>> initializeText() async {
     List<String> text = [];
@@ -104,8 +87,8 @@ class _HomeState extends State<Home> {
       dynamic display = DateFormat("dd/MM/yyyy").format;
 
       if (date.isBefore(phaseStart) || date.isAfter(phaseEnd)) {
-        AppData.instance.currentPhase = widget.phase = "Rest";
-        widget.dateString = "Prochaine phase: Undefined";
+        AppData.instance.currentPhase = widget.phase = "Repos";
+        widget.dateString = "de ${display(phaseEnd)} à --/--/----";
         widget.phaseIntro = "Phase de";
       } else {
         widget.phaseIntro = "Phases des";
@@ -143,7 +126,7 @@ class _HomeState extends State<Home> {
             icon: Icon(
               Icons.notifications,
               size: widget.titleBarFontSize + 10,
-              color: Color.fromRGBO(232, 232, 232, 1)
+              color: const Color.fromRGBO(232, 232, 232, 1),
             ),
             onSelected: (value) {},
             itemBuilder: (context) {
@@ -163,7 +146,7 @@ class _HomeState extends State<Home> {
             icon: Icon(
               Icons.settings,
               size: widget.titleBarFontSize + 10,
-              color: Color.fromRGBO(232, 232, 232, 1),
+              color: const Color.fromRGBO(232, 232, 232, 1),
             ),
             onPressed: () {
               Navigator.push(
@@ -176,10 +159,10 @@ class _HomeState extends State<Home> {
       ),
       drawer: Drawer(
         child: ListView(
-          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 7),
           children: [
             SizedBox(
-              height: 90,
+              height: 105,
               child: DrawerHeader(
                 child: Text(
                   'Menu',
@@ -214,7 +197,7 @@ class _HomeState extends State<Home> {
             ),
             MenuSection(
               menuData: {
-                'Vote National' : NationalVotingList(),
+                'Vote National' : const NationalVotingList(),
                 'Mes Votes' : MyVotes(),
               },
               icons: [
@@ -224,7 +207,7 @@ class _HomeState extends State<Home> {
             ),
             MenuSection(
               menuData: {
-                'Préferences' : Preferences(),
+                'Préferences' : const Preferences(),
                 'Administration' : AdminPanel(),
               },
               icons: [
@@ -233,7 +216,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             MenuSection(
-              menuData: {
+              menuData: const {
                 'Déconnexion' : null,
               },
               icons: [
@@ -250,9 +233,9 @@ class _HomeState extends State<Home> {
               future: getRegion(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Text("Error loading the region");
+                  return const Text("Error loading the region");
                 } else {
                   return Card(
                     elevation: 5,
@@ -292,7 +275,7 @@ class _HomeState extends State<Home> {
                       children: [
                         Text(
                           snapshot.data[0],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 24,
                             color: Color.fromRGBO(232, 232, 232, 1),
                             fontWeight: FontWeight.w900,
@@ -300,7 +283,7 @@ class _HomeState extends State<Home> {
                         ),
                         Text(
                           snapshot.data[1],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 45,
                             fontWeight: FontWeight.w900,
                             color: Color.fromRGBO(232, 232, 232, 1),
@@ -309,7 +292,7 @@ class _HomeState extends State<Home> {
                         const SizedBox(height: 10),
                         Text(
                           snapshot.data[2],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 23,
                             color: Color.fromRGBO(232, 232, 232, 1),
                             fontWeight: FontWeight.w900,
@@ -358,7 +341,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
