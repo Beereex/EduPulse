@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Planning extends StatefulWidget {
+  const Planning({super.key});
+
   @override
   _PlanningState createState() => _PlanningState();
 }
@@ -25,39 +27,8 @@ class _PlanningState extends State<Planning> {
     _phaseEndExpanded = false;
   }
 
-  Color _ActionColorBack = Color.fromRGBO(111, 97, 211, 1);
+  final Color _actionColorBack = const Color.fromRGBO(111, 97, 211, 1);
 
-  Future<Map<String, dynamic>?> _fillSettingsData() async{
-    try{
-      final snapshot = await FirebaseFirestore.instance.collection("settings")
-          .doc("tqu1LE7CZEmDBgaJzhiI").get();
-      if(snapshot.exists){
-        return snapshot.data();
-      }
-      else{
-        print("settings doc not found!!!");
-      }
-    }
-    catch(e){
-      print("Error loading settings: $e");
-    }
-  }
-
-  Future<dynamic> _getField(String field) async{
-    try{
-      final snapshot = await FirebaseFirestore.instance.collection("settings")
-          .doc("tqu1LE7CZEmDBgaJzhiI").get();
-      if(snapshot.exists){
-        return snapshot.data()![field];
-      }
-      else{
-        print("settings doc not found!!!");
-      }
-    }
-    catch(e){
-      print("Error loading settings: $e");
-    }
-  }
 
   Future<void> _fetchData() async {
     final settingsDoc = await FirebaseFirestore.instance
@@ -109,14 +80,14 @@ class _PlanningState extends State<Planning> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               elevation: 5,
               child: Padding(
-                padding: EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(17),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -137,7 +108,7 @@ class _PlanningState extends State<Planning> {
                           icon: Icon(
                             Icons.remove,
                             size: 40,
-                            color: _ActionColorBack,
+                            color: _actionColorBack,
                           ),
                           onPressed: () {
                             setState(() {
@@ -147,20 +118,20 @@ class _PlanningState extends State<Planning> {
                             });
                           },
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
                           '$_numberOfPropositions',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Color.fromRGBO(232, 232, 232, 1),
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         IconButton(
                           icon: Icon(
                             Icons.add,
-                            color: _ActionColorBack,
+                            color: _actionColorBack,
                             size: 40,
                           ),
                           onPressed: () {
@@ -179,7 +150,7 @@ class _PlanningState extends State<Planning> {
             SingleChildScrollView(
               child: ExpansionPanelList(
                 elevation: 0,
-                expandedHeaderPadding: EdgeInsets.all(0),
+                expandedHeaderPadding: const EdgeInsets.all(0),
                 expansionCallback: (int index, bool isExpanded) {
                   setState(() {
                     if(!_phaseStartExpanded){
@@ -191,7 +162,7 @@ class _PlanningState extends State<Planning> {
                 children: [
                   ExpansionPanel(
                     headerBuilder: (BuildContext context, bool isExpanded) {
-                      return ListTile(
+                      return const ListTile(
                         title: Text(
                           'Date de début de phase',
                           style: TextStyle(
@@ -203,7 +174,7 @@ class _PlanningState extends State<Planning> {
                       );
                     },
                     body: Container(
-                        constraints: BoxConstraints(maxHeight: 200),
+                        constraints: const BoxConstraints(maxHeight: 200),
                         child: Scaffold(
                           body: _phaseStart != null
                           ? CupertinoDatePicker(
@@ -225,7 +196,7 @@ class _PlanningState extends State<Planning> {
             SingleChildScrollView(
               child: ExpansionPanelList(
                 elevation: 0,
-                expandedHeaderPadding: EdgeInsets.all(0),
+                expandedHeaderPadding: const EdgeInsets.all(0),
                 expansionCallback: (int index, bool isExpanded) {
                   setState(() {
                     if(!_phaseSwitchExpanded){
@@ -237,9 +208,9 @@ class _PlanningState extends State<Planning> {
                 children: [
                   ExpansionPanel(
                     headerBuilder: (BuildContext context, bool isExpanded) {
-                      return ListTile(
+                      return const ListTile(
                         title: Text(
-                          'Date de fin de phase',
+                          'Date de changement de phase',
                           style: TextStyle(
                             fontSize: 20,
                             color: Color.fromRGBO(232, 232, 232, 1),
@@ -249,7 +220,7 @@ class _PlanningState extends State<Planning> {
                       );
                     },
                     body: Container(
-                        constraints: BoxConstraints(maxHeight: 200),
+                        constraints: const BoxConstraints(maxHeight: 200),
                         child: Scaffold(
                           body: _phaseSwitch != null
                           ? CupertinoDatePicker(
@@ -271,7 +242,7 @@ class _PlanningState extends State<Planning> {
             SingleChildScrollView(
               child: ExpansionPanelList(
                 elevation: 0,
-                expandedHeaderPadding: EdgeInsets.all(0),
+                expandedHeaderPadding: const EdgeInsets.all(0),
                 expansionCallback: (int index, bool isExpanded) {
                   setState(() {
                     if(!_phaseEndExpanded){
@@ -283,9 +254,9 @@ class _PlanningState extends State<Planning> {
                 children: [
                   ExpansionPanel(
                     headerBuilder: (BuildContext context, bool isExpanded) {
-                      return ListTile(
+                      return const ListTile(
                         title: Text(
-                          'Date de début de phase',
+                          'Date de fin de phase',
                           style: TextStyle(
                             fontSize: 20,
                             color: Color.fromRGBO(232, 232, 232, 1),
@@ -295,7 +266,7 @@ class _PlanningState extends State<Planning> {
                       );
                     },
                     body: Container(
-                        constraints: BoxConstraints(maxHeight: 200),
+                        constraints: const BoxConstraints(maxHeight: 200),
                         child: Scaffold(
                           body: _phaseEnd != null
                           ? CupertinoDatePicker(
@@ -316,7 +287,7 @@ class _PlanningState extends State<Planning> {
             const SizedBox(height: 16),
             Align(
               alignment: Alignment.centerRight,
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -325,7 +296,7 @@ class _PlanningState extends State<Planning> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context){
-                              //return SimpleDialog(title: Text("Success"),);
+
                               return SuccessDialog(message: "les nouveaux paramètres ont été enregistrer avec success",);
                             }
                         );
@@ -340,12 +311,12 @@ class _PlanningState extends State<Planning> {
                       }
                     });
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.save,
                     size: 30,
                     color: Color.fromRGBO(232, 232, 232, 1),
                   ),
-                  label: Text(
+                  label: const Text(
                     'Enregistrer',
                     style: TextStyle(
                       fontSize: 20,
@@ -353,8 +324,8 @@ class _PlanningState extends State<Planning> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _ActionColorBack,
-                    padding: EdgeInsets.all(7),
+                    backgroundColor: _actionColorBack,
+                    padding: const EdgeInsets.all(7),
                   ),
                 ),
               ),
