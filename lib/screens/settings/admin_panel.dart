@@ -21,7 +21,8 @@ class _AdminPanelState extends State<AdminPanel> {
           appBar: AppBar(
             title: const Text("panneau de configuration"),
             bottom: const TabBar(
-              labelStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,letterSpacing: 1),
+              indicatorColor: Color.fromRGBO(111, 97, 211, 1),
+              labelStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.w600,letterSpacing: 1,),
               tabs: [
                 Tab(text: 'Chemin',icon: Icon(Icons.account_tree,size: 30,)),
                 Tab(text: 'Plannification',icon: Icon(Icons.schedule,size: 30,),),

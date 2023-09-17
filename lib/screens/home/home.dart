@@ -109,6 +109,12 @@ class _HomeState extends State<Home> {
     return text;
   }
 
+  void refresh(){
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,6 +128,16 @@ class _HomeState extends State<Home> {
           },
         ),
         actions: [
+          IconButton(
+            icon: Icon(
+              Icons.refresh,
+              size: widget.titleBarFontSize + 10,
+              color: const Color.fromRGBO(232, 232, 232, 1),
+            ),
+            onPressed: () {
+              refresh();
+            },
+          ),
           PopupMenuButton(
             icon: Icon(
               Icons.notifications,

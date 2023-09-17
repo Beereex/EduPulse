@@ -141,22 +141,6 @@ class _PathSelectionState extends State<PathSelection> {
     });
     return id;
   }
-
-  String _pathBuilder(){
-    String path = ("$selectedEducationType/" ?? "Undefined");
-    if(selectedSpeciality != null)
-      path += "$selectedSpeciality/";
-    if(selectedGrade != null)
-      path += "$selectedGrade/";
-    if(selectedSubject != null)
-      path += "$selectedSubject/";
-    if(selectedCours != null)
-      path += "$selectedCours";
-    if(!widget.isPathSelection && path != "Undefined"){
-      
-    }     
-    return path;
-  }
   
   Future _saveSpecialityToDb()async{
     try{
@@ -500,7 +484,20 @@ class _PathSelectionState extends State<PathSelection> {
           visible: !isAdd,
           child: ElevatedButton(
             onPressed: func,
-            child: const Icon(Icons.add,size: 30,),
+            child: Icon(Icons.add,size: 30,),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return const Color.fromRGBO(111, 97, 211, 0.5);
+                  }
+                  else if (states.contains(MaterialState.disabled)){
+                    return Colors.grey;
+                  }
+                  return const Color.fromRGBO(111, 97, 211, 1);
+                },
+              ),
+            ),
           ),
         ),
       ],
