@@ -37,7 +37,6 @@ class _SignInState extends State<SignIn> {
       );
 
       if (userCredential.user != null) {
-        print(userCredential.user?.uid);
         await AppData.instance.setCurrentUser(userCredential.user!);
 
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
@@ -58,7 +57,6 @@ class _SignInState extends State<SignIn> {
           });
         }
       } else {
-        print("oh SSSShit");
         setState(() {
           _errorMessage = 'Échec de la connexion. Veuillez vérifier votre courriel et votre mot de passe.';
         });

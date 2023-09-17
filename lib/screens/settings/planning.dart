@@ -285,48 +285,45 @@ class _PlanningState extends State<Planning> {
               ),
             ),
             const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _saveSettings().then((value){
-                      if(_datesValid){
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context){
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _saveSettings().then((value){
+                    if(_datesValid){
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context){
 
-                              return SuccessDialog(message: "les nouveaux paramètres ont été enregistrer avec success",);
-                            }
-                        );
-                      }
-                      else{
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context){
-                              return const AlertDialog(title: Text("date Error"),content: Text("This is bad"),);
-                            }
-                        );
-                      }
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.save,
-                    size: 30,
+                            return SuccessDialog(message: "les nouveaux paramètres ont été enregistrer avec success",);
+                          }
+                      );
+                    }
+                    else{
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context){
+                            return const AlertDialog(title: Text("date Error"),content: Text("This is bad"),);
+                          }
+                      );
+                    }
+                  });
+                },
+                icon: const Icon(
+                  Icons.save,
+                  size: 30,
+                  color: Color.fromRGBO(232, 232, 232, 1),
+                ),
+                label: const Text(
+                  'Enregistrer',
+                  style: TextStyle(
+                    fontSize: 20,
                     color: Color.fromRGBO(232, 232, 232, 1),
                   ),
-                  label: const Text(
-                    'Enregistrer',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromRGBO(232, 232, 232, 1),
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _actionColorBack,
-                    padding: const EdgeInsets.all(7),
-                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _actionColorBack,
+                  padding: const EdgeInsets.all(7),
                 ),
               ),
             ),

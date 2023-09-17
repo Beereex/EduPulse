@@ -19,6 +19,8 @@ class _CreateUserState extends State<CreateUser> {
   String lastName = '';
   String picUrl = '';
 
+  final Color _actionColorBack = const Color.fromRGBO(111, 97, 211, 1);
+
   // Function to generate a random password
   String generateRandomPassword() {
     // Generate a random 10-character password
@@ -126,12 +128,47 @@ class _CreateUserState extends State<CreateUser> {
                     picUrl = value!;
                   },
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Create the user and save data
-                    createUser();
-                  },
-                  child: Text('Enregistrer'),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      /*_saveSettings().then((value){
+                        if(_datesValid){
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+
+                                return SuccessDialog(message: "les nouveaux paramètres ont été enregistrer avec success",);
+                              }
+                          );
+                        }
+                        else{
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+                                return const AlertDialog(title: Text("date Error"),content: Text("This is bad"),);
+                              }
+                          );
+                        }
+                      });*/
+                    },
+                    icon: const Icon(
+                      Icons.save,
+                      size: 30,
+                      color: Color.fromRGBO(232, 232, 232, 1),
+                    ),
+                    label: const Text(
+                      'Enregistrer',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromRGBO(232, 232, 232, 1),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _actionColorBack,
+                      padding: const EdgeInsets.all(7),
+                    ),
+                  ),
                 ),
               ],
             ),
