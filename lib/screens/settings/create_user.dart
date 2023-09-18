@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../propositions/path_selection.dart';
+
 class CreateUser extends StatefulWidget {
   @override
   _CreateUserState createState() => _CreateUserState();
@@ -21,12 +23,41 @@ class _CreateUserState extends State<CreateUser> {
 
   final Color _actionColorBack = const Color.fromRGBO(111, 97, 211, 1);
 
+  String _selectedPathResult = "";
+  bool _isPathExpanded = false;
+  List<String> _pathElements = ["","","","",""];
+  String _separator = " . ";
+
+
   // Function to generate a random password
   String generateRandomPassword() {
     // Generate a random 10-character password
     final String charset = 'abcdefghijklmnopqrstuvwxyz0123456789_';
     final random = Random.secure();
     return List.generate(10, (index) => charset[random.nextInt(charset.length)]).join();
+  }
+
+  void _pathBuilder(String separator){
+    int coursIndex = 4;
+    setState(() {
+      _selectedPathResult = "";
+      for(int i = 0; i < 4 ; i++){
+        _selectedPathResult += (_pathElements[i] != "")
+            ? "${(i != 0) ? separator : ""}${_pathElements[i]}"
+            : "";
+      }
+      _selectedPathResult += _pathElements[coursIndex];
+    });
+  }
+
+  void updatePathElement(int index, String element){
+    _pathElements[index] = element;
+    if(index != 4){
+      for(int i = index + 1; i <= 4 ; i++){
+        _pathElements[i] = "";
+      }
+    }
+    _pathBuilder(_separator);
   }
 
   // Function to handle user creation and data storage
@@ -76,6 +107,41 @@ class _CreateUserState extends State<CreateUser> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                SingleChildScrollView(
+                  child: ExpansionPanelList(
+                    elevation: 0,
+                    expandedHeaderPadding: EdgeInsets.all(0),
+                    expansionCallback: (int index, bool isExpanded) {
+                      setState(() {
+                        _isPathExpanded = !_isPathExpanded;
+                      });
+                    },
+                    children: [
+                      ExpansionPanel(
+                        headerBuilder: (BuildContext context, bool isExpanded) {
+                          return ListTile(
+                            title: Text(
+                              'Cible: $_selectedPathResult',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Color.fromRGBO(232, 232, 232, 1),
+                                fontWeight: FontWeight.w500,
+                              ),),
+                          );
+                        },
+                        body: Container(
+                          constraints: BoxConstraints(maxHeight: 380),
+                          child: PathSelection(
+                            isPathSelection: true,
+                            updateFunction: updatePathElement,
+                          ),
+                        ),
+                        isExpanded: _isPathExpanded,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 15,),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Adresse e-mail'),
                   keyboardType: TextInputType.emailAddress,
@@ -89,43 +155,18 @@ class _CreateUserState extends State<CreateUser> {
                     email = value!;
                   },
                 ),
-
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Chemin d\'accès'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Veuillez entrer un chemin d\'accès.';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    accessPath = value!;
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle access path generation and navigation
-                    // You can navigate to another page to generate the path string
-                    // and return it to this page
-                  },
-                  child: Text('Générer le chemin d\'accès'),
-                ),
+                SizedBox(height: 15,),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Prénom (facultatif)'),
                   onSaved: (value) {
                     firstName = value!;
                   },
                 ),
+                SizedBox(height: 15,),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Nom (facultatif)'),
                   onSaved: (value) {
                     lastName = value!;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'URL de la photo (facultatif)'),
-                  onSaved: (value) {
-                    picUrl = value!;
                   },
                 ),
                 SizedBox(
